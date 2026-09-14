@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Actions\Pages\CreatePageAction;
 use App\Actions\Pages\PublishPageAction;
 use App\Models\Hotel;
+use App\Models\Media;
 use Illuminate\Database\Seeder;
 
 /**
@@ -34,11 +35,18 @@ class PageSeeder extends Seeder
 
     protected function seedHomepage(Hotel $hotel): void
     {
+        $heroMediaId = Media::query()
+            ->where('hotel_id', $hotel->id)
+            ->where('collection', 'cover')
+            ->orderBy('id')
+            ->value('id');
+
         $sections = [
             [
                 'id' => 'hero-home',
                 'type' => 'hero',
                 'props' => [
+                    'media_id' => $heroMediaId,
                     'title' => 'Welcome to Grand Horizon',
                     'subtitle' => 'Discover an unforgettable hotel experience on the water\'s edge.',
                     'button_text' => 'Explore Facilities',

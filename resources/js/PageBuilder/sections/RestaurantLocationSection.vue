@@ -1,22 +1,33 @@
 <script setup lang="ts">
 import type { RenderMode, SectionSettings } from '@/types/pageBuilder';
 
-interface Data { restaurant: { location?: string | null; floor?: string | null; phone?: string | null } | null; }
+interface Data {
+    restaurant: { location?: string | null; floor?: string | null; phone?: string | null } | null;
+}
 
 defineProps<{
-  props: Record<string, never>;
-  settings: SectionSettings;
-  data?: Data;
-  mode: RenderMode;
+    props: Record<string, never>;
+    settings: SectionSettings;
+    data?: Data;
+    mode: RenderMode;
 }>();
 </script>
 
 <template>
-  <section class="mx-auto max-w-screen-sm px-4 py-6 text-sm text-slate-600">
-    <template v-if="data?.restaurant">
-      <p v-if="data.restaurant.location">📍 {{ data.restaurant.location }}</p>
-      <p v-if="data.restaurant.floor">Floor: {{ data.restaurant.floor }}</p>
-      <p v-if="data.restaurant.phone">☎ {{ data.restaurant.phone }}</p>
-    </template>
-  </section>
+    <section v-if="data?.restaurant" class="mx-auto max-w-4xl px-6 lg:px-10 py-12 lg:py-16 border-t border-slate-100">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+            <div v-if="data.restaurant.location" class="reveal" v-reveal>
+                <p class="text-slate-400 uppercase tracking-wide text-xs">Location</p>
+                <p class="mt-1 text-slate-700">{{ data.restaurant.location }}</p>
+            </div>
+            <div v-if="data.restaurant.floor" class="reveal" v-reveal="{ delay: 60 }">
+                <p class="text-slate-400 uppercase tracking-wide text-xs">Floor</p>
+                <p class="mt-1 text-slate-700">{{ data.restaurant.floor }}</p>
+            </div>
+            <div v-if="data.restaurant.phone" class="reveal" v-reveal="{ delay: 120 }">
+                <p class="text-slate-400 uppercase tracking-wide text-xs">Phone</p>
+                <p class="mt-1 text-slate-700">{{ data.restaurant.phone }}</p>
+            </div>
+        </div>
+    </section>
 </template>

@@ -3,10 +3,13 @@
 namespace App\Services\PageBuilder\Sections;
 
 use App\Models\Hotel;
+use App\Services\PageBuilder\Concerns\ResolvesMedia;
 use App\Services\PageBuilder\Contracts\SectionDefinition;
 
 class HeroSectionDefinition implements SectionDefinition
 {
+    use ResolvesMedia;
+
     public function type(): string
     {
         return 'hero';
@@ -43,6 +46,8 @@ class HeroSectionDefinition implements SectionDefinition
 
     public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
-        return [];
+        return [
+            'media' => $this->resolveMedia($props['media_id'] ?? null, $hotel),
+        ];
     }
 }

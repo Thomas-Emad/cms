@@ -5,51 +5,63 @@ import type { Facility } from '@/types/facility';
 defineOptions({ layout: GuestLayout });
 
 defineProps<{
-  facility: Facility;
+    facility: Facility;
 }>();
 </script>
 
 <template>
-  <div>
-    <div class="aspect-[16/9] bg-slate-100">
-      <img
-        v-if="facility.cover_image_url"
-        :src="facility.cover_image_url"
-        :alt="facility.name"
-        class="h-full w-full object-cover"
-      />
-    </div>
+    <div>
+        <section class="relative w-full h-[70vh] min-h-[480px] overflow-hidden flex items-end" style="background: #1c1f26">
+            <div class="absolute inset-0">
+                <img
+                    v-if="facility.cover_image_url"
+                    :src="facility.cover_image_url"
+                    :alt="facility.name"
+                    class="w-full h-full object-cover"
+                />
+                <div class="absolute inset-0" style="background: var(--atmosphere-gradient)" />
+            </div>
+            <div class="relative z-10 w-full px-6 lg:px-10 pb-14">
+                <div class="mx-auto max-w-7xl">
+                    <p v-if="facility.category" class="text-white/70 text-xs uppercase tracking-[0.2em] mb-2">{{ facility.category }}</p>
+                    <h1 class="text-white text-5xl lg:text-6xl" style="font-family: var(--font-display)">{{ facility.name }}</h1>
+                </div>
+            </div>
+        </section>
 
-    <div class="mx-auto max-w-screen-sm px-4 py-6">
-      <p class="text-xs uppercase tracking-wide text-slate-400">{{ facility.category }}</p>
-      <h1 class="text-xl font-semibold text-slate-800">{{ facility.name }}</h1>
+        <div class="mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                <p
+                    v-if="facility.description"
+                    class="lg:col-span-7 text-xl leading-relaxed text-slate-700 whitespace-pre-line"
+                    style="font-family: var(--font-display)"
+                >
+                    {{ facility.description }}
+                </p>
 
-      <p v-if="facility.description" class="mt-3 text-sm text-slate-600 whitespace-pre-line">
-        {{ facility.description }}
-      </p>
+                <div class="lg:col-span-4 lg:col-start-9 space-y-5 text-sm">
+                    <div v-if="facility.building">
+                        <p class="text-slate-400 uppercase tracking-wide text-xs">Location</p>
+                        <p class="mt-1 text-slate-700">
+                            {{ [facility.building, facility.floor, facility.wing].filter(Boolean).join(', ') }}
+                        </p>
+                    </div>
+                    <div v-if="facility.phone">
+                        <p class="text-slate-400 uppercase tracking-wide text-xs">Phone</p>
+                        <p class="mt-1 text-slate-700">{{ facility.phone }}</p>
+                    </div>
+                </div>
+            </div>
 
-      <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
-        <div v-if="facility.building">
-          <p class="text-slate-400">Location</p>
-          <p class="text-slate-700">
-            {{ [facility.building, facility.floor, facility.wing].filter(Boolean).join(', ') }}
-          </p>
+            <ul v-if="facility.amenities?.length" class="mt-10 flex flex-wrap gap-2">
+                <li
+                    v-for="amenity in facility.amenities"
+                    :key="amenity"
+                    class="rounded-full border border-slate-200 px-4 py-1.5 text-xs uppercase tracking-wide text-slate-600"
+                >
+                    {{ amenity }}
+                </li>
+            </ul>
         </div>
-        <div v-if="facility.phone">
-          <p class="text-slate-400">Phone</p>
-          <p class="text-slate-700">{{ facility.phone }}</p>
-        </div>
-      </div>
-
-      <ul v-if="facility.amenities?.length" class="mt-6 flex flex-wrap gap-2">
-        <li
-          v-for="amenity in facility.amenities"
-          :key="amenity"
-          class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600"
-        >
-          {{ amenity }}
-        </li>
-      </ul>
     </div>
-  </div>
 </template>

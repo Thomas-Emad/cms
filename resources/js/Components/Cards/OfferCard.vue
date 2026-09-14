@@ -3,29 +3,37 @@ import { Link } from '@inertiajs/vue3';
 import type { Offer } from '@/types/content';
 
 defineProps<{
-  offer: Pick<Offer, 'title' | 'slug' | 'price' | 'discount' | 'cover_image_url'>;
+    offer: Pick<Offer, 'title' | 'slug' | 'price' | 'discount' | 'cover_image_url'>;
 }>();
 </script>
 
 <template>
-  <Link
-    :href="`/offers/${offer.slug}`"
-    class="block overflow-hidden bg-white shadow-sm"
-    style="border-radius: var(--radius, 8px)"
-  >
-    <div class="relative aspect-[4/3] bg-slate-100">
-      <img v-if="offer.cover_image_url" :src="offer.cover_image_url" :alt="offer.title" class="h-full w-full object-cover" />
-      <span
-        v-if="offer.discount"
-        class="absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold text-white"
-        style="background: var(--color-secondary, #D4AF37)"
-      >
-        -{{ offer.discount }}%
-      </span>
-    </div>
-    <div class="p-3">
-      <h3 class="font-medium text-slate-800">{{ offer.title }}</h3>
-      <p v-if="offer.price" class="mt-0.5 text-sm text-slate-500">From ${{ offer.price }}</p>
-    </div>
-  </Link>
+    <Link :href="`/offers/${offer.slug}`" class="group relative block aspect-[4/5] overflow-hidden">
+        <img
+            v-if="offer.cover_image_url"
+            :src="offer.cover_image_url"
+            :alt="offer.title"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-cinematic)] group-hover:scale-105"
+        />
+        <div v-else class="absolute inset-0 bg-slate-100" />
+
+        <div class="absolute inset-0" style="background: var(--atmosphere-gradient)" />
+
+        <span
+            v-if="offer.discount"
+            class="absolute top-4 right-4 text-xs font-medium tracking-wide text-white/90 border border-white/40 rounded-full px-3 py-1 backdrop-blur-sm"
+        >
+            -{{ offer.discount }}%
+        </span>
+
+        <div class="absolute inset-x-0 bottom-0 p-5">
+            <h3 class="text-xl text-white" style="font-family: var(--font-display)">{{ offer.title }}</h3>
+            <p v-if="offer.price" class="mt-1 text-sm text-white/75">From ${{ offer.price }}</p>
+            <span
+                class="mt-3 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-white/90 opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"
+            >
+                View offer <span class="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+        </div>
+    </Link>
 </template>
