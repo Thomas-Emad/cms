@@ -45,7 +45,7 @@ class RestaurantGridSectionDefinition implements SectionDefinition
      * Restaurant model + Guest\RestaurantController) - no new query
      * semantics invented for the Page Builder.
      */
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         $restaurants = Restaurant::query()
             ->published()

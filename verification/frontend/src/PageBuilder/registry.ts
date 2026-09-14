@@ -11,6 +11,11 @@ import OffersSection from './sections/OffersSection.vue';
 import ExperiencesSection from './sections/ExperiencesSection.vue';
 import CtaSection from './sections/CtaSection.vue';
 import SpacerSection from './sections/SpacerSection.vue';
+import RestaurantHeroSection from './sections/RestaurantHeroSection.vue';
+import RestaurantInfoSection from './sections/RestaurantInfoSection.vue';
+import RestaurantGallerySection from './sections/RestaurantGallerySection.vue';
+import RestaurantMenuSection from './sections/RestaurantMenuSection.vue';
+import RestaurantLocationSection from './sections/RestaurantLocationSection.vue';
 
 export interface EditorField {
   key: string;
@@ -21,42 +26,29 @@ export interface EditorField {
   max?: number;
 }
 
+/** 'any' = shown regardless of Builder context. Mirrors the backend
+ * SectionRegistry's $contexts map - kept in sync by convention, same as
+ * the type keys themselves (see SectionRegistryParityTest). */
+export type SectionContext = 'page' | 'restaurant' | 'any';
+
 export interface SectionRegistryEntry {
   component: Component;
   label: string;
-  /**
-   * Emoji/text icon shown in the Component Library - intentionally not a
-   * real icon library dependency for this checkpoint (production polish
-   * is explicitly out of scope). Swap for lucide-react/heroicons-vue
-   * later without touching anything that reads this field's TYPE, only
-   * its rendering in ComponentLibrary.vue.
-   */
   icon: string;
   defaultProps: Record<string, unknown>;
   defaultSettings: Record<string, unknown>;
   isDynamic: boolean;
+  contexts: SectionContext[];
   editorFields: EditorField[];
 }
 
 const FACILITY_CATEGORIES = ['wellness', 'fitness', 'pool', 'kids', 'business', 'beach', 'meeting', 'other'];
 
-/**
- * All 12 section types from the Phase 3 design doc's initial list. Every
- * entry's shape is identical (component/label/icon/defaultProps/
- * defaultSettings/isDynamic/editorFields) - SectionRenderer, Canvas,
- * SettingsPanel, and ComponentLibrary never branch on `type` by name;
- * they only ever read through this shape. Keep this file's keys in sync
- * with the backend SectionRegistry's keys AND with section-types.json
- * (see SectionRegistryParityTest / registry.test.ts).
- */
 export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
   hero: {
-    component: HeroSection,
-    label: 'Hero',
-    icon: '🖼️',
+    component: HeroSection, label: 'Hero', icon: '🖼️', contexts: ['page'],
     defaultProps: { title: '', subtitle: '', media_id: null, button_text: '', button_url: '' },
-    defaultSettings: { background: 'transparent', padding: 'large' },
-    isDynamic: false,
+    defaultSettings: { background: 'transparent', padding: 'large' }, isDynamic: false,
     editorFields: [
       { key: 'title', type: 'text', label: 'Title' },
       { key: 'subtitle', type: 'text', label: 'Subtitle' },
@@ -66,24 +58,16 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   text: {
-    component: TextSection,
-    label: 'Text',
-    icon: '📝',
-    defaultProps: { heading: '', body: '' },
-    defaultSettings: { padding: 'medium' },
-    isDynamic: false,
+    component: TextSection, label: 'Text', icon: '📝', contexts: ['any'],
+    defaultProps: { heading: '', body: '' }, defaultSettings: { padding: 'medium' }, isDynamic: false,
     editorFields: [
       { key: 'heading', type: 'text', label: 'Heading' },
       { key: 'body', type: 'textarea', label: 'Body text' },
     ],
   },
   image: {
-    component: ImageSection,
-    label: 'Image',
-    icon: '🖼️',
-    defaultProps: { media_id: null, caption: '', link_url: '' },
-    defaultSettings: { padding: 'medium' },
-    isDynamic: false,
+    component: ImageSection, label: 'Image', icon: '🖼️', contexts: ['any'],
+    defaultProps: { media_id: null, caption: '', link_url: '' }, defaultSettings: { padding: 'medium' }, isDynamic: false,
     editorFields: [
       { key: 'media_id', type: 'media', label: 'Image' },
       { key: 'caption', type: 'text', label: 'Caption' },
@@ -91,24 +75,17 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   gallery: {
-    component: GallerySection,
-    label: 'Gallery',
-    icon: '🎞️',
-    defaultProps: { title: '', media_ids: [] },
-    defaultSettings: { padding: 'medium', layout: 'grid' },
-    isDynamic: false,
+    component: GallerySection, label: 'Gallery', icon: '🎞️', contexts: ['page'],
+    defaultProps: { title: '', media_ids: [] }, defaultSettings: { padding: 'medium', layout: 'grid' }, isDynamic: false,
     editorFields: [
       { key: 'title', type: 'text', label: 'Title' },
       { key: 'media_ids', type: 'media-list', label: 'Images' },
     ],
   },
   'facility-grid': {
-    component: FacilityGridSection,
-    label: 'Facility Grid',
-    icon: '🏨',
+    component: FacilityGridSection, label: 'Facility Grid', icon: '🏨', contexts: ['page'],
     defaultProps: { title: 'Explore Our Facilities', description: null, category: null, featured_only: false, limit: 6, columns: 3 },
-    defaultSettings: { background: 'light', padding: 'medium' },
-    isDynamic: true,
+    defaultSettings: { background: 'light', padding: 'medium' }, isDynamic: true,
     editorFields: [
       { key: 'title', type: 'text', label: 'Section title' },
       { key: 'description', type: 'textarea', label: 'Description' },
@@ -119,12 +96,9 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   'restaurant-grid': {
-    component: RestaurantGridSection,
-    label: 'Restaurant Grid',
-    icon: '🍽️',
+    component: RestaurantGridSection, label: 'Restaurant Grid', icon: '🍽️', contexts: ['page'],
     defaultProps: { title: 'Dining at Grand Horizon', description: null, cuisine: null, featured_only: false, limit: 6 },
-    defaultSettings: { background: 'light', padding: 'medium' },
-    isDynamic: true,
+    defaultSettings: { background: 'light', padding: 'medium' }, isDynamic: true,
     editorFields: [
       { key: 'title', type: 'text', label: 'Section title' },
       { key: 'description', type: 'textarea', label: 'Description' },
@@ -134,24 +108,16 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   'service-grid': {
-    component: ServiceGridSection,
-    label: 'Service Grid',
-    icon: '🛎️',
-    defaultProps: { title: 'Hotel Services', limit: 6 },
-    defaultSettings: { padding: 'medium' },
-    isDynamic: true,
+    component: ServiceGridSection, label: 'Service Grid', icon: '🛎️', contexts: ['page'],
+    defaultProps: { title: 'Hotel Services', limit: 6 }, defaultSettings: { padding: 'medium' }, isDynamic: true,
     editorFields: [
       { key: 'title', type: 'text', label: 'Section title' },
       { key: 'limit', type: 'number', label: 'Number to show', min: 1, max: 12 },
     ],
   },
   events: {
-    component: EventsSection,
-    label: 'Events',
-    icon: '📅',
-    defaultProps: { title: 'Upcoming Events', limit: 4, upcoming_only: true },
-    defaultSettings: { padding: 'medium' },
-    isDynamic: true,
+    component: EventsSection, label: 'Events', icon: '📅', contexts: ['page'],
+    defaultProps: { title: 'Upcoming Events', limit: 4, upcoming_only: true }, defaultSettings: { padding: 'medium' }, isDynamic: true,
     editorFields: [
       { key: 'title', type: 'text', label: 'Section title' },
       { key: 'upcoming_only', type: 'toggle', label: 'Upcoming only' },
@@ -159,12 +125,8 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   offers: {
-    component: OffersSection,
-    label: 'Offers',
-    icon: '🏷️',
-    defaultProps: { title: 'Special Offers', limit: 4, active_only: true, featured_only: false },
-    defaultSettings: { padding: 'medium' },
-    isDynamic: true,
+    component: OffersSection, label: 'Offers', icon: '🏷️', contexts: ['page'],
+    defaultProps: { title: 'Special Offers', limit: 4, active_only: true, featured_only: false }, defaultSettings: { padding: 'medium' }, isDynamic: true,
     editorFields: [
       { key: 'title', type: 'text', label: 'Section title' },
       { key: 'active_only', type: 'toggle', label: 'Active only (hide expired)' },
@@ -173,12 +135,9 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   experiences: {
-    component: ExperiencesSection,
-    label: 'Experiences',
-    icon: '🧘',
+    component: ExperiencesSection, label: 'Experiences', icon: '🧘', contexts: ['page'],
     defaultProps: { title: 'Experiences', description: null, category: null, featured_only: false, limit: 4 },
-    defaultSettings: { background: 'light', padding: 'medium' },
-    isDynamic: true,
+    defaultSettings: { background: 'light', padding: 'medium' }, isDynamic: true,
     editorFields: [
       { key: 'title', type: 'text', label: 'Section title' },
       { key: 'description', type: 'textarea', label: 'Description' },
@@ -188,12 +147,8 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   cta: {
-    component: CtaSection,
-    label: 'Call to Action',
-    icon: '📣',
-    defaultProps: { heading: '', subheading: '', button_text: '', button_url: '' },
-    defaultSettings: { background: 'brand', padding: 'large' },
-    isDynamic: false,
+    component: CtaSection, label: 'Call to Action', icon: '📣', contexts: ['any'],
+    defaultProps: { heading: '', subheading: '', button_text: '', button_url: '' }, defaultSettings: { background: 'brand', padding: 'large' }, isDynamic: false,
     editorFields: [
       { key: 'heading', type: 'text', label: 'Heading' },
       { key: 'subheading', type: 'text', label: 'Subheading' },
@@ -202,14 +157,43 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     ],
   },
   spacer: {
-    component: SpacerSection,
-    label: 'Spacer',
-    icon: '↕️',
-    defaultProps: { height: 'medium' },
-    defaultSettings: {},
-    isDynamic: false,
+    component: SpacerSection, label: 'Spacer', icon: '↕️', contexts: ['any'],
+    defaultProps: { height: 'medium' }, defaultSettings: {}, isDynamic: false,
+    editorFields: [{ key: 'height', type: 'select', label: 'Height', options: ['small', 'medium', 'large'] }],
+  },
+
+  // --- Entity-backed: Restaurant ---
+  'restaurant-hero': {
+    component: RestaurantHeroSection, label: 'Restaurant Hero', icon: '🍽️', contexts: ['restaurant'],
+    defaultProps: { subtitle_override: '', button_text: 'Reserve a Table' }, defaultSettings: {}, isDynamic: true,
     editorFields: [
-      { key: 'height', type: 'select', label: 'Height', options: ['small', 'medium', 'large'] },
+      { key: 'subtitle_override', type: 'text', label: 'Subtitle (optional override)' },
+      { key: 'button_text', type: 'text', label: 'Button label' },
     ],
   },
+  'restaurant-info': {
+    component: RestaurantInfoSection, label: 'Restaurant Info', icon: 'ℹ️', contexts: ['restaurant'],
+    defaultProps: { show_opening_hours: true }, defaultSettings: {}, isDynamic: true,
+    editorFields: [{ key: 'show_opening_hours', type: 'toggle', label: 'Show opening hours' }],
+  },
+  'restaurant-gallery': {
+    component: RestaurantGallerySection, label: 'Restaurant Gallery', icon: '🎞️', contexts: ['restaurant'],
+    defaultProps: { title: 'Gallery' }, defaultSettings: {}, isDynamic: true,
+    editorFields: [{ key: 'title', type: 'text', label: 'Section title' }],
+  },
+  'restaurant-menu': {
+    component: RestaurantMenuSection, label: 'Restaurant Menu', icon: '📋', contexts: ['restaurant'],
+    defaultProps: { title: 'Menu' }, defaultSettings: {}, isDynamic: true,
+    editorFields: [{ key: 'title', type: 'text', label: 'Section title' }],
+  },
+  'restaurant-location': {
+    component: RestaurantLocationSection, label: 'Restaurant Location', icon: '📍', contexts: ['restaurant'],
+    defaultProps: {}, defaultSettings: {}, isDynamic: true, editorFields: [],
+  },
 };
+
+export function sectionsForContext(context: SectionContext): [string, SectionRegistryEntry][] {
+  return Object.entries(SECTION_REGISTRY).filter(
+    ([, entry]) => entry.contexts.includes(context) || entry.contexts.includes('any')
+  );
+}

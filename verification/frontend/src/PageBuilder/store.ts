@@ -50,7 +50,19 @@ export interface BuilderState {
  * the live `state.sections` array - restoring a snapshot replaces
  * `state.sections` wholesale rather than patching it in place.
  */
-export function usePageBuilderStore(pageId: number, initial: { schema_version: number; sections: Section[] }) {
+export interface PageBuilderConfig {
+  /** e.g. '/admin/pages/42' or '/admin/restaurants/7/presentation' - the
+   * shared prefix under which draft/publish/resolve-preview all live.
+   * Parameterizing this (instead of hardcoding '/admin/pages/{id}') is
+   * what lets ONE store/Builder engine serve both standalone Pages and
+   * entity-backed presentations without duplicating any logic below. */
+  apiBase: string;
+}
+
+export function usePageBuilderStore(config: PageBuilderConfig, initial: { schema_version: number; sections: Section[] }) {
+  const draftUrl = `${config.apiBase}/draft`;
+  const publishUrl = `${config.apiBase}/publish`;
+  const resolvePreviewUrl = `${config.apiBase}/resolve-preview`;
   const state = reactive<BuilderState>({
     schema_version: initial.schema_version,
     sections: initial.sections,
@@ -295,7 +307,7 @@ export function usePageBuilderStore(pageId: number, initial: { schema_version: n
       if (!section) return;
 
       try {
-        const response = await axios.post(`/admin/pages/${pageId}/resolve-preview`, {
+        const response = await axios.post(resolvePreviewUrl, {
           sections: [{ id: section.id, type: section.type, props: section.props, settings: section.settings }],
         });
         const current = state.sections.find((s) => s.id === sectionId);
@@ -310,7 +322,7 @@ export function usePageBuilderStore(pageId: number, initial: { schema_version: n
   function saveDraft() {
     state.isSaving = true;
     router.put(
-      `/admin/pages/${pageId}/draft`,
+      draftUrl,
       {
         sections: state.sections.map((s) => ({
           id: s.id, type: s.type, props: s.props, settings: s.settings,
@@ -325,7 +337,7 @@ export function usePageBuilderStore(pageId: number, initial: { schema_version: n
   }
 
   function publish() {
-    router.post(`/admin/pages/${pageId}/publish`, {}, { preserveScroll: true });
+    router.post(publishUrl, {}, { preserveScroll: true });
   }
 
   return {

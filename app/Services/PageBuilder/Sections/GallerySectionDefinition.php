@@ -34,7 +34,7 @@ class GallerySectionDefinition implements SectionDefinition
         return false; // see ImageSectionDefinition's docblock - same reasoning
     }
 
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         return ['media' => $this->resolveMediaList($props['media_ids'] ?? [], $hotel)];
     }

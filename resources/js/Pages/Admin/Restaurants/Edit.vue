@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, Link } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
 import type { Restaurant } from '@/types/restaurant';
 
@@ -77,9 +77,25 @@ const saveMenu = () => {
 <template>
   <div class="max-w-2xl space-y-8">
     <div>
-      <h1 class="text-xl font-semibold text-slate-800 mb-4">
-        {{ isEdit ? 'Edit Restaurant' : 'Add Restaurant' }}
-      </h1>
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-xl font-semibold text-slate-800">
+          {{ isEdit ? 'Edit Restaurant' : 'Add Restaurant' }}
+        </h1>
+        <!--
+          Entry point into the shared Page Builder engine, scoped to this
+          restaurant's own entity presentation - see
+          RestaurantPresentationController::edit(). Only shown once the
+          restaurant exists (can't customize a guest page for a restaurant
+          that hasn't been created yet).
+        -->
+        <Link
+          v-if="isEdit"
+          :href="`/admin/restaurants/${props.restaurant!.id}/presentation/builder`"
+          class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+        >
+          🎨 Customize Guest Page
+        </Link>
+      </div>
 
       <form @submit.prevent="submit" class="space-y-4 rounded-lg border border-slate-200 bg-white p-6">
         <div class="grid grid-cols-2 gap-4">

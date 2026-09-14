@@ -9,6 +9,7 @@ defineOptions({ layout: GuestLayout });
 const props = defineProps<{
   page: { id: number; name: string; slug: string };
   sections: Section[];
+  backToBuilderHref: string;
 }>();
 </script>
 
@@ -17,7 +18,7 @@ const props = defineProps<{
 
   <div class="sticky top-14 z-30 bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs text-amber-700 flex items-center justify-between">
     <span>Preview mode — showing the current draft, not the published page.</span>
-    <Link :href="`/admin/pages/${props.page.id}/builder`" class="underline">Back to Builder</Link>
+    <Link :href="props.backToBuilderHref" class="underline">Back to Builder</Link>
   </div>
 
   <!--

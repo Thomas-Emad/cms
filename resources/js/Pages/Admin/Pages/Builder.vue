@@ -1,27 +1,39 @@
 <script setup lang="ts">
-import { provide } from 'vue';
+import { provide, computed } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ComponentLibrary from '@/PageBuilder/ComponentLibrary.vue';
 import Canvas from '@/PageBuilder/Canvas.vue';
 import SettingsPanel from '@/PageBuilder/SettingsPanel.vue';
 import { usePageBuilderStore } from '@/PageBuilder/store';
+import type { SectionContext } from '@/PageBuilder/registry';
 import type { Section } from '@/types/pageBuilder';
 
 defineOptions({ layout: AdminLayout });
+
+interface BuilderContext {
+  type: SectionContext;
+  entityName: string;
+  backLabel: string;
+  backHref: string;
+  apiBase: string;
+}
 
 const props = defineProps<{
   page: { id: number; name: string; slug: string; status: string; published_version_id: number | null };
   schemaVersion: number;
   sections: Section[];
   availableSectionTypes: string[];
+  context: BuilderContext;
 }>();
 
-const store = usePageBuilderStore(props.page.id, {
-  schema_version: props.schemaVersion,
-  sections: props.sections,
-});
+const store = usePageBuilderStore(
+  { apiBase: props.context.apiBase },
+  { schema_version: props.schemaVersion, sections: props.sections }
+);
 provide('pageBuilderStore', store);
+
+const isEntityContext = computed(() => props.context.type !== 'page');
 
 function onKeydown(e: KeyboardEvent) {
   const meta = e.metaKey || e.ctrlKey;
@@ -33,20 +45,21 @@ function onKeydown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <Head :title="`Builder — ${props.page.name}`" />
+  <Head :title="`Builder — ${props.context.entityName}`" />
 
   <div class="flex flex-col h-[calc(100vh-3.5rem)] -m-6" tabindex="0" @keydown="onKeydown">
     <div class="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2">
       <div class="flex items-center gap-3">
-        <Link
-          href="/admin/pages"
-          class="text-sm text-slate-400 hover:text-slate-700"
-          title="Back to Pages"
-        >
-          ← Pages
+        <Link :href="props.context.backHref" class="text-sm text-slate-400 hover:text-slate-700">
+          ← {{ props.context.backLabel }}
         </Link>
         <span class="w-px h-5 bg-slate-200" />
-        <h1 class="text-sm font-semibold text-slate-800">{{ props.page.name }}</h1>
+
+        <div class="leading-tight">
+          <h1 class="text-sm font-semibold text-slate-800">{{ props.context.entityName }}</h1>
+          <p v-if="isEntityContext" class="text-xs text-slate-400">Guest Page</p>
+        </div>
+
         <span
           class="rounded-full px-2 py-0.5 text-xs"
           :class="props.page.status === 'published' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'"
@@ -79,7 +92,7 @@ function onKeydown(e: KeyboardEvent) {
         <span class="w-px h-5 bg-slate-200 mx-1" />
 
         <Link
-          :href="`/admin/pages/${props.page.id}/preview`"
+          :href="`${props.context.apiBase}/preview`"
           class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
         >
           Preview
@@ -104,7 +117,7 @@ function onKeydown(e: KeyboardEvent) {
     </div>
 
     <div class="flex flex-1 min-h-0">
-      <ComponentLibrary />
+      <ComponentLibrary :context="props.context.type" />
       <Canvas />
       <SettingsPanel />
     </div>

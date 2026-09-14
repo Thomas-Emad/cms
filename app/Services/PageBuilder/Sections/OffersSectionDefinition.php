@@ -41,7 +41,7 @@ class OffersSectionDefinition implements SectionDefinition
      * technically expired-by-date but still marked published (e.g. an
      * "ended" banner use case) - not the common case, but not blocked.
      */
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         $query = ($props['active_only'] ?? true)
             ? Offer::query()->active()

@@ -37,7 +37,7 @@ class ServiceGridSectionDefinition implements SectionDefinition
      * the services table), so this section doesn't invent filters the
      * underlying model can't actually support.
      */
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         $services = Service::query()
             ->published()

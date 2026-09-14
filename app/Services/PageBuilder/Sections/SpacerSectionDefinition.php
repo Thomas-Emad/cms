@@ -42,7 +42,7 @@ class SpacerSectionDefinition implements SectionDefinition
         return false;
     }
 
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         return [];
     }

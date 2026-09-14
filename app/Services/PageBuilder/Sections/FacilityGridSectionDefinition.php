@@ -61,7 +61,7 @@ class FacilityGridSectionDefinition implements SectionDefinition
      * definitions that might need it explicitly, but the scoping itself
      * doesn't depend on this parameter - it depends on request context.
      */
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         $facilities = Facility::query()
             ->published()

@@ -44,6 +44,15 @@ interface SectionDefinition
      *
      * @return array Render-ready data, shaped however this section type's
      *                Vue component expects it (e.g. a list of facilities).
+     *
+     * $entity is optional context for entity-backed presentations: when
+     * a Restaurant's "Customize Guest Page" Builder resolves a
+     * `restaurant-info` section, $entity IS that Restaurant model - the
+     * section reads the CURRENT entity's own fields, never a copy stored
+     * in page JSON. For standalone Pages (and every pre-existing section
+     * type), $entity is always null and resolve() behaves exactly as
+     * before this parameter existed - appended as optional specifically
+     * so no existing SectionDefinition class needed to change.
      */
-    public function resolve(array $props, Hotel $hotel): array;
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array;
 }

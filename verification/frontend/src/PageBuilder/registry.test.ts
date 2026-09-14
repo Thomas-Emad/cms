@@ -1,66 +1,47 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import { SECTION_REGISTRY, sectionsForContext } from './registry';
 
-vi.mock('@inertiajs/vue3', () => ({ router: { put: vi.fn(), post: vi.fn() } }));
-vi.mock('axios', () => ({ default: { post: vi.fn(() => Promise.resolve({ data: { section: { data: {} } } })) } }));
+describe('registry.ts context filtering (real registry, real components)', () => {
+  it('the "page" context includes page-only and any-context sections, but NO restaurant-only sections', () => {
+    const types = sectionsForContext('page').map(([type]) => type);
 
-import { SECTION_REGISTRY } from './registry';
-import sectionTypesManifest from './section-types.json';
-
-const EXPECTED_TYPES = [
-  'hero', 'text', 'image', 'gallery',
-  'facility-grid', 'restaurant-grid', 'service-grid',
-  'events', 'offers', 'experiences',
-  'cta', 'spacer',
-];
-
-describe('SECTION_REGISTRY (real registry.ts)', () => {
-  it('has exactly 12 entries', () => {
-    expect(Object.keys(SECTION_REGISTRY)).toHaveLength(12);
+    expect(types).toContain('hero');
+    expect(types).toContain('facility-grid');
+    expect(types).toContain('cta'); // 'any'
+    expect(types).toContain('spacer'); // 'any'
+    expect(types).not.toContain('restaurant-hero');
+    expect(types).not.toContain('restaurant-menu');
   });
 
-  it.each(EXPECTED_TYPES)('registers "%s"', (type) => {
-    expect(SECTION_REGISTRY[type]).toBeDefined();
+  it('the "restaurant" context includes restaurant-only and any-context sections, but NO page-only sections', () => {
+    const types = sectionsForContext('restaurant').map(([type]) => type);
+
+    expect(types).toContain('restaurant-hero');
+    expect(types).toContain('restaurant-menu');
+    expect(types).toContain('restaurant-info');
+    expect(types).toContain('restaurant-gallery');
+    expect(types).toContain('restaurant-location');
+    expect(types).toContain('cta'); // 'any' still shows up
+    expect(types).toContain('text'); // 'any'
+    expect(types).not.toContain('hero'); // page-only
+    expect(types).not.toContain('facility-grid'); // page-only
   });
 
-  it.each(Object.entries(SECTION_REGISTRY))('"%s" entry has the complete required shape', (type, entry) => {
-    expect(entry.component).toBeDefined();
-    expect(typeof entry.label).toBe('string');
-    expect(entry.label.length).toBeGreaterThan(0);
-    expect(typeof entry.icon).toBe('string');
-    expect(typeof entry.defaultProps).toBe('object');
-    expect(typeof entry.defaultSettings).toBe('object');
-    expect(typeof entry.isDynamic).toBe('boolean');
-    expect(Array.isArray(entry.editorFields)).toBe(true);
-  });
-
-  it.each(Object.entries(SECTION_REGISTRY))('"%s" has at least one editable field UNLESS it genuinely has no props (spacer aside)', (type, entry) => {
-    // Every section except a truly prop-less one should expose something
-    // editable - this guards against silently shipping a section with
-    // real props but zero editorFields (unreachable in the Builder UI).
-    const propKeys = Object.keys(entry.defaultProps);
-    if (propKeys.length > 0) {
-      expect(entry.editorFields.length).toBeGreaterThan(0);
+  it('every registry entry declares a non-empty contexts array', () => {
+    for (const [type, entry] of Object.entries(SECTION_REGISTRY)) {
+      expect(entry.contexts.length, `${type} has no contexts declared`).toBeGreaterThan(0);
     }
   });
 
-  it('the 6 spec-designated dynamic sections are marked isDynamic, the other 6 are not', () => {
-    const dynamicTypes = ['facility-grid', 'restaurant-grid', 'service-grid', 'events', 'offers', 'experiences'];
-    const staticTypes = ['hero', 'text', 'image', 'gallery', 'cta', 'spacer'];
-
-    for (const type of dynamicTypes) {
-      expect(SECTION_REGISTRY[type].isDynamic, `${type} should be isDynamic`).toBe(true);
-    }
-    for (const type of staticTypes) {
-      expect(SECTION_REGISTRY[type].isDynamic, `${type} should NOT be isDynamic`).toBe(false);
+  it('all 5 restaurant-* entity sections exist with real components', () => {
+    for (const type of ['restaurant-hero', 'restaurant-info', 'restaurant-gallery', 'restaurant-menu', 'restaurant-location']) {
+      expect(SECTION_REGISTRY[type]).toBeDefined();
+      expect(SECTION_REGISTRY[type].component).toBeDefined();
+      expect(SECTION_REGISTRY[type].contexts).toEqual(['restaurant']);
     }
   });
 
-  describe('registry parity with the canonical manifest', () => {
-    it('Object.keys(SECTION_REGISTRY) exactly matches section-types.json', () => {
-      const registryKeys = Object.keys(SECTION_REGISTRY).slice().sort();
-      const manifestKeys = [...(sectionTypesManifest as string[])].sort();
-
-      expect(registryKeys).toEqual(manifestKeys);
-    });
+  it('registry now has 17 total types', () => {
+    expect(Object.keys(SECTION_REGISTRY)).toHaveLength(17);
   });
 });

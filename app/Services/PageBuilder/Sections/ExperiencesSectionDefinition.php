@@ -34,7 +34,7 @@ class ExperiencesSectionDefinition implements SectionDefinition
         return true;
     }
 
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         $experiences = Experience::query()
             ->published()

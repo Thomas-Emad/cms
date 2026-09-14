@@ -87,7 +87,14 @@ class PageController extends Controller
             'page' => $page->only(['id', 'name', 'slug', 'status', 'published_version_id']),
             'schemaVersion' => $draft->sections['schema_version'] ?? 1,
             'sections' => $draft->sections['sections'] ?? [],
-            'availableSectionTypes' => SectionRegistry::types(),
+            'availableSectionTypes' => SectionRegistry::typesForContext('page'),
+            'context' => [
+                'type' => 'page',
+                'entityName' => $page->name,
+                'backLabel' => 'Pages',
+                'backHref' => '/admin/pages',
+                'apiBase' => "/admin/pages/{$page->id}",
+            ],
         ]);
     }
 
@@ -129,6 +136,7 @@ class PageController extends Controller
         return Inertia::render('Admin/Pages/Preview', [
             'page' => $page->only(['id', 'name', 'slug']),
             'sections' => $sections,
+            'backToBuilderHref' => "/admin/pages/{$page->id}/builder",
         ]);
     }
 

@@ -40,7 +40,7 @@ class EventsSectionDefinition implements SectionDefinition
      * a simple date ordering rather than inventing a second "all events"
      * scope on the model.
      */
-    public function resolve(array $props, Hotel $hotel): array
+    public function resolve(array $props, Hotel $hotel, mixed $entity = null): array
     {
         $query = Event::query()->published();
 
