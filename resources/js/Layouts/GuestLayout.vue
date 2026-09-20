@@ -2,6 +2,8 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import type { Hotel } from '@/types/hotel';
+import { computed } from 'vue' // if not already imported
+import { headerOverHero } from '@/lib/headerState'
 
 defineProps<{
     hotel?: Hotel;
@@ -15,6 +17,7 @@ defineProps<{
  */
 const isScrolled = ref(false);
 const mobileMenuOpen = ref(false);
+const isTransparent = computed(() => headerOverHero.value && !isScrolled.value)
 
 const NAV_LINKS = [
     { href: '/', label: 'Home' },
@@ -48,78 +51,50 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll));
       whether or not the page actually has a hero - pages without one
       just get the solid state immediately on next scroll frame.
     -->
-        <header
-            class="fixed top-0 inset-x-0 z-50 transition-colors duration-500"
-            :class="isScrolled ? 'bg-white/90 backdrop-blur-md border-b border-slate-100 text-slate-900' : 'bg-transparent text-white'"
-        >
+        <header class="fixed top-0 inset-x-0 z-50 transition-colors duration-500" :class="isTransparent
+            ? 'bg-transparent text-white'
+            : 'bg-white/90 backdrop-blur-md border-b border-slate-100 text-slate-900'">
             <div class="mx-auto max-w-7xl px-6 lg:px-10 h-16 lg:h-20 flex items-center justify-between">
-                <Link
-                    href="/"
-                    class="text-xl lg:text-2xl tracking-tight"
-                    :style="{ fontFamily: 'var(--font-display)', color: isScrolled ? 'var(--color-primary, #1F4B5A)' : undefined }"
-                >
+                <Link href="/" class="text-xl lg:text-2xl tracking-tight"
+                    :style="{ fontFamily: 'var(--font-display)', color: isScrolled ? 'var(--color-primary, #1F4B5A)' : undefined }">
                     {{ hotel?.name ?? 'Hotel' }}
                 </Link>
 
                 <!-- Desktop nav -->
                 <nav class="hidden lg:flex items-center gap-8 text-sm tracking-wide uppercase">
-                    <Link
-                        v-for="link in NAV_LINKS"
-                        :key="link.href"
-                        :href="link.href"
-                        class="relative py-2 opacity-90 hover:opacity-100 transition-opacity group"
-                    >
+                    <Link v-for="link in NAV_LINKS" :key="link.href" :href="link.href"
+                        class="relative py-2 opacity-90 hover:opacity-100 transition-opacity group">
                         {{ link.label }}
                         <span
                             class="absolute left-0 -bottom-0.5 h-px w-0 group-hover:w-full transition-all duration-300 ease-out"
-                            :style="{ background: isScrolled ? 'var(--color-primary, #1F4B5A)' : 'white' }"
-                        />
+                            :style="{ background: isScrolled ? 'var(--color-primary, #1F4B5A)' : 'white' }" />
                     </Link>
                 </nav>
 
                 <!-- Mobile toggle -->
-                <button
-                    type="button"
-                    class="lg:hidden p-2 -mr-2"
-                    :aria-expanded="mobileMenuOpen"
-                    aria-label="Toggle menu"
-                    @click="mobileMenuOpen = !mobileMenuOpen"
-                >
-                    <span
-                        class="block w-6 h-px mb-1.5 transition-transform"
+                <button type="button" class="lg:hidden p-2 -mr-2" :aria-expanded="mobileMenuOpen"
+                    aria-label="Toggle menu" @click="mobileMenuOpen = !mobileMenuOpen">
+                    <span class="block w-6 h-px mb-1.5 transition-transform"
                         :class="{ 'rotate-45 translate-y-[3px]': mobileMenuOpen }"
-                        :style="{ background: isScrolled || mobileMenuOpen ? 'currentColor' : 'white' }"
-                    />
-                    <span
-                        class="block w-6 h-px mb-1.5"
-                        :class="{ 'opacity-0': mobileMenuOpen }"
-                        :style="{ background: isScrolled ? 'currentColor' : 'white' }"
-                    />
-                    <span
-                        class="block w-6 h-px transition-transform"
+                        :style="{ background: isScrolled || mobileMenuOpen ? 'currentColor' : 'white' }" />
+                    <span class="block w-6 h-px mb-1.5" :class="{ 'opacity-0': mobileMenuOpen }"
+                        :style="{ background: isScrolled ? 'currentColor' : 'white' }" />
+                    <span class="block w-6 h-px transition-transform"
                         :class="{ '-rotate-45 -translate-y-[6px]': mobileMenuOpen }"
-                        :style="{ background: isScrolled || mobileMenuOpen ? 'currentColor' : 'white' }"
-                    />
+                        :style="{ background: isScrolled || mobileMenuOpen ? 'currentColor' : 'white' }" />
                 </button>
             </div>
 
             <!-- Mobile drawer -->
-            <Transition
-                enter-active-class="transition duration-300 ease-out"
-                enter-from-class="opacity-0 -translate-y-2"
-                enter-to-class="opacity-100 translate-y-0"
-                leave-active-class="transition duration-200 ease-in"
-                leave-from-class="opacity-100 translate-y-0"
-                leave-to-class="opacity-0 -translate-y-2"
-            >
-                <nav v-if="mobileMenuOpen" class="lg:hidden bg-white text-slate-900 border-t border-slate-100 shadow-lg">
-                    <Link
-                        v-for="link in NAV_LINKS"
-                        :key="link.href"
-                        :href="link.href"
+            <Transition enter-active-class="transition duration-300 ease-out"
+                enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 -translate-y-2">
+                <nav v-if="mobileMenuOpen"
+                    class="lg:hidden bg-white text-slate-900 border-t border-slate-100 shadow-lg">
+                    <Link v-for="link in NAV_LINKS" :key="link.href" :href="link.href"
                         class="block px-6 py-4 text-sm border-b border-slate-50 last:border-0"
-                        @click="mobileMenuOpen = false"
-                    >
+                        @click="mobileMenuOpen = false">
                         {{ link.label }}
                     </Link>
                 </nav>
@@ -132,7 +107,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll));
       should give their first section top padding themselves
       (e.g. pt-24 lg:pt-28) so content doesn't sit under the nav bar.
     -->
-        <main class="flex-1">
+        <main :class="headerOverHero ? '' : 'pt-16 md:pt-20'">
             <slot />
         </main>
 
