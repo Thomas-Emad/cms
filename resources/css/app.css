@@ -175,3 +175,32 @@ body {
         scroll-behavior: auto !important;
     }
 }
+
+/* ------------------------------------------------------------------ */
+/* Touch-screen (hospitality display) hardening — see GuestLayout.vue  */
+/* ------------------------------------------------------------------ */
+
+/* Shared public screen: no tap flash, no text selection, no double-tap
+   zoom, no pull-to-refresh/rubber-band, no dragging images out of the page. */
+.kiosk-root {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+.kiosk-root img {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+html:has(.kiosk-root),
+html:has(.kiosk-root) body {
+    overscroll-behavior: none;
+}
+
+/* Horizontal dock scrolls by touch; the scrollbar itself is just noise. */
+.no-scrollbar {
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
