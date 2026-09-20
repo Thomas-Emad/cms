@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Upload / delete / reorder images for anything that uses HasMedia.
@@ -39,8 +40,19 @@ class MediaController extends Controller
             'mediable_id' => ['required', 'integer'],
             'collection' => ['required', Rule::in(['cover', 'gallery'])],
             'files' => ['required', 'array', 'min:1', 'max:20'],
-            'files.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            // Photos and short video clips. 100 MB cap here; PHP's upload_max_filesize /
+            // post_max_size must also allow it (see the change notes).
+            'files.*' => ['file', 'mimes:jpg,jpeg,png,webp,mp4,webm', 'max:102400'],
         ]);
+
+        // A cover is used as a still (cards, posters), so it must be an image.
+        if ($data['collection'] === 'cover') {
+            foreach ($request->file('files', []) as $file) {
+                if (! str_starts_with((string) $file->getMimeType(), 'image/')) {
+                    throw ValidationException::withMessages(['files' => 'The main photo must be an image, not a video.']);
+                }
+            }
+        }
 
         $owner = $this->resolveOwner($data['mediable_type'], (int) $data['mediable_id']);
         $this->authorize('update', $owner);

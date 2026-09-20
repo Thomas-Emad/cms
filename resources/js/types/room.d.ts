@@ -2,6 +2,7 @@ export interface MediaItem {
   id: number;
   url: string;
   alt_text?: string | null;
+  type?: 'image' | 'video';
 }
 
 export interface Room {

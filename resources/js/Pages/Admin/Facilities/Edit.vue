@@ -12,6 +12,7 @@ const props = defineProps<{
   facility: Facility | null;
   cover?: MediaItem[];
   gallery?: MediaItem[];
+  default_category?: string | null;
 }>();
 
 const isEdit = !!props.facility;
@@ -21,7 +22,7 @@ const form = useForm({
   slug: props.facility?.slug ?? '',
   description: props.facility?.description ?? '',
   short_description: props.facility?.short_description ?? '',
-  category: props.facility?.category ?? 'other',
+  category: props.facility?.category ?? props.default_category ?? 'other',
   building: props.facility?.building ?? '',
   floor: props.facility?.floor ?? '',
   wing: props.facility?.wing ?? '',

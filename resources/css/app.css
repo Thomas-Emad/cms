@@ -100,58 +100,20 @@ body {
     transform: scale(1);
 }
 
-/*
- * .reveal-mask — a masked text/line reveal: the OUTER element (bind
- * v-reveal or v-reveal-mount here) clips its contents; the INNER element
- * (.reveal-mask-inner, direct child) slides up from fully below the mask
- * into place. This reads as the text itself "rising into the scene"
- * rather than fading, which is a distinct enough effect from .reveal
- * that using both across a hero (e.g. mask on the heading, plain reveal
- * on the CTA) gives the entrance real hierarchy instead of every element
- * doing the identical fade+rise.
- *
- * Usage:
- *   <div class="reveal-mask" v-reveal-mount="{ delay: 420 }">
- *     <h1 class="reveal-mask-inner">Grand Horizon Hotel</h1>
- *   </div>
- */
-.reveal-mask {
-    overflow: hidden;
-}
-.reveal-mask-inner {
-    display: block;
-    transform: translateY(110%);
-    transition: transform var(--duration-slow) var(--ease-cinematic);
-    transition-delay: var(--reveal-delay, 0ms);
-    will-change: transform;
-}
-.reveal-mask.is-visible .reveal-mask-inner {
-    transform: translateY(0);
-}
-
-/*
- * Page transition (Inertia), wired in app.ts via <Transition name="page-fade">.
- * Opacity + scale + a slight clip-path, not a plain vertical fade - reads
- * as the new "scene" settling into frame rather than a generic slide.
- * Kept fast (--duration-fast, not --duration-base) specifically because
- * this fires on every navigation - it must never make the site feel slow.
- */
+/* Page transition (Inertia) — see resources/js/Layouts/PageTransition.vue */
 .page-fade-enter-active,
 .page-fade-leave-active {
     transition:
-        opacity var(--duration-fast) var(--ease-standard),
-        transform var(--duration-fast) var(--ease-standard),
-        clip-path var(--duration-fast) var(--ease-standard);
+        opacity var(--duration-base) var(--ease-standard),
+        transform var(--duration-base) var(--ease-standard);
 }
 .page-fade-enter-from {
     opacity: 0;
-    transform: scale(1.012);
-    clip-path: inset(0.6% round 2px);
+    transform: translateY(12px);
 }
 .page-fade-leave-to {
     opacity: 0;
-    transform: scale(0.992);
-    clip-path: inset(0.6% round 2px);
+    transform: translateY(-8px);
 }
 
 /* Respect the user's OS-level motion preference everywhere at once,
@@ -159,12 +121,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .reveal,
     .reveal-scale,
-    .reveal-mask-inner,
     .page-fade-enter-active,
     .page-fade-leave-active {
         transition: none !important;
         transform: none !important;
-        clip-path: none !important;
         opacity: 1 !important;
     }
     *,
@@ -203,4 +163,28 @@ html:has(.kiosk-root) body {
 }
 .no-scrollbar::-webkit-scrollbar {
     display: none;
+}
+
+/* Per-slide caption entrance for StoryPlayer (animate-overlay). */
+.story-text-enter-active {
+    transition:
+        opacity 700ms var(--ease-cinematic),
+        transform 700ms var(--ease-cinematic);
+    transition-delay: 150ms;
+}
+.story-text-leave-active {
+    transition: opacity 200ms var(--ease-standard);
+}
+.story-text-enter-from {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.story-text-leave-to {
+    opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+    .story-text-enter-active,
+    .story-text-leave-active {
+        transition: none !important;
+    }
 }

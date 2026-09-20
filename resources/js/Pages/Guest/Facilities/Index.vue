@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import FacilityCard from '@/Components/Cards/FacilityCard.vue';
+import Showcase from '@/Components/Showcase.vue';
+import { computed } from 'vue';
 import type { Facility } from '@/types/facility';
 
 defineOptions({ layout: GuestLayout });
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         facilities: Facility[];
         category: string | null;
@@ -13,10 +15,17 @@ withDefaults(
     }>(),
     { title: 'Facilities' },
 );
+
+// Meeting rooms get the cinematic story treatment; other facilities keep the card grid.
+const isMeeting = computed(() => props.category === 'meeting');
+const items = computed(() =>
+    props.facilities.map((f) => ({ id: f.id, title: f.name, subtitle: f.short_description, image: f.cover_image_url, href: `/facilities/${f.slug}` })),
+);
 </script>
 
 <template>
-    <div class="mx-auto max-w-7xl px-6 lg:px-10 pt-24 lg:pt-28 pb-16 lg:pb-24">
+    <Showcase v-if="isMeeting" :items="items" :heading="title" empty-text="Meeting rooms will appear here soon." action-label="View room" />
+    <div v-else class="mx-auto max-w-7xl px-6 lg:px-10 pt-24 lg:pt-28 pb-16 lg:pb-24">
         <h1 class="reveal text-3xl lg:text-4xl mb-8 lg:mb-10" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)" v-reveal>
             {{ title }}
         </h1>

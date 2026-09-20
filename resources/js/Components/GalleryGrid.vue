@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue';
 interface Img {
     url: string;
     alt_text?: string | null;
+    type?: 'image' | 'video';
 }
 
 const props = withDefaults(defineProps<{ images: Img[]; columns?: 2 | 3 | 4 }>(), { columns: 3 });
@@ -69,7 +70,12 @@ const colClass = computed(() => ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-
                 data-testid="tile"
                 @click="open(i)"
             >
-                <img :src="img.url" :alt="img.alt_text ?? ''" draggable="false" class="absolute inset-0 h-full w-full object-cover" />
+                <!-- Videos show their first frame as the thumbnail, with a play badge. -->
+                <video v-if="img.type === 'video'" :src="img.url" muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover" />
+                <img v-else :src="img.url" :alt="img.alt_text ?? ''" draggable="false" class="absolute inset-0 h-full w-full object-cover" />
+                <span v-if="img.type === 'video'" class="absolute inset-0 flex items-center justify-center" aria-label="Video">
+                    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-black/55 text-white text-2xl">▶</span>
+                </span>
             </button>
         </div>
 
@@ -80,7 +86,17 @@ const colClass = computed(() => ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-
                 data-testid="viewer"
                 @click.self="close"
             >
+                <video
+                    v-if="images[active!].type === 'video'"
+                    :key="active!"
+                    :src="images[active!].url"
+                    autoplay
+                    controls
+                    playsinline
+                    class="max-h-full max-w-full"
+                />
                 <img
+                    v-else
                     :src="images[active!].url"
                     :alt="images[active!].alt_text ?? ''"
                     draggable="false"

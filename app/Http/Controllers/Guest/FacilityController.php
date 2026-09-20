@@ -47,13 +47,15 @@ class FacilityController extends Controller
     {
         abort_unless($facility->status === 'published', 404);
 
-        $facility->load('gallery');
+        $facility->load('cover', 'gallery');
 
         return Inertia::render('Guest/Facilities/Show', [
             'facility' => [
                 ...$facility->toArray(),
                 'gallery_urls' => $facility->gallery->pluck('url'),
             ],
+            'slides' => collect([$facility->cover])->filter()->concat($facility->gallery)
+                ->map(fn (\App\Models\Media $m) => $m->toPayload())->values(),
         ]);
     }
 }

@@ -37,6 +37,16 @@ class Media extends Model
     /** Shape sent to the admin MediaManager and guest galleries. */
     public function toPayload(): array
     {
-        return ['id' => $this->id, 'url' => $this->url, 'alt_text' => $this->alt_text];
+        return ['id' => $this->id, 'url' => $this->url, 'alt_text' => $this->alt_text, 'type' => $this->isVideo() ? 'video' : 'image'];
+    }
+
+    /** Uploads store a mime type; seeded/external media may not, so fall back to the file extension. */
+    public function isVideo(): bool
+    {
+        if ($this->mime_type !== null) {
+            return str_starts_with($this->mime_type, 'video/');
+        }
+
+        return (bool) preg_match('/\.(mp4|webm|mov)(\?.*)?$/i', (string) $this->path);
     }
 }

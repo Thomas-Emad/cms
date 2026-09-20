@@ -38,7 +38,9 @@ class RoomController extends Controller
                     'size_sqm', 'max_guests', 'bed_type', 'view', 'features',
                 ]),
                 'cover_image_url' => $room->cover_image_url,
-                'gallery' => $room->gallery->map(fn (Media $m) => $m->toPayload())->values(),
+                // Played as a story on the room page: main photo first, then the gallery (photos and videos).
+                'slides' => collect([$room->cover])->filter()->concat($room->gallery)
+                    ->map(fn (Media $m) => $m->toPayload())->values(),
             ],
         ]);
     }

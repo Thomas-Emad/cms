@@ -236,4 +236,75 @@ class GuestScreenContentTest extends TestCase
 
         $this->get('/meeting-rooms')->assertInertia(fn ($page) => $page->component('Guest/Facilities/Index')->has('facilities', 1)->where('facilities.0.slug', 'm1'));
     }
+
+    /* ---------------- video + meeting rooms admin ---------------- */
+
+    /** @test */
+    public function a_video_can_be_added_to_a_gallery_and_is_reported_as_type_video(): void
+    {
+        Storage::fake('public');
+        $room = $this->room($this->hotelA);
+
+        $this->actingAs($this->adminA)->post('/admin/media', [
+            'mediable_type' => 'room', 'mediable_id' => $room->id, 'collection' => 'gallery',
+            'files' => [UploadedFile::fake()->create('clip.mp4', 500, 'video/mp4')],
+        ])->assertCreated()->assertJsonPath('items.0.type', 'video');
+    }
+
+    /** @test */
+    public function a_video_is_rejected_as_a_cover_image(): void
+    {
+        Storage::fake('public');
+        $room = $this->room($this->hotelA);
+
+        $this->actingAs($this->adminA)->postJson('/admin/media', [
+            'mediable_type' => 'room', 'mediable_id' => $room->id, 'collection' => 'cover',
+            'files' => [UploadedFile::fake()->create('clip.mp4', 500, 'video/mp4')],
+        ])->assertStatus(422)->assertJsonValidationErrors('files');
+
+        $this->assertSame(0, Media::count());
+    }
+
+    /** @test */
+    public function media_type_falls_back_to_the_file_extension_when_no_mime_type_is_stored(): void
+    {
+        $m = new Media(['path' => 'https://cdn.example.com/tour.MP4?x=1']);
+        $this->assertTrue($m->isVideo());
+        $this->assertFalse((new Media(['path' => 'https://cdn.example.com/a.jpg']))->isVideo());
+    }
+
+    /** @test */
+    public function room_detail_slides_put_the_cover_first_then_the_gallery(): void
+    {
+        $room = $this->room($this->hotelA, 'suite');
+        $mk = fn ($coll, $order, $path) => Media::create(['hotel_id' => $this->hotelA->id, 'disk' => 'public', 'path' => $path, 'mediable_type' => Room::class, 'mediable_id' => $room->id, 'collection' => $coll, 'sort_order' => $order]);
+        $mk('gallery', 0, 'https://x.test/g1.jpg');
+        $mk('cover', 0, 'https://x.test/cover.jpg');
+        $mk('gallery', 1, 'https://x.test/g2.mp4');
+
+        $this->get('/rooms/suite')->assertInertia(fn ($page) => $page
+            ->component('Guest/Rooms/Show')
+            ->has('room.slides', 3)
+            ->where('room.slides.0.url', 'https://x.test/cover.jpg')
+            ->where('room.slides.2.type', 'video')
+        );
+    }
+
+    /** @test */
+    public function admin_facility_list_can_be_filtered_to_meeting_rooms(): void
+    {
+        foreach ([['m1', 'meeting'], ['p1', 'pool']] as [$slug, $cat]) {
+            \App\Models\Facility::create(['hotel_id' => $this->hotelA->id, 'name' => $slug, 'slug' => $slug, 'category' => $cat, 'status' => 'published']);
+        }
+
+        $this->actingAs($this->adminA)->get('/admin/facilities?category=meeting')->assertInertia(fn ($page) => $page
+            ->component('Admin/Facilities/Index')
+            ->where('category', 'meeting')
+            ->has('facilities.data', 1)
+            ->where('facilities.data.0.slug', 'm1')
+        );
+
+        $this->actingAs($this->adminA)->get('/admin/facilities/create?category=meeting')
+            ->assertInertia(fn ($page) => $page->where('default_category', 'meeting'));
+    }
 }

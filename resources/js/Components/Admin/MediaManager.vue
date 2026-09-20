@@ -21,6 +21,7 @@ const props = defineProps<{
 
 const list = ref<MediaItem[]>([...props.items]);
 const busy = ref(false);
+const percent = ref(0);
 const error = ref<string | null>(null);
 const isCover = computed(() => props.collection === 'cover');
 
@@ -44,7 +45,11 @@ async function onPick(event: Event) {
     busy.value = true;
     error.value = null;
     try {
-        const { data } = await axios.post<{ items: MediaItem[] }>('/admin/media', body);
+        percent.value = 0;
+        const { data } = await axios.post<{ items: MediaItem[] }>('/admin/media', body, {
+            // Videos can take a while; show progress instead of a frozen button.
+            onUploadProgress: (e) => (percent.value = e.total ? Math.round((e.loaded / e.total) * 100) : 0),
+        });
         list.value = isCover.value ? data.items : [...list.value, ...data.items];
     } catch (e) {
         error.value = messageFrom(e);
@@ -94,10 +99,10 @@ async function move(index: number, direction: -1 | 1) {
                 class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
                 :class="{ 'opacity-50 pointer-events-none': busy }"
             >
-                {{ busy ? 'Uploading...' : isCover ? (list.length ? 'Replace photo' : 'Choose photo') : 'Add photos' }}
+                {{ busy ? `Uploading... ${percent}%` : isCover ? (list.length ? 'Replace photo' : 'Choose photo') : 'Add photos or videos' }}
                 <input
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    :accept="isCover ? 'image/jpeg,image/png,image/webp' : 'image/jpeg,image/png,image/webp,video/mp4,video/webm'"
                     class="hidden"
                     :multiple="!isCover"
                     data-testid="file-input"
@@ -110,7 +115,9 @@ async function move(index: number, direction: -1 | 1) {
 
         <ul v-if="list.length" class="grid grid-cols-3 sm:grid-cols-4 gap-3">
             <li v-for="(item, i) in list" :key="item.id" class="relative group" data-testid="item">
-                <img :src="item.url" :alt="item.alt_text ?? ''" class="aspect-square w-full rounded-md object-cover border border-slate-200" />
+                <video v-if="item.type === 'video'" :src="item.url" muted preload="metadata" class="aspect-square w-full rounded-md object-cover border border-slate-200" />
+                <img v-else :src="item.url" :alt="item.alt_text ?? ''" class="aspect-square w-full rounded-md object-cover border border-slate-200" />
+                <span v-if="item.type === 'video'" class="absolute left-1 top-1 rounded bg-black/60 px-1.5 text-xs text-white">▶ video</span>
                 <button
                     type="button"
                     class="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/60 text-white text-xs leading-6 text-center hover:bg-red-600"

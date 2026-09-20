@@ -1,23 +1,25 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import RoomCard from '@/Components/Cards/RoomCard.vue';
+import Showcase from '@/Components/Showcase.vue';
 import type { Room } from '@/types/room';
 
 defineOptions({ layout: GuestLayout });
 
-defineProps<{ rooms: Room[] }>();
+const props = defineProps<{ rooms: Room[] }>();
+
+const items = computed(() =>
+    props.rooms.map((r) => ({
+        id: r.id,
+        title: r.name,
+        subtitle: r.short_description,
+        facts: [r.size_sqm ? `${r.size_sqm} m²` : null, r.max_guests ? `${r.max_guests} guest${r.max_guests > 1 ? 's' : ''}` : null].filter(Boolean).join(' · '),
+        image: r.cover_image_url,
+        href: `/rooms/${r.slug}`,
+    })),
+);
 </script>
 
 <template>
-    <div class="mx-auto max-w-7xl px-10 pt-28 pb-16">
-        <h1 class="reveal text-5xl mb-10" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)" v-reveal>Rooms &amp; Suites</h1>
-
-        <div class="grid grid-cols-2 xl:grid-cols-3 gap-5">
-            <div v-for="(room, i) in rooms" :key="room.id" class="reveal" v-reveal="{ delay: i * 70 }">
-                <RoomCard :room="room" />
-            </div>
-        </div>
-
-        <p v-if="!rooms.length" class="text-xl text-slate-400 mt-16 text-center">Rooms will appear here soon.</p>
-    </div>
+    <Showcase :items="items" heading="Rooms & Suites" empty-text="Rooms will appear here soon." action-label="View room" />
 </template>

@@ -80,7 +80,7 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/dashboard', DashboardController::class)
+        Route::get('/', DashboardController::class)
             ->middleware('role:super_admin,hotel_admin,hotel_staff')
             ->name('dashboard');
 

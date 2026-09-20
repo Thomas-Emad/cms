@@ -19,6 +19,7 @@ const nav = [
     label: 'Content',
     children: [
       { label: 'Facilities', href: '/admin/facilities' },
+      { label: 'Meeting Rooms', href: '/admin/facilities?category=meeting' },
       { label: 'Rooms & Suites', href: '/admin/rooms' },
       { label: 'Timing', href: '/admin/timing' },
       { label: 'Short Calls', href: '/admin/short-calls' },

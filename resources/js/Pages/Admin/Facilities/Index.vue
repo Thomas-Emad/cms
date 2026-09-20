@@ -5,9 +5,15 @@ import type { Facility, Paginated } from '@/types/facility';
 
 defineOptions({ layout: AdminLayout });
 
-defineProps<{
+const props = defineProps<{
   facilities: Paginated<Facility>;
+  category?: string | null;
 }>();
+
+// ?category=meeting is the "Meeting Rooms" view of the same list.
+const isMeeting = props.category === 'meeting';
+const title = isMeeting ? 'Meeting Rooms' : 'Facilities';
+const createUrl = isMeeting ? '/admin/facilities/create?category=meeting' : '/admin/facilities/create';
 
 const destroy = (facility: Facility) => {
   if (confirm(`Delete "${facility.name}"? This cannot be undone.`)) {
@@ -19,12 +25,12 @@ const destroy = (facility: Facility) => {
 <template>
   <div>
     <div class="flex items-center justify-between mb-4">
-      <h1 class="text-xl font-semibold text-slate-800">Facilities</h1>
+      <h1 class="text-xl font-semibold text-slate-800">{{ title }}</h1>
       <Link
-        href="/admin/facilities/create"
+        :href="createUrl"
         class="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900"
       >
-        + Add Facility
+        {{ isMeeting ? '+ Add Meeting Room' : '+ Add Facility' }}
       </Link>
     </div>
 
@@ -62,7 +68,7 @@ const destroy = (facility: Facility) => {
     </div>
 
     <p v-if="!facilities.data.length" class="text-sm text-slate-400 mt-6 text-center">
-      No facilities yet — add your first one.
+      Nothing here yet — add your first one.
     </p>
   </div>
 </template>

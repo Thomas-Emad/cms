@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreFacilityRequest;
 use App\Models\Facility;
 use App\Models\Media;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,15 +23,21 @@ use Inertia\Response;
  */
 class FacilityController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Facility::class);
 
+        // ?category=meeting powers the "Meeting Rooms" sidebar entry: same data, filtered list.
+        $category = $request->string('category')->value() ?: null;
+
         return Inertia::render('Admin/Facilities/Index', [
+            'category' => $category,
             'facilities' => Facility::query()
+                ->category($category)
                 ->ordered()
                 ->with('cover')
                 ->paginate(20)
+                ->withQueryString()
                 ->through(fn (Facility $f) => [
                     ...$f->only(['id', 'name', 'slug', 'category', 'status', 'featured', 'sort_order']),
                     'cover_image_url' => $f->cover_image_url,
@@ -38,12 +45,13 @@ class FacilityController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
         $this->authorize('create', Facility::class);
 
         return Inertia::render('Admin/Facilities/Edit', [
             'facility' => null,
+            'default_category' => $request->string('category')->value() ?: null,
         ]);
     }
 
