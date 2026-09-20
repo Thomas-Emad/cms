@@ -33,4 +33,10 @@ class Media extends Model
 
         return \Illuminate\Support\Facades\Storage::disk($this->disk)->url($this->path);
     }
+
+    /** Shape sent to the admin MediaManager and guest galleries. */
+    public function toPayload(): array
+    {
+        return ['id' => $this->id, 'url' => $this->url, 'alt_text' => $this->alt_text];
+    }
 }

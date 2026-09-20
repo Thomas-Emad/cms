@@ -23,18 +23,16 @@ defineProps<{
 
 const page = usePage();
 
-// Each entry opens its own page. Only Facilities is a built-in list page;
-// the rest are Page Builder pages under /pages/{slug} (created by
-// GuestScreenPagesSeeder, editable in the admin Builder). Home is reached
-// via the hotel name / "Home" button in the top bar, not the dock.
+// Each button opens its own guest page. Home is reached via the hotel name /
+// "Home" button in the top bar, not the dock.
 const NAV_LINKS = [
     { href: '/facilities', label: 'Facilities' },
-    { href: '/pages/timing', label: 'Timing' },
+    { href: '/timing', label: 'Timing' },
     { href: '/pages/map', label: 'Map' },
-    { href: '/pages/short-calls', label: 'Short Calls' },
-    { href: '/pages/rooms-suites', label: 'Rooms & Suites' },
-    { href: '/pages/gallery', label: 'Gallery' },
-    { href: '/pages/meeting-room', label: 'Meeting Room' },
+    { href: '/short-calls', label: 'Short Calls' },
+    { href: '/rooms', label: 'Rooms & Suites' },
+    { href: '/gallery', label: 'Gallery' },
+    { href: '/meeting-rooms', label: 'Meeting Room' },
 ];
 
 function isActive(href: string): boolean {

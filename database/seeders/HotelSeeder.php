@@ -45,7 +45,7 @@ class HotelSeeder extends Seeder
 
         User::create([
             'name' => 'Platform Super Admin',
-            'email' => 'superadmin@platform.example',
+            'email' => 'superadmin@gmail.com',
             'password' => Hash::make('password'),
             'hotel_id' => null,
             'role' => 'super_admin',
@@ -54,7 +54,7 @@ class HotelSeeder extends Seeder
 
         User::create([
             'name' => 'Grand Horizon Admin',
-            'email' => 'admin@grandhorizonhotel.example',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'hotel_id' => $hotel->id,
             'role' => 'hotel_admin',

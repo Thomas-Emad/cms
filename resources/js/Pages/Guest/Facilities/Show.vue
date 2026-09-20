@@ -1,47 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GalleryGrid from '@/Components/GalleryGrid.vue';
 import type { Facility } from '@/types/facility';
-import { useParallax, vRevealMount } from '@/lib/motion';
 
 defineOptions({ layout: GuestLayout });
 
 defineProps<{
-    facility: Facility;
+    facility: Facility & { gallery_urls?: string[] };
 }>();
 
-const heroRef = ref<HTMLElement | null>(null);
-const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
+// Guests reach this from a list; the screen has no browser back button.
+const back = () => window.history.back();
 </script>
 
 <template>
     <div>
-        <section ref="heroRef" class="relative w-full h-[70vh] min-h-[480px] overflow-hidden flex items-end" style="background: #1c1f26">
+        <section class="relative w-full h-[70vh] min-h-[480px] overflow-hidden flex items-end" style="background: #1c1f26">
             <div class="absolute inset-0">
                 <img
                     v-if="facility.cover_image_url"
                     :src="facility.cover_image_url"
                     :alt="facility.name"
-                    class="reveal-scale w-full h-full object-cover"
-                    :style="parallaxStyle()"
-                    v-reveal-mount="{ delay: 0 }"
+                    class="w-full h-full object-cover"
                 />
-                <div class="absolute inset-0 reveal" style="background: var(--atmosphere-gradient)" v-reveal-mount="{ delay: 150 }" />
+                <div class="absolute inset-0" style="background: var(--atmosphere-gradient)" />
             </div>
+            <button
+                type="button"
+                class="absolute left-10 z-20 flex items-center h-12 px-6 rounded-full bg-black/40 text-white text-base uppercase tracking-wider active:scale-95 transition-transform"
+                style="top: calc(var(--kiosk-topbar-h, 0px) + 1rem)"
+                @click="back"
+            >
+                ← Back
+            </button>
             <div class="relative z-10 w-full px-6 lg:px-10 pb-14">
                 <div class="mx-auto max-w-7xl">
-                    <p
-                        v-if="facility.category"
-                        class="reveal text-white/70 text-xs uppercase tracking-[0.2em] mb-2"
-                        v-reveal-mount="{ delay: 300 }"
-                    >
-                        {{ facility.category }}
-                    </p>
-                    <div class="reveal-mask" v-reveal-mount="{ delay: 460 }">
-                        <h1 class="reveal-mask-inner text-white text-5xl lg:text-6xl" style="font-family: var(--font-display)">
-                            {{ facility.name }}
-                        </h1>
-                    </div>
+                    <p v-if="facility.category" class="text-white/70 text-xs uppercase tracking-[0.2em] mb-2">{{ facility.category }}</p>
+                    <h1 class="text-white text-5xl lg:text-6xl" style="font-family: var(--font-display)">{{ facility.name }}</h1>
                 </div>
             </div>
         </section>
@@ -50,14 +45,13 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                 <p
                     v-if="facility.description"
-                    class="reveal lg:col-span-7 text-xl leading-relaxed text-slate-700 whitespace-pre-line"
+                    class="lg:col-span-7 text-xl leading-relaxed text-slate-700 whitespace-pre-line"
                     style="font-family: var(--font-display)"
-                    v-reveal
                 >
                     {{ facility.description }}
                 </p>
 
-                <div class="reveal lg:col-span-4 lg:col-start-9 space-y-5 text-sm" v-reveal="{ delay: 100 }">
+                <div class="lg:col-span-4 lg:col-start-9 space-y-5 text-sm">
                     <div v-if="facility.building">
                         <p class="text-slate-400 uppercase tracking-wide text-xs">Location</p>
                         <p class="mt-1 text-slate-700">
@@ -73,14 +67,18 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
 
             <ul v-if="facility.amenities?.length" class="mt-10 flex flex-wrap gap-2">
                 <li
-                    v-for="(amenity, i) in facility.amenities"
+                    v-for="amenity in facility.amenities"
                     :key="amenity"
-                    class="reveal rounded-full border border-slate-200 px-4 py-1.5 text-xs uppercase tracking-wide text-slate-600"
-                    v-reveal="{ delay: i * 60 }"
+                    class="rounded-full border border-slate-200 px-4 py-1.5 text-xs uppercase tracking-wide text-slate-600"
                 >
                     {{ amenity }}
                 </li>
             </ul>
+
+            <div v-if="facility.gallery_urls?.length" class="mt-14">
+                <h2 class="text-3xl mb-6" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)">Gallery</h2>
+                <GalleryGrid :images="facility.gallery_urls.map((url) => ({ url }))" />
+            </div>
         </div>
     </div>
 </template>

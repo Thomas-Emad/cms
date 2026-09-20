@@ -4,6 +4,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\FacilityController as AdminFacilityController;
+use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\InfoEntryController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\OfferController as AdminOfferController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
@@ -11,6 +15,9 @@ use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Guest\EventController as GuestEventController;
 use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController;
 use App\Http\Controllers\Guest\FacilityController as GuestFacilityController;
+use App\Http\Controllers\Guest\GalleryController as GuestGalleryController;
+use App\Http\Controllers\Guest\InfoPageController;
+use App\Http\Controllers\Guest\RoomController as GuestRoomController;
 use App\Http\Controllers\Guest\OfferController as GuestOfferController;
 use App\Http\Controllers\Guest\PageController as GuestPageController;
 use App\Http\Controllers\Guest\RestaurantController as GuestRestaurantController;
@@ -22,9 +29,8 @@ use Illuminate\Support\Facades\Route;
 | Guest routes (public hotel site) - middleware: web, resolve.hotel
 |--------------------------------------------------------------------------
 | The homepage ('/') is a real Page Builder page resolved via is_home -
-| NOT a hardcoded template. Phase 1's placeholder Guest\HomeController and
-| Pages/Guest/Home.vue were dead code (never routed to) and have been
-| removed.
+| NOT a hardcoded template. This replaced Phase 1's placeholder
+| HomeController once the Page Builder landed in Phase 3.
 */
 
 Route::middleware(['web', 'resolve.hotel'])->group(function () {
@@ -32,6 +38,14 @@ Route::middleware(['web', 'resolve.hotel'])->group(function () {
 
     Route::get('/facilities', [GuestFacilityController::class, 'index'])->name('guest.facilities.index');
     Route::get('/facilities/{facility:slug}', [GuestFacilityController::class, 'show'])->name('guest.facilities.show');
+
+    // Guest-screen dock destinations
+    Route::get('/meeting-rooms', [GuestFacilityController::class, 'meetingRooms'])->name('guest.meeting-rooms');
+    Route::get('/rooms', [GuestRoomController::class, 'index'])->name('guest.rooms.index');
+    Route::get('/rooms/{room:slug}', [GuestRoomController::class, 'show'])->name('guest.rooms.show');
+    Route::get('/timing', [InfoPageController::class, 'timing'])->name('guest.timing');
+    Route::get('/short-calls', [InfoPageController::class, 'shortCalls'])->name('guest.short-calls');
+    Route::get('/gallery', GuestGalleryController::class)->name('guest.gallery');
 
     Route::get('/restaurants', [GuestRestaurantController::class, 'index'])->name('guest.restaurants.index');
     Route::get('/restaurants/{restaurant:slug}', [GuestRestaurantController::class, 'show'])->name('guest.restaurants.show');
@@ -81,6 +95,21 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             Route::resource('events', AdminEventController::class)->except(['show']);
             Route::resource('offers', AdminOfferController::class)->except(['show']);
             Route::resource('experiences', AdminExperienceController::class)->except(['show']);
+
+            // Guest-screen content
+            Route::resource('rooms', AdminRoomController::class)->except(['show']);
+
+            Route::get('timing', [InfoEntryController::class, 'edit'])->defaults('kind', 'timing')->name('timing.edit');
+            Route::put('timing', [InfoEntryController::class, 'update'])->defaults('kind', 'timing')->name('timing.update');
+            Route::get('short-calls', [InfoEntryController::class, 'edit'])->defaults('kind', 'short_call')->name('short-calls.edit');
+            Route::put('short-calls', [InfoEntryController::class, 'update'])->defaults('kind', 'short_call')->name('short-calls.update');
+
+            Route::get('gallery', [AdminGalleryController::class, 'index'])->name('gallery.index');
+
+            // Image upload / delete / reorder for any HasMedia owner
+            Route::post('media', [MediaController::class, 'store'])->name('media.store');
+            Route::put('media/reorder', [MediaController::class, 'reorder'])->name('media.reorder');
+            Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
 
             // Page Builder
             Route::get('pages/', [AdminPageController::class, 'index'])->name('pages.index');

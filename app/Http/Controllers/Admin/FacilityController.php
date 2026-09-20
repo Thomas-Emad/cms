@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreFacilityRequest;
 use App\Models\Facility;
+use App\Models\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -48,10 +49,11 @@ class FacilityController extends Controller
 
     public function store(StoreFacilityRequest $request): RedirectResponse
     {
-        Facility::create($request->validated());
+        $facility = Facility::create($request->validated());
 
-        return redirect()->route('admin.facilities.index')
-            ->with('success', 'Facility created.');
+        // Straight to the edit screen so photos can be added right away.
+        return redirect()->route('admin.facilities.edit', $facility)
+            ->with('success', 'Facility created. You can now add photos.');
     }
 
     public function edit(Facility $facility): Response
@@ -60,6 +62,8 @@ class FacilityController extends Controller
 
         return Inertia::render('Admin/Facilities/Edit', [
             'facility' => $facility,
+            'cover' => $facility->cover ? [$facility->cover->toPayload()] : [],
+            'gallery' => $facility->gallery->map(fn (Media $m) => $m->toPayload())->values(),
         ]);
     }
 
@@ -67,7 +71,7 @@ class FacilityController extends Controller
     {
         $facility->update($request->validated());
 
-        return redirect()->route('admin.facilities.index')
+        return redirect()->route('admin.facilities.edit', $facility)
             ->with('success', 'Facility updated.');
     }
 

@@ -12,11 +12,27 @@ class FacilityController extends Controller
 {
     public function index(Request $request): Response
     {
+        return $this->listing($request->string('category')->value() ?: null, 'Facilities');
+    }
+
+    /**
+     * Meeting rooms are ordinary Facilities with category "meeting" - same
+     * data, same admin screen, same detail page - just a dedicated entry
+     * point for the guest screen's "Meeting Room" button.
+     */
+    public function meetingRooms(): Response
+    {
+        return $this->listing('meeting', 'Meeting Rooms');
+    }
+
+    private function listing(?string $category, string $title): Response
+    {
         return Inertia::render('Guest/Facilities/Index', [
-            'category' => $request->string('category')->value() ?: null,
+            'title' => $title,
+            'category' => $category,
             'facilities' => Facility::query()
                 ->published()
-                ->category($request->string('category')->value() ?: null)
+                ->category($category)
                 ->with('cover')
                 ->ordered()
                 ->get()
