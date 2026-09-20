@@ -10,6 +10,7 @@ use App\Services\PageBuilder\Sections\FacilityGridSectionDefinition;
 use App\Services\PageBuilder\Sections\GallerySectionDefinition;
 use App\Services\PageBuilder\Sections\HeroSectionDefinition;
 use App\Services\PageBuilder\Sections\ImageSectionDefinition;
+use App\Services\PageBuilder\Sections\InfoListSectionDefinition;
 use App\Services\PageBuilder\Sections\OffersSectionDefinition;
 use App\Services\PageBuilder\Sections\RestaurantGallerySectionDefinition;
 use App\Services\PageBuilder\Sections\RestaurantGridSectionDefinition;
@@ -19,6 +20,7 @@ use App\Services\PageBuilder\Sections\RestaurantLocationSectionDefinition;
 use App\Services\PageBuilder\Sections\RestaurantMenuSectionDefinition;
 use App\Services\PageBuilder\Sections\ServiceGridSectionDefinition;
 use App\Services\PageBuilder\Sections\SpacerSectionDefinition;
+use App\Services\PageBuilder\Sections\StorySlideshowSectionDefinition;
 use App\Services\PageBuilder\Sections\TextSectionDefinition;
 use InvalidArgumentException;
 
@@ -46,6 +48,8 @@ class SectionRegistry
         'experiences' => ExperiencesSectionDefinition::class,
         'cta' => CtaSectionDefinition::class,
         'spacer' => SpacerSectionDefinition::class,
+        'story-slideshow' => StorySlideshowSectionDefinition::class,
+        'info-list' => InfoListSectionDefinition::class,
         'restaurant-hero' => RestaurantHeroSectionDefinition::class,
         'restaurant-info' => RestaurantInfoSectionDefinition::class,
         'restaurant-gallery' => RestaurantGallerySectionDefinition::class,
@@ -70,6 +74,8 @@ class SectionRegistry
         'experiences' => ['page'],
         'cta' => ['any'],
         'spacer' => ['any'],
+        'story-slideshow' => ['page'],
+        'info-list' => ['any'],
         'restaurant-hero' => ['restaurant'],
         'restaurant-info' => ['restaurant'],
         'restaurant-gallery' => ['restaurant'],

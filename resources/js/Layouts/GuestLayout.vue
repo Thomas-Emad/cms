@@ -23,14 +23,18 @@ defineProps<{
 
 const page = usePage();
 
+// Each entry opens its own page. Only Facilities is a built-in list page;
+// the rest are Page Builder pages under /pages/{slug} (created by
+// GuestScreenPagesSeeder, editable in the admin Builder). Home is reached
+// via the hotel name / "Home" button in the top bar, not the dock.
 const NAV_LINKS = [
-    { href: '/', label: 'Home' },
-    { href: '/restaurants', label: 'Dining' },
     { href: '/facilities', label: 'Facilities' },
-    { href: '/services', label: 'Services' },
-    { href: '/events', label: 'Events' },
-    { href: '/offers', label: 'Offers' },
-    { href: '/experiences', label: 'Experiences' },
+    { href: '/pages/timing', label: 'Timing' },
+    { href: '/pages/map', label: 'Map' },
+    { href: '/pages/short-calls', label: 'Short Calls' },
+    { href: '/pages/rooms-suites', label: 'Rooms & Suites' },
+    { href: '/pages/gallery', label: 'Gallery' },
+    { href: '/pages/meeting-room', label: 'Meeting Room' },
 ];
 
 function isActive(href: string): boolean {
@@ -40,6 +44,8 @@ function isActive(href: string): boolean {
 }
 
 /* ---------------------------------------------------------------- clock */
+const onHome = computed(() => page.url.split('?')[0] === '/');
+
 const now = ref(new Date());
 const clock = computed(() =>
     now.value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -106,7 +112,16 @@ onUnmounted(() => {
             <Link href="/" class="text-2xl tracking-tight" style="font-family: var(--font-display)">
                 {{ hotel?.name ?? 'Hotel' }}
             </Link>
-            <span class="text-xl tabular-nums text-white/80" aria-label="Current time">{{ clock }}</span>
+            <div class="flex items-center gap-6">
+                <Link
+                    v-if="!onHome"
+                    href="/"
+                    class="flex items-center h-12 px-6 rounded-full border border-white/25 bg-white/10 text-base uppercase tracking-wider transition-transform duration-150 active:scale-95"
+                >
+                    ← Home
+                </Link>
+                <span class="text-xl tabular-nums text-white/80" aria-label="Current time">{{ clock }}</span>
+            </div>
         </header>
 
         <!--
@@ -125,12 +140,12 @@ onUnmounted(() => {
             aria-label="Main navigation"
         >
             <div class="no-scrollbar w-full overflow-x-auto snap-x snap-proximity px-10">
-                <ul class="flex gap-4 w-max mx-auto">
+                <ul class="flex gap-3 w-max mx-auto">
                     <li v-for="link in NAV_LINKS" :key="link.href" class="snap-center">
                         <Link
                             :href="link.href"
                             :aria-current="isActive(link.href) ? 'page' : undefined"
-                            class="flex items-center justify-center h-[4.5rem] min-w-[9rem] px-8 rounded-full text-lg uppercase tracking-wider border transition-transform duration-150 active:scale-95"
+                            class="flex items-center justify-center h-[4.5rem] min-w-[7rem] px-6 rounded-full text-lg uppercase tracking-wide border transition-transform duration-150 active:scale-95"
                             :class="
                                 isActive(link.href)
                                     ? 'border-transparent text-slate-900'

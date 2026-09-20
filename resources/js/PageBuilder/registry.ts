@@ -11,6 +11,8 @@ import OffersSection from './sections/OffersSection.vue';
 import ExperiencesSection from './sections/ExperiencesSection.vue';
 import CtaSection from './sections/CtaSection.vue';
 import SpacerSection from './sections/SpacerSection.vue';
+import StorySlideshowSection from './sections/StorySlideshowSection.vue';
+import InfoListSection from './sections/InfoListSection.vue';
 import RestaurantHeroSection from './sections/RestaurantHeroSection.vue';
 import RestaurantInfoSection from './sections/RestaurantInfoSection.vue';
 import RestaurantGallerySection from './sections/RestaurantGallerySection.vue';
@@ -160,6 +162,26 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
     component: SpacerSection, label: 'Spacer', icon: '↕️', contexts: ['any'],
     defaultProps: { height: 'medium' }, defaultSettings: {}, isDynamic: false,
     editorFields: [{ key: 'height', type: 'select', label: 'Height', options: ['small', 'medium', 'large'] }],
+  },
+
+  'story-slideshow': {
+    component: StorySlideshowSection, label: 'Story Slideshow', icon: '🎬', contexts: ['page'],
+    defaultProps: { title: '', subtitle: '', media_ids: [], interval_seconds: 6 }, defaultSettings: {}, isDynamic: false,
+    editorFields: [
+      { key: 'title', type: 'text', label: 'Title' },
+      { key: 'subtitle', type: 'text', label: 'Subtitle' },
+      { key: 'media_ids', type: 'media-list', label: 'Images (in order)' },
+      { key: 'interval_seconds', type: 'number', label: 'Seconds per photo', min: 3, max: 20 },
+    ],
+  },
+  'info-list': {
+    component: InfoListSection, label: 'Info List', icon: '📋', contexts: ['any'],
+    defaultProps: { title: '', description: '', items_text: '' }, defaultSettings: { padding: 'medium' }, isDynamic: false,
+    editorFields: [
+      { key: 'title', type: 'text', label: 'Title' },
+      { key: 'description', type: 'textarea', label: 'Description' },
+      { key: 'items_text', type: 'textarea', label: 'Rows - one per line: Label | Value (a line without | is a group heading)' },
+    ],
   },
 
   // --- Entity-backed: Restaurant ---

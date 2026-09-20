@@ -6,14 +6,16 @@
   "gallery",
   "hero",
   "image",
+  "info-list",
   "offers",
-  "restaurant-grid",
   "restaurant-gallery",
+  "restaurant-grid",
   "restaurant-hero",
   "restaurant-info",
   "restaurant-location",
   "restaurant-menu",
   "service-grid",
   "spacer",
+  "story-slideshow",
   "text"
 ]
