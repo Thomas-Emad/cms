@@ -57,6 +57,40 @@ export const vReveal: Directive<HTMLElement, RevealOptions | undefined> = {
     },
 };
 
+const prefersReducedMotion = () =>
+    typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * v-reveal-mount — like v-reveal, but triggers on a short timer after
+ * mount instead of on scroll intersection. Use this for anything that's
+ * already in the viewport at load (hero eyebrow/heading/description/CTA)
+ * where scroll-intersection would never fire, or would fire instantly
+ * with no chance to sequence. This is what gives the hero its "scene
+ * entering" order — each element gets a slightly later `delay` so the
+ * eyebrow, heading, description, and CTA settle in one after another
+ * rather than all appearing at once.
+ *
+ * Usage:
+ *   <p class="reveal" v-reveal-mount="{ delay: 200 }">EYEBROW</p>
+ *   <h1 class="reveal" v-reveal-mount="{ delay: 420 }">Heading</h1>
+ *   <p class="reveal" v-reveal-mount="{ delay: 620 }">Description</p>
+ *   <a class="reveal" v-reveal-mount="{ delay: 820 }">CTA</a>
+ */
+export const vRevealMount: Directive<HTMLElement, RevealOptions | undefined> = {
+    mounted(el, binding) {
+        const { delay = 0 } = binding.value ?? {};
+        if (prefersReducedMotion()) {
+            el.classList.add('is-visible');
+            return;
+        }
+        if (delay) el.style.setProperty('--reveal-delay', `${delay}ms`);
+        // rAF, not setTimeout(0): guarantees the browser has painted the
+        // initial (hidden) state first, so the transition actually plays
+        // instead of the element just appearing already-visible.
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-visible')));
+    },
+};
+
 /**
  * useParallax — subtle, slower-than-scroll vertical drift for hero/gallery
  * imagery. Returns a ref to bind as `style` on the image wrapper. Disabled

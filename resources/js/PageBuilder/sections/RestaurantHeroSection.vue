@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { RenderMode, SectionSettings } from '@/types/pageBuilder';
-import { useParallax } from '@/lib/motion';
+import { useParallax, vRevealMount } from '@/lib/motion';
 
 interface Data {
     restaurant: {
@@ -37,35 +37,46 @@ const isEditorCanvas = props.mode === 'edit';
                 v-if="data?.restaurant?.cover_image_url"
                 :src="data.restaurant.cover_image_url"
                 :alt="data.restaurant.name"
-                class="reveal-scale is-visible w-full h-full object-cover"
+                :class="isEditorCanvas ? 'w-full h-full object-cover' : 'reveal-scale w-full h-full object-cover'"
                 :style="isEditorCanvas ? {} : parallaxStyle()"
+                v-reveal-mount="isEditorCanvas ? undefined : { delay: 0 }"
             />
-            <div class="absolute inset-0" style="background: var(--atmosphere-gradient)" />
+            <div
+                class="absolute inset-0"
+                :class="isEditorCanvas ? '' : 'reveal'"
+                :style="{ background: 'var(--atmosphere-gradient)' }"
+                v-reveal-mount="isEditorCanvas ? undefined : { delay: 150 }"
+            />
         </div>
 
         <div v-if="data?.restaurant" class="relative z-10 w-full px-6 lg:px-10 pb-14 lg:pb-20">
             <div class="mx-auto max-w-7xl">
-                <h1
-                    class="reveal text-white leading-[1.05]"
-                    :class="isEditorCanvas ? 'text-3xl' : 'text-5xl lg:text-6xl'"
-                    style="font-family: var(--font-display)"
-                    v-reveal
+                <div
+                    :class="isEditorCanvas ? '' : 'reveal-mask'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 300 }"
                 >
-                    {{ data.restaurant.name }}
-                </h1>
+                    <h1
+                        class="text-white leading-[1.05]"
+                        :class="[isEditorCanvas ? 'text-3xl' : 'reveal-mask-inner text-5xl lg:text-6xl']"
+                        style="font-family: var(--font-display)"
+                    >
+                        {{ data.restaurant.name }}
+                    </h1>
+                </div>
                 <p
                     v-if="props.subtitle_override ?? data.restaurant.subtitle"
-                    class="reveal mt-3 text-white/85 max-w-md"
-                    :class="isEditorCanvas ? 'text-sm' : 'text-lg'"
-                    v-reveal="{ delay: 120 }"
+                    class="mt-3 text-white/85 max-w-md"
+                    :class="isEditorCanvas ? 'text-sm' : 'reveal text-lg'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 500 }"
                 >
                     {{ props.subtitle_override ?? data.restaurant.subtitle }}
                 </p>
                 <a
                     v-if="data.restaurant.reservation_url"
                     :href="data.restaurant.reservation_url"
-                    class="reveal group mt-7 inline-flex items-center gap-2 text-white text-sm uppercase tracking-wide border-b border-white/40 pb-1 hover:border-white transition-colors"
-                    v-reveal="{ delay: 220 }"
+                    class="group mt-7 inline-flex items-center gap-2 text-white text-sm uppercase tracking-wide border-b border-white/40 pb-1 hover:border-white transition-colors"
+                    :class="isEditorCanvas ? '' : 'reveal'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 650 }"
                 >
                     {{ props.button_text ?? data.restaurant.button_text ?? 'Reserve a Table' }}
                     <span class="inline-block transition-transform group-hover:translate-x-1">→</span>

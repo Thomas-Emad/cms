@@ -3,7 +3,7 @@ import { createApp, h, Transition } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue, route } from 'ziggy-js';
-import { vReveal } from '@/lib/motion';
+import { vReveal, vRevealMount } from '@/lib/motion';
 import '../css/app.css';
 
 // Login.vue and others call route(...) as a bare global (script setup,
@@ -26,6 +26,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .directive('reveal', vReveal)
+            .directive('reveal-mount', vRevealMount)
             .mount(el);
     },
 });

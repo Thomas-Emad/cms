@@ -22,8 +22,9 @@ use Illuminate\Support\Facades\Route;
 | Guest routes (public hotel site) - middleware: web, resolve.hotel
 |--------------------------------------------------------------------------
 | The homepage ('/') is a real Page Builder page resolved via is_home -
-| NOT a hardcoded template. This replaced Phase 1's placeholder
-| HomeController once the Page Builder landed in Phase 3.
+| NOT a hardcoded template. Phase 1's placeholder Guest\HomeController and
+| Pages/Guest/Home.vue were dead code (never routed to) and have been
+| removed.
 */
 
 Route::middleware(['web', 'resolve.hotel'])->group(function () {

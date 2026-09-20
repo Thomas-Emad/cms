@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { HeroProps, SectionSettings, RenderMode } from '@/types/pageBuilder';
-import { useParallax } from '@/lib/motion';
+import { useParallax, vRevealMount } from '@/lib/motion';
 
 interface HeroData {
     media?: { url: string; alt_text: string | null } | null;
@@ -18,8 +18,11 @@ const heroRef = ref<HTMLElement | null>(null);
 const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
 
 // The Builder canvas renders many sections stacked in a small scroll
-// area, so a real 100vh hero there would make editing unusable. Only
-// go full-cinematic in the actual guest-facing render.
+// area, so a real 100vh hero there would make editing unusable. Only go
+// full-cinematic in the actual guest-facing render. The canvas also
+// skips the mount-sequenced entrance entirely - an admin editing the
+// hero shouldn't wait for a ~1s sequence to replay every time a prop
+// changes and the section re-renders.
 const isEditorCanvas = props.mode === 'edit';
 </script>
 
@@ -28,61 +31,79 @@ const isEditorCanvas = props.mode === 'edit';
         ref="heroRef"
         class="relative w-full overflow-hidden flex items-end"
         :class="isEditorCanvas ? 'h-[420px]' : 'h-[92vh] min-h-[560px]'"
-        :style="{
-            background: !data?.media ? (settings.background === 'brand' ? 'var(--luxury-forest)' : 'var(--luxury-forest)') : undefined,
-        }"
+        :style="{ background: !data?.media ? 'var(--luxury-forest)' : undefined }"
     >
-        <!-- Background imagery, drifting slightly slower than scroll -->
+        <!--
+          Sequence, slowest/foundational first:
+            1. image scale-settles
+            2. dark atmosphere fades over it
+            3. eyebrow, then heading (masked line-rise), then description,
+               then CTA - each a little later than the last, so the scene
+               reads as arriving rather than everything popping at once.
+        -->
         <div class="absolute inset-0">
             <img
                 v-if="data?.media"
                 :src="data.media.url"
                 :alt="data.media.alt_text ?? ''"
-                class="reveal-scale is-visible w-full h-full object-cover"
+                :class="isEditorCanvas ? 'w-full h-full object-cover' : 'reveal-scale w-full h-full object-cover'"
                 :style="isEditorCanvas ? {} : parallaxStyle()"
+                v-reveal-mount="isEditorCanvas ? undefined : { delay: 0 }"
             />
-            <div
-                v-else
-                class="w-full h-full flex items-center justify-center text-white/40 text-sm"
-            >
+            <div v-else class="w-full h-full flex items-center justify-center text-white/40 text-sm">
                 <span v-if="isEditorCanvas">No image selected</span>
             </div>
-            <!-- Atmosphere: darkens toward the bottom so title/CTA stay legible
-           over any photo without needing a flat color block. -->
-            <div class="absolute inset-0" style="background: var(--atmosphere-gradient)" />
+
+            <div
+                class="absolute inset-0"
+                :class="isEditorCanvas ? '' : 'reveal'"
+                :style="{ background: 'var(--atmosphere-gradient)' }"
+                v-reveal-mount="isEditorCanvas ? undefined : { delay: 150 }"
+            />
         </div>
 
-        <!-- Content, anchored toward the bottom third like a film title card -->
         <div class="relative z-10 w-full px-6 lg:px-10 pb-16 lg:pb-24" :class="{ 'pb-8': isEditorCanvas }">
             <div class="mx-auto max-w-7xl">
                 <p
-                    v-if="settings.padding"
-                    class="reveal is-visible text-white/80 text-xs uppercase tracking-[0.24em] mb-4"
-                    v-reveal
+                    class="text-white/80 text-xs uppercase tracking-[0.24em] mb-4"
+                    :class="isEditorCanvas ? '' : 'reveal'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 300 }"
                 >
                     Grand Horizon
                 </p>
-                <h1
-                    class="reveal is-visible text-white font-normal leading-[1.05]"
-                    :class="isEditorCanvas ? 'text-3xl' : 'text-5xl lg:text-8xl max-w-4xl'"
-                    style="font-family: var(--font-display)"
-                    v-reveal="{ delay: 80 }"
+
+                <!-- The heading gets the masked line-rise, not a plain fade -
+                     it's the most important element on the page, and this is
+                     what makes it feel like it's arriving into the scene
+                     rather than fading like everything else. -->
+                <div
+                    :class="isEditorCanvas ? '' : 'reveal-mask'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 460 }"
                 >
-                    {{ props.props.title }}
-                </h1>
+                    <h1
+                        class="text-white font-normal leading-[1.05]"
+                        :class="[isEditorCanvas ? 'text-3xl' : 'reveal-mask-inner text-5xl lg:text-8xl max-w-4xl']"
+                        style="font-family: var(--font-display)"
+                    >
+                        {{ props.props.title }}
+                    </h1>
+                </div>
+
                 <p
                     v-if="props.props.subtitle"
-                    class="reveal is-visible mt-4 text-white/85 max-w-lg"
-                    :class="isEditorCanvas ? 'text-sm' : 'text-lg lg:text-xl'"
-                    v-reveal="{ delay: 180 }"
+                    class="mt-4 text-white/85 max-w-lg"
+                    :class="isEditorCanvas ? 'text-sm' : 'reveal text-lg lg:text-xl'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 640 }"
                 >
                     {{ props.props.subtitle }}
                 </p>
+
                 <a
                     v-if="props.props.button_text && props.props.button_url"
                     :href="props.props.button_url"
-                    class="reveal is-visible group mt-8 inline-flex items-center gap-2 text-white text-sm uppercase tracking-wide border-b border-white/40 pb-1 hover:border-white transition-colors"
-                    v-reveal="{ delay: 280 }"
+                    class="group mt-8 inline-flex items-center gap-2 text-white text-sm uppercase tracking-wide border-b border-white/40 pb-1 hover:border-white transition-colors"
+                    :class="isEditorCanvas ? '' : 'reveal'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 820 }"
                 >
                     {{ props.props.button_text }}
                     <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
@@ -90,15 +111,39 @@ const isEditorCanvas = props.mode === 'edit';
             </div>
         </div>
 
-        <!-- Scroll indicator: a small cue that there's more below, not a UI control -->
+        <!--
+          Scroll indicator: a slow, quiet drift-and-fade loop rather than
+          Tailwind's animate-bounce, which reads as playful rather than
+          cinematic for a premium hotel scene.
+        -->
         <div
             v-if="!isEditorCanvas"
-            class="reveal absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-white/70 animate-bounce"
-            style="animation-duration: 2s"
-            v-reveal="{ delay: 500 }"
+            class="reveal absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-white/70 scroll-cue"
+            v-reveal-mount="{ delay: 1000 }"
             aria-hidden="true"
         >
             <div class="w-px h-8 bg-white/40 mx-auto" />
         </div>
     </section>
 </template>
+
+<style scoped>
+/* A slow (3.2s) opacity/translate drift, not a bounce - quiet enough to
+   read as ambient rather than an animated UI control. Covered by the
+   global prefers-reduced-motion rule in app.css (animation-duration
+   override applies to all animations, not just transitions). */
+.scroll-cue {
+    animation: scroll-cue-drift 3.2s var(--ease-standard) infinite;
+}
+@keyframes scroll-cue-drift {
+    0%,
+    100% {
+        transform: translate(-50%, 0);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(-50%, 6px);
+        opacity: 0.35;
+    }
+}
+</style>
