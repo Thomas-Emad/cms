@@ -1,0 +1,1958 @@
+{
+ "version": 1,
+ "meters_per_unit": 0.1,
+ "default_start": "reception",
+ "floors": [
+  {
+   "id": "fb1",
+   "label": "B1",
+   "name": "Basement",
+   "level": -1,
+   "width": 1000,
+   "height": 600,
+   "plan_image": null,
+   "areas": [
+    {
+     "id": "fb1-building",
+     "kind": "building",
+     "x": 56,
+     "y": 36,
+     "w": 888,
+     "h": 528
+    },
+    {
+     "id": "fb1-corridor",
+     "kind": "corridor",
+     "x": 56,
+     "y": 270,
+     "w": 888,
+     "h": 60
+    },
+    {
+     "id": "fb1-elev",
+     "kind": "service",
+     "x": 393,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Elevators"
+    },
+    {
+     "id": "fb1-stairs",
+     "kind": "service",
+     "x": 503,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Stairs"
+    },
+    {
+     "id": "fb1-pool",
+     "kind": "water",
+     "x": 63,
+     "y": 43,
+     "w": 324,
+     "h": 224,
+     "label": "Infinity Pool"
+    },
+    {
+     "id": "fb1-spa",
+     "kind": "public",
+     "x": 613,
+     "y": 43,
+     "w": 324,
+     "h": 224,
+     "label": "Serenity Spa"
+    },
+    {
+     "id": "fb1-gym",
+     "kind": "public",
+     "x": 63,
+     "y": 333,
+     "w": 214,
+     "h": 224,
+     "label": "Fitness Center"
+    },
+    {
+     "id": "fb1-restrooms-b1",
+     "kind": "service",
+     "x": 283,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Restrooms"
+    },
+    {
+     "id": "fb1-sauna",
+     "kind": "public",
+     "x": 613,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Sauna & Steam"
+    },
+    {
+     "id": "fb1-juice-bar",
+     "kind": "public",
+     "x": 723,
+     "y": 333,
+     "w": 214,
+     "h": 224,
+     "label": "Juice Bar"
+    },
+    {
+     "id": "fb1-n4-staff",
+     "kind": "service",
+     "x": 503,
+     "y": 43,
+     "w": 104,
+     "h": 224
+    },
+    {
+     "id": "fb1-s3-staff",
+     "kind": "service",
+     "x": 393,
+     "y": 333,
+     "w": 104,
+     "h": 224
+    }
+   ]
+  },
+  {
+   "id": "fg",
+   "label": "G",
+   "name": "Ground Floor",
+   "level": 0,
+   "width": 1000,
+   "height": 600,
+   "plan_image": null,
+   "areas": [
+    {
+     "id": "fg-building",
+     "kind": "building",
+     "x": 56,
+     "y": 36,
+     "w": 888,
+     "h": 528
+    },
+    {
+     "id": "fg-corridor",
+     "kind": "corridor",
+     "x": 56,
+     "y": 270,
+     "w": 888,
+     "h": 60
+    },
+    {
+     "id": "fg-elev",
+     "kind": "service",
+     "x": 393,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Elevators"
+    },
+    {
+     "id": "fg-stairs",
+     "kind": "service",
+     "x": 503,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Stairs"
+    },
+    {
+     "id": "fg-reception",
+     "kind": "public",
+     "x": 63,
+     "y": 43,
+     "w": 214,
+     "h": 224,
+     "label": "Reception"
+    },
+    {
+     "id": "fg-concierge",
+     "kind": "public",
+     "x": 283,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Concierge"
+    },
+    {
+     "id": "fg-restrooms-g",
+     "kind": "service",
+     "x": 503,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Restrooms"
+    },
+    {
+     "id": "fg-cafe-aroma",
+     "kind": "public",
+     "x": 613,
+     "y": 43,
+     "w": 214,
+     "h": 224,
+     "label": "Cafe Aroma"
+    },
+    {
+     "id": "fg-gift-shop",
+     "kind": "public",
+     "x": 833,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Gift Shop"
+    },
+    {
+     "id": "fg-lobby",
+     "kind": "public",
+     "x": 63,
+     "y": 333,
+     "w": 324,
+     "h": 224,
+     "label": "Lobby & Lounge"
+    },
+    {
+     "id": "fg-business-center",
+     "kind": "public",
+     "x": 393,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Business Center"
+    },
+    {
+     "id": "fg-azure",
+     "kind": "public",
+     "x": 613,
+     "y": 333,
+     "w": 324,
+     "h": 224,
+     "label": "Azure Restaurant"
+    }
+   ]
+  },
+  {
+   "id": "f1",
+   "label": "1",
+   "name": "1st Floor",
+   "level": 1,
+   "width": 1000,
+   "height": 600,
+   "plan_image": null,
+   "areas": [
+    {
+     "id": "f1-building",
+     "kind": "building",
+     "x": 56,
+     "y": 36,
+     "w": 888,
+     "h": 528
+    },
+    {
+     "id": "f1-corridor",
+     "kind": "corridor",
+     "x": 56,
+     "y": 270,
+     "w": 888,
+     "h": 60
+    },
+    {
+     "id": "f1-elev",
+     "kind": "service",
+     "x": 393,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Elevators"
+    },
+    {
+     "id": "f1-stairs",
+     "kind": "service",
+     "x": 503,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Stairs"
+    },
+    {
+     "id": "f1-room-101",
+     "kind": "room",
+     "x": 63,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "101"
+    },
+    {
+     "id": "f1-room-102",
+     "kind": "room",
+     "x": 173,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "102"
+    },
+    {
+     "id": "f1-room-103",
+     "kind": "room",
+     "x": 283,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "103"
+    },
+    {
+     "id": "f1-room-104",
+     "kind": "room",
+     "x": 503,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "104"
+    },
+    {
+     "id": "f1-room-105",
+     "kind": "room",
+     "x": 613,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "105"
+    },
+    {
+     "id": "f1-room-106",
+     "kind": "room",
+     "x": 723,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "106"
+    },
+    {
+     "id": "f1-room-107",
+     "kind": "room",
+     "x": 833,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "107"
+    },
+    {
+     "id": "f1-room-108",
+     "kind": "room",
+     "x": 63,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "108"
+    },
+    {
+     "id": "f1-room-109",
+     "kind": "room",
+     "x": 173,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "109"
+    },
+    {
+     "id": "f1-restrooms-1",
+     "kind": "service",
+     "x": 283,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Restrooms"
+    },
+    {
+     "id": "f1-meeting-a",
+     "kind": "public",
+     "x": 613,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Meeting Room A"
+    },
+    {
+     "id": "f1-meeting-b",
+     "kind": "public",
+     "x": 723,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Meeting Room B"
+    },
+    {
+     "id": "f1-boardroom",
+     "kind": "public",
+     "x": 833,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Boardroom"
+    },
+    {
+     "id": "f1-s3-staff",
+     "kind": "service",
+     "x": 393,
+     "y": 333,
+     "w": 104,
+     "h": 224
+    }
+   ]
+  },
+  {
+   "id": "f2",
+   "label": "2",
+   "name": "2nd Floor",
+   "level": 2,
+   "width": 1000,
+   "height": 600,
+   "plan_image": null,
+   "areas": [
+    {
+     "id": "f2-building",
+     "kind": "building",
+     "x": 56,
+     "y": 36,
+     "w": 888,
+     "h": 528
+    },
+    {
+     "id": "f2-corridor",
+     "kind": "corridor",
+     "x": 56,
+     "y": 270,
+     "w": 888,
+     "h": 60
+    },
+    {
+     "id": "f2-elev",
+     "kind": "service",
+     "x": 393,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Elevators"
+    },
+    {
+     "id": "f2-stairs",
+     "kind": "service",
+     "x": 503,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Stairs"
+    },
+    {
+     "id": "f2-garden",
+     "kind": "public",
+     "x": 63,
+     "y": 43,
+     "w": 324,
+     "h": 224,
+     "label": "The Garden Restaurant"
+    },
+    {
+     "id": "f2-sky-lounge",
+     "kind": "public",
+     "x": 503,
+     "y": 43,
+     "w": 214,
+     "h": 224,
+     "label": "Sky Lounge"
+    },
+    {
+     "id": "f2-room-201",
+     "kind": "room",
+     "x": 723,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "201"
+    },
+    {
+     "id": "f2-room-202",
+     "kind": "room",
+     "x": 833,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "202"
+    },
+    {
+     "id": "f2-room-203",
+     "kind": "room",
+     "x": 63,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "203"
+    },
+    {
+     "id": "f2-room-204",
+     "kind": "room",
+     "x": 173,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "204"
+    },
+    {
+     "id": "f2-restrooms-2",
+     "kind": "service",
+     "x": 283,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Restrooms"
+    },
+    {
+     "id": "f2-room-205",
+     "kind": "room",
+     "x": 613,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "205"
+    },
+    {
+     "id": "f2-room-206",
+     "kind": "room",
+     "x": 723,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "206"
+    },
+    {
+     "id": "f2-room-207",
+     "kind": "room",
+     "x": 833,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "207"
+    },
+    {
+     "id": "f2-s3-staff",
+     "kind": "service",
+     "x": 393,
+     "y": 333,
+     "w": 104,
+     "h": 224
+    }
+   ]
+  },
+  {
+   "id": "f3",
+   "label": "3",
+   "name": "3rd Floor",
+   "level": 3,
+   "width": 1000,
+   "height": 600,
+   "plan_image": null,
+   "areas": [
+    {
+     "id": "f3-building",
+     "kind": "building",
+     "x": 56,
+     "y": 36,
+     "w": 888,
+     "h": 528
+    },
+    {
+     "id": "f3-corridor",
+     "kind": "corridor",
+     "x": 56,
+     "y": 270,
+     "w": 888,
+     "h": 60
+    },
+    {
+     "id": "f3-elev",
+     "kind": "service",
+     "x": 393,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "Elevators"
+    },
+    {
+     "id": "f3-stairs",
+     "kind": "service",
+     "x": 503,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Stairs"
+    },
+    {
+     "id": "f3-room-301",
+     "kind": "room",
+     "x": 63,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "301"
+    },
+    {
+     "id": "f3-room-302",
+     "kind": "room",
+     "x": 173,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "302"
+    },
+    {
+     "id": "f3-room-303",
+     "kind": "room",
+     "x": 283,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "303"
+    },
+    {
+     "id": "f3-room-304",
+     "kind": "room",
+     "x": 503,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "304"
+    },
+    {
+     "id": "f3-room-305",
+     "kind": "room",
+     "x": 613,
+     "y": 43,
+     "w": 104,
+     "h": 224,
+     "label": "305"
+    },
+    {
+     "id": "f3-presidential",
+     "kind": "public",
+     "x": 723,
+     "y": 43,
+     "w": 214,
+     "h": 224,
+     "label": "Presidential Suite"
+    },
+    {
+     "id": "f3-room-306",
+     "kind": "room",
+     "x": 63,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "306"
+    },
+    {
+     "id": "f3-room-307",
+     "kind": "room",
+     "x": 173,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "307"
+    },
+    {
+     "id": "f3-restrooms-3",
+     "kind": "service",
+     "x": 283,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "Restrooms"
+    },
+    {
+     "id": "f3-room-308",
+     "kind": "room",
+     "x": 613,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "308"
+    },
+    {
+     "id": "f3-room-309",
+     "kind": "room",
+     "x": 723,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "309"
+    },
+    {
+     "id": "f3-room-310",
+     "kind": "room",
+     "x": 833,
+     "y": 333,
+     "w": 104,
+     "h": 224,
+     "label": "310"
+    },
+    {
+     "id": "f3-s3-staff",
+     "kind": "service",
+     "x": 393,
+     "y": 333,
+     "w": 104,
+     "h": 224
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "id": "fb1-c0",
+   "floor": "fb1",
+   "x": 115,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fb1-c1"
+   ]
+  },
+  {
+   "id": "fb1-c1",
+   "floor": "fb1",
+   "x": 225,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fb1-c0",
+    "fb1-c2"
+   ]
+  },
+  {
+   "id": "fb1-c2",
+   "floor": "fb1",
+   "x": 335,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fb1-c1",
+    "fb1-c3"
+   ]
+  },
+  {
+   "id": "fb1-c3",
+   "floor": "fb1",
+   "x": 445,
+   "y": 300,
+   "type": "elevator",
+   "connections": [
+    "fb1-c2",
+    "fb1-c4",
+    "fg-c3"
+   ],
+   "door": {
+    "x": 445,
+    "y": 248
+   }
+  },
+  {
+   "id": "fb1-c4",
+   "floor": "fb1",
+   "x": 555,
+   "y": 300,
+   "type": "stairs",
+   "connections": [
+    "fb1-c3",
+    "fb1-c5",
+    "fg-c4"
+   ],
+   "door": {
+    "x": 555,
+    "y": 352
+   }
+  },
+  {
+   "id": "fb1-c5",
+   "floor": "fb1",
+   "x": 665,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fb1-c4",
+    "fb1-c6"
+   ]
+  },
+  {
+   "id": "fb1-c6",
+   "floor": "fb1",
+   "x": 775,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fb1-c5",
+    "fb1-c7"
+   ]
+  },
+  {
+   "id": "fb1-c7",
+   "floor": "fb1",
+   "x": 885,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fb1-c6"
+   ]
+  },
+  {
+   "id": "fg-c0",
+   "floor": "fg",
+   "x": 115,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fg-c1",
+    "fg-e0"
+   ]
+  },
+  {
+   "id": "fg-c1",
+   "floor": "fg",
+   "x": 225,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fg-c0",
+    "fg-c2"
+   ]
+  },
+  {
+   "id": "fg-c2",
+   "floor": "fg",
+   "x": 335,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fg-c1",
+    "fg-c3"
+   ]
+  },
+  {
+   "id": "fg-c3",
+   "floor": "fg",
+   "x": 445,
+   "y": 300,
+   "type": "elevator",
+   "connections": [
+    "fg-c2",
+    "fg-c4",
+    "fb1-c3",
+    "f1-c3"
+   ],
+   "door": {
+    "x": 445,
+    "y": 248
+   }
+  },
+  {
+   "id": "fg-c4",
+   "floor": "fg",
+   "x": 555,
+   "y": 300,
+   "type": "stairs",
+   "connections": [
+    "fg-c3",
+    "fg-c5",
+    "fb1-c4",
+    "f1-c4"
+   ],
+   "door": {
+    "x": 555,
+    "y": 352
+   }
+  },
+  {
+   "id": "fg-c5",
+   "floor": "fg",
+   "x": 665,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fg-c4",
+    "fg-c6"
+   ]
+  },
+  {
+   "id": "fg-c6",
+   "floor": "fg",
+   "x": 775,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fg-c5",
+    "fg-c7"
+   ]
+  },
+  {
+   "id": "fg-c7",
+   "floor": "fg",
+   "x": 885,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "fg-c6"
+   ]
+  },
+  {
+   "id": "f1-c0",
+   "floor": "f1",
+   "x": 115,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f1-c1"
+   ]
+  },
+  {
+   "id": "f1-c1",
+   "floor": "f1",
+   "x": 225,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f1-c0",
+    "f1-c2"
+   ]
+  },
+  {
+   "id": "f1-c2",
+   "floor": "f1",
+   "x": 335,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f1-c1",
+    "f1-c3"
+   ]
+  },
+  {
+   "id": "f1-c3",
+   "floor": "f1",
+   "x": 445,
+   "y": 300,
+   "type": "elevator",
+   "connections": [
+    "f1-c2",
+    "f1-c4",
+    "fg-c3",
+    "f2-c3"
+   ],
+   "door": {
+    "x": 445,
+    "y": 248
+   }
+  },
+  {
+   "id": "f1-c4",
+   "floor": "f1",
+   "x": 555,
+   "y": 300,
+   "type": "stairs",
+   "connections": [
+    "f1-c3",
+    "f1-c5",
+    "fg-c4",
+    "f2-c4"
+   ],
+   "door": {
+    "x": 555,
+    "y": 352
+   }
+  },
+  {
+   "id": "f1-c5",
+   "floor": "f1",
+   "x": 665,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f1-c4",
+    "f1-c6"
+   ]
+  },
+  {
+   "id": "f1-c6",
+   "floor": "f1",
+   "x": 775,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f1-c5",
+    "f1-c7"
+   ]
+  },
+  {
+   "id": "f1-c7",
+   "floor": "f1",
+   "x": 885,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f1-c6"
+   ]
+  },
+  {
+   "id": "f2-c0",
+   "floor": "f2",
+   "x": 115,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f2-c1"
+   ]
+  },
+  {
+   "id": "f2-c1",
+   "floor": "f2",
+   "x": 225,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f2-c0",
+    "f2-c2"
+   ]
+  },
+  {
+   "id": "f2-c2",
+   "floor": "f2",
+   "x": 335,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f2-c1",
+    "f2-c3"
+   ]
+  },
+  {
+   "id": "f2-c3",
+   "floor": "f2",
+   "x": 445,
+   "y": 300,
+   "type": "elevator",
+   "connections": [
+    "f2-c2",
+    "f2-c4",
+    "f1-c3",
+    "f3-c3"
+   ],
+   "door": {
+    "x": 445,
+    "y": 248
+   }
+  },
+  {
+   "id": "f2-c4",
+   "floor": "f2",
+   "x": 555,
+   "y": 300,
+   "type": "stairs",
+   "connections": [
+    "f2-c3",
+    "f2-c5",
+    "f1-c4",
+    "f3-c4"
+   ],
+   "door": {
+    "x": 555,
+    "y": 352
+   }
+  },
+  {
+   "id": "f2-c5",
+   "floor": "f2",
+   "x": 665,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f2-c4",
+    "f2-c6"
+   ]
+  },
+  {
+   "id": "f2-c6",
+   "floor": "f2",
+   "x": 775,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f2-c5",
+    "f2-c7"
+   ]
+  },
+  {
+   "id": "f2-c7",
+   "floor": "f2",
+   "x": 885,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f2-c6"
+   ]
+  },
+  {
+   "id": "f3-c0",
+   "floor": "f3",
+   "x": 115,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f3-c1"
+   ]
+  },
+  {
+   "id": "f3-c1",
+   "floor": "f3",
+   "x": 225,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f3-c0",
+    "f3-c2"
+   ]
+  },
+  {
+   "id": "f3-c2",
+   "floor": "f3",
+   "x": 335,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f3-c1",
+    "f3-c3"
+   ]
+  },
+  {
+   "id": "f3-c3",
+   "floor": "f3",
+   "x": 445,
+   "y": 300,
+   "type": "elevator",
+   "connections": [
+    "f3-c2",
+    "f3-c4",
+    "f2-c3"
+   ],
+   "door": {
+    "x": 445,
+    "y": 248
+   }
+  },
+  {
+   "id": "f3-c4",
+   "floor": "f3",
+   "x": 555,
+   "y": 300,
+   "type": "stairs",
+   "connections": [
+    "f3-c3",
+    "f3-c5",
+    "f2-c4"
+   ],
+   "door": {
+    "x": 555,
+    "y": 352
+   }
+  },
+  {
+   "id": "f3-c5",
+   "floor": "f3",
+   "x": 665,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f3-c4",
+    "f3-c6"
+   ]
+  },
+  {
+   "id": "f3-c6",
+   "floor": "f3",
+   "x": 775,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f3-c5",
+    "f3-c7"
+   ]
+  },
+  {
+   "id": "f3-c7",
+   "floor": "f3",
+   "x": 885,
+   "y": 300,
+   "type": "walk",
+   "connections": [
+    "f3-c6"
+   ]
+  },
+  {
+   "id": "fg-e0",
+   "floor": "fg",
+   "x": 66,
+   "y": 300,
+   "type": "entrance",
+   "connections": [
+    "fg-c0"
+   ]
+  }
+ ],
+ "locations": [
+  {
+   "id": "elevator-b1",
+   "name": "Elevators",
+   "description": "Lifts to all floors.",
+   "image": null,
+   "floor": "fb1",
+   "x": 445,
+   "y": 250,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "fb1-c3"
+  },
+  {
+   "id": "stairs-b1",
+   "name": "Stairs",
+   "description": "Staircase to all floors.",
+   "image": null,
+   "floor": "fb1",
+   "x": 555,
+   "y": 400,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "fb1-c4"
+  },
+  {
+   "id": "elevator-g",
+   "name": "Elevators",
+   "description": "Lifts to all floors.",
+   "image": null,
+   "floor": "fg",
+   "x": 445,
+   "y": 250,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "fg-c3"
+  },
+  {
+   "id": "stairs-g",
+   "name": "Stairs",
+   "description": "Staircase to all floors.",
+   "image": null,
+   "floor": "fg",
+   "x": 555,
+   "y": 400,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "fg-c4"
+  },
+  {
+   "id": "elevator-1",
+   "name": "Elevators",
+   "description": "Lifts to all floors.",
+   "image": null,
+   "floor": "f1",
+   "x": 445,
+   "y": 250,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "f1-c3"
+  },
+  {
+   "id": "stairs-1",
+   "name": "Stairs",
+   "description": "Staircase to all floors.",
+   "image": null,
+   "floor": "f1",
+   "x": 555,
+   "y": 400,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "f1-c4"
+  },
+  {
+   "id": "elevator-2",
+   "name": "Elevators",
+   "description": "Lifts to all floors.",
+   "image": null,
+   "floor": "f2",
+   "x": 445,
+   "y": 250,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "f2-c3"
+  },
+  {
+   "id": "stairs-2",
+   "name": "Stairs",
+   "description": "Staircase to all floors.",
+   "image": null,
+   "floor": "f2",
+   "x": 555,
+   "y": 400,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "f2-c4"
+  },
+  {
+   "id": "elevator-3",
+   "name": "Elevators",
+   "description": "Lifts to all floors.",
+   "image": null,
+   "floor": "f3",
+   "x": 445,
+   "y": 250,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "f3-c3"
+  },
+  {
+   "id": "stairs-3",
+   "name": "Stairs",
+   "description": "Staircase to all floors.",
+   "image": null,
+   "floor": "f3",
+   "x": 555,
+   "y": 400,
+   "category": "transport",
+   "opening_hours": null,
+   "node": "f3-c4"
+  },
+  {
+   "id": "pool",
+   "name": "Infinity Pool",
+   "description": "Heated indoor infinity pool with loungers and a poolside bar.",
+   "image": null,
+   "floor": "fb1",
+   "x": 225,
+   "y": 155,
+   "category": "pool",
+   "opening_hours": "07:00 - 21:00",
+   "node": "fb1-c1",
+   "ref": {
+    "type": "facility",
+    "slug": "infinity-pool"
+   }
+  },
+  {
+   "id": "spa",
+   "name": "Serenity Spa",
+   "description": "Massages, facials and treatments in a calm, candle-lit setting.",
+   "image": null,
+   "floor": "fb1",
+   "x": 775,
+   "y": 155,
+   "category": "wellness",
+   "opening_hours": "09:00 - 21:00",
+   "node": "fb1-c6",
+   "ref": {
+    "type": "facility",
+    "slug": "serenity-spa"
+   }
+  },
+  {
+   "id": "gym",
+   "name": "Fitness Center",
+   "description": "Cardio, free weights and a stretching studio.",
+   "image": null,
+   "floor": "fb1",
+   "x": 170,
+   "y": 445,
+   "category": "fitness",
+   "opening_hours": "24 hours",
+   "node": "fb1-c0",
+   "ref": {
+    "type": "facility",
+    "slug": "fitness-center"
+   }
+  },
+  {
+   "id": "restrooms-b1",
+   "name": "Restrooms",
+   "description": "Restrooms.",
+   "image": null,
+   "floor": "fb1",
+   "x": 335,
+   "y": 445,
+   "category": "restroom",
+   "opening_hours": null,
+   "node": "fb1-c2"
+  },
+  {
+   "id": "sauna",
+   "name": "Sauna & Steam",
+   "description": "Finnish sauna and steam room.",
+   "image": null,
+   "floor": "fb1",
+   "x": 665,
+   "y": 445,
+   "category": "wellness",
+   "opening_hours": "09:00 - 21:00",
+   "node": "fb1-c5"
+  },
+  {
+   "id": "juice-bar",
+   "name": "Juice Bar",
+   "description": "Fresh juices, smoothies and light bites after your workout.",
+   "image": null,
+   "floor": "fb1",
+   "x": 830,
+   "y": 445,
+   "category": "cafe",
+   "opening_hours": "08:00 - 20:00",
+   "node": "fb1-c6"
+  },
+  {
+   "id": "entrance",
+   "name": "Main Entrance",
+   "description": "Welcome to Grand Horizon.",
+   "image": null,
+   "floor": "fg",
+   "x": 66,
+   "y": 300,
+   "category": "entrance",
+   "opening_hours": null,
+   "node": "fg-e0"
+  },
+  {
+   "id": "reception",
+   "name": "Reception",
+   "description": "Check-in, check-out and any help you need, day or night.",
+   "image": null,
+   "floor": "fg",
+   "x": 170,
+   "y": 155,
+   "category": "reception",
+   "opening_hours": "24 hours",
+   "node": "fg-c0"
+  },
+  {
+   "id": "concierge",
+   "name": "Concierge",
+   "description": "Tours, transport and restaurant bookings.",
+   "image": null,
+   "floor": "fg",
+   "x": 335,
+   "y": 155,
+   "category": "facility",
+   "opening_hours": "07:00 - 22:00",
+   "node": "fg-c2"
+  },
+  {
+   "id": "restrooms-g",
+   "name": "Restrooms",
+   "description": "Restrooms.",
+   "image": null,
+   "floor": "fg",
+   "x": 555,
+   "y": 155,
+   "category": "restroom",
+   "opening_hours": null,
+   "node": "fg-c4"
+  },
+  {
+   "id": "cafe-aroma",
+   "name": "Cafe Aroma",
+   "description": "Specialty coffee, pastries and light lunches.",
+   "image": null,
+   "floor": "fg",
+   "x": 720,
+   "y": 155,
+   "category": "cafe",
+   "opening_hours": "06:30 - 22:00",
+   "node": "fg-c5"
+  },
+  {
+   "id": "gift-shop",
+   "name": "Gift Shop",
+   "description": "Souvenirs, essentials and local crafts.",
+   "image": null,
+   "floor": "fg",
+   "x": 885,
+   "y": 155,
+   "category": "facility",
+   "opening_hours": "09:00 - 21:00",
+   "node": "fg-c7"
+  },
+  {
+   "id": "lobby",
+   "name": "Lobby & Lounge",
+   "description": "Relax in the lounge with a drink and live piano in the evenings.",
+   "image": null,
+   "floor": "fg",
+   "x": 225,
+   "y": 445,
+   "category": "lobby",
+   "opening_hours": null,
+   "node": "fg-c1"
+  },
+  {
+   "id": "business-center",
+   "name": "Business Center",
+   "description": "Printing, meeting pods and fast Wi-Fi.",
+   "image": null,
+   "floor": "fg",
+   "x": 445,
+   "y": 445,
+   "category": "facility",
+   "opening_hours": "07:00 - 22:00",
+   "node": "fg-c3",
+   "ref": {
+    "type": "facility",
+    "slug": "business-center"
+   }
+  },
+  {
+   "id": "azure",
+   "name": "Azure Restaurant",
+   "description": "Mediterranean cuisine with sea views.",
+   "image": null,
+   "floor": "fg",
+   "x": 775,
+   "y": 445,
+   "category": "dining",
+   "opening_hours": "12:00 - 23:00",
+   "node": "fg-c6",
+   "ref": {
+    "type": "restaurant",
+    "slug": "azure-restaurant"
+   }
+  },
+  {
+   "id": "room-101",
+   "name": "Room 101",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 115,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c0"
+  },
+  {
+   "id": "room-102",
+   "name": "Room 102",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 225,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c1"
+  },
+  {
+   "id": "room-103",
+   "name": "Room 103",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 335,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c2"
+  },
+  {
+   "id": "room-104",
+   "name": "Room 104",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 555,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c4"
+  },
+  {
+   "id": "room-105",
+   "name": "Room 105",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 665,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c5"
+  },
+  {
+   "id": "room-106",
+   "name": "Room 106",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 775,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c6"
+  },
+  {
+   "id": "room-107",
+   "name": "Room 107",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 885,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c7"
+  },
+  {
+   "id": "room-108",
+   "name": "Room 108",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 115,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c0"
+  },
+  {
+   "id": "room-109",
+   "name": "Room 109",
+   "description": "A comfortable guest room on the 1st Floor.",
+   "image": null,
+   "floor": "f1",
+   "x": 225,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f1-c1"
+  },
+  {
+   "id": "restrooms-1",
+   "name": "Restrooms",
+   "description": "Restrooms.",
+   "image": null,
+   "floor": "f1",
+   "x": 335,
+   "y": 445,
+   "category": "restroom",
+   "opening_hours": null,
+   "node": "f1-c2"
+  },
+  {
+   "id": "meeting-a",
+   "name": "Meeting Room A",
+   "description": "Bright room for up to 12 guests with a projector and video conferencing.",
+   "image": null,
+   "floor": "f1",
+   "x": 665,
+   "y": 445,
+   "category": "meeting",
+   "opening_hours": "08:00 - 20:00",
+   "node": "f1-c5"
+  },
+  {
+   "id": "meeting-b",
+   "name": "Meeting Room B",
+   "description": "Seats 8 around a boardroom table, with whiteboard and screen.",
+   "image": null,
+   "floor": "f1",
+   "x": 775,
+   "y": 445,
+   "category": "meeting",
+   "opening_hours": "08:00 - 20:00",
+   "node": "f1-c6"
+  },
+  {
+   "id": "boardroom",
+   "name": "Boardroom",
+   "description": "Executive boardroom for up to 16, with catering on request.",
+   "image": null,
+   "floor": "f1",
+   "x": 885,
+   "y": 445,
+   "category": "meeting",
+   "opening_hours": "08:00 - 20:00",
+   "node": "f1-c7"
+  },
+  {
+   "id": "garden",
+   "name": "The Garden Restaurant",
+   "description": "Enjoy international cuisine with panoramic views of the hotel garden.",
+   "image": null,
+   "floor": "f2",
+   "x": 225,
+   "y": 155,
+   "category": "dining",
+   "opening_hours": "12:00 - 23:00",
+   "node": "f2-c1"
+  },
+  {
+   "id": "sky-lounge",
+   "name": "Sky Lounge",
+   "description": "Cocktails and small plates above the skyline.",
+   "image": null,
+   "floor": "f2",
+   "x": 610,
+   "y": 155,
+   "category": "dining",
+   "opening_hours": "17:00 - 01:00",
+   "node": "f2-c4",
+   "ref": {
+    "type": "restaurant",
+    "slug": "sky-lounge"
+   }
+  },
+  {
+   "id": "room-201",
+   "name": "Room 201",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 775,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c6"
+  },
+  {
+   "id": "room-202",
+   "name": "Room 202",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 885,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c7"
+  },
+  {
+   "id": "room-203",
+   "name": "Room 203",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 115,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c0"
+  },
+  {
+   "id": "room-204",
+   "name": "Room 204",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 225,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c1"
+  },
+  {
+   "id": "restrooms-2",
+   "name": "Restrooms",
+   "description": "Restrooms.",
+   "image": null,
+   "floor": "f2",
+   "x": 335,
+   "y": 445,
+   "category": "restroom",
+   "opening_hours": null,
+   "node": "f2-c2"
+  },
+  {
+   "id": "room-205",
+   "name": "Room 205",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 665,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c5"
+  },
+  {
+   "id": "room-206",
+   "name": "Room 206",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 775,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c6"
+  },
+  {
+   "id": "room-207",
+   "name": "Room 207",
+   "description": "A comfortable guest room on the 2nd Floor.",
+   "image": null,
+   "floor": "f2",
+   "x": 885,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f2-c7"
+  },
+  {
+   "id": "room-301",
+   "name": "Room 301",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 115,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c0"
+  },
+  {
+   "id": "room-302",
+   "name": "Room 302",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 225,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c1"
+  },
+  {
+   "id": "room-303",
+   "name": "Room 303",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 335,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c2"
+  },
+  {
+   "id": "room-304",
+   "name": "Room 304",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 555,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c4"
+  },
+  {
+   "id": "room-305",
+   "name": "Room 305",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 665,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c5"
+  },
+  {
+   "id": "presidential",
+   "name": "Presidential Suite",
+   "description": "Our finest suite: two bedrooms, a private terrace and butler service.",
+   "image": null,
+   "floor": "f3",
+   "x": 830,
+   "y": 155,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c6"
+  },
+  {
+   "id": "room-306",
+   "name": "Room 306",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 115,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c0"
+  },
+  {
+   "id": "room-307",
+   "name": "Room 307",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 225,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c1"
+  },
+  {
+   "id": "restrooms-3",
+   "name": "Restrooms",
+   "description": "Restrooms.",
+   "image": null,
+   "floor": "f3",
+   "x": 335,
+   "y": 445,
+   "category": "restroom",
+   "opening_hours": null,
+   "node": "f3-c2"
+  },
+  {
+   "id": "room-308",
+   "name": "Room 308",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 665,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c5"
+  },
+  {
+   "id": "room-309",
+   "name": "Room 309",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 775,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c6"
+  },
+  {
+   "id": "room-310",
+   "name": "Room 310",
+   "description": "A comfortable guest room on the 3rd Floor.",
+   "image": null,
+   "floor": "f3",
+   "x": 885,
+   "y": 445,
+   "category": "room",
+   "opening_hours": null,
+   "node": "f3-c7"
+  }
+ ]
+}

@@ -98,30 +98,14 @@ class GuestScreenPagesSeeder extends Seeder
     }
 
     /**
-     * Only the Map page is still a Page Builder page (its tappable-locations
-     * version comes later). Timing, Short Calls, Rooms & Suites, Gallery and
-     * Meeting Rooms are real admin-managed data now - see the admin sidebar.
+     * No Page Builder pages are needed any more: Timing, Short Calls, Rooms & Suites, Gallery,
+     * Meeting Rooms and the Map are all real admin-managed features now (see the admin sidebar).
      *
      * @return array<string, array{name: string, sections: array}>
      */
     protected function pages(): array
     {
-        return [
-            'map' => [
-                'name' => 'Map',
-                'sections' => [
-                    [
-                        'id' => 'text-map',
-                        'type' => 'text',
-                        'props' => [
-                            'heading' => 'Hotel Map',
-                            'body' => 'An interactive map is coming soon.',
-                        ],
-                        'settings' => ['padding' => 'large'],
-                    ],
-                ],
-            ],
-        ];
+        return [];
     }
 
     protected function createPageIfMissing(Hotel $hotel, string $slug, string $name, array $sections): void

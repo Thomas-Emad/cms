@@ -28,7 +28,7 @@ const page = usePage();
 const NAV_LINKS = [
     { href: '/facilities', label: 'Facilities' },
     { href: '/timing', label: 'Timing' },
-    { href: '/pages/map', label: 'Map' },
+    { href: '/map', label: 'Map' },
     { href: '/short-calls', label: 'Short Calls' },
     { href: '/rooms', label: 'Rooms & Suites' },
     { href: '/gallery', label: 'Gallery' },

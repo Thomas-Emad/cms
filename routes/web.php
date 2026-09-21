@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\FacilityController as AdminFacilityController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\MapController as AdminMapController;
 use App\Http\Controllers\Admin\InfoEntryController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController
 use App\Http\Controllers\Guest\FacilityController as GuestFacilityController;
 use App\Http\Controllers\Guest\GalleryController as GuestGalleryController;
 use App\Http\Controllers\Guest\InfoPageController;
+use App\Http\Controllers\Guest\MapController as GuestMapController;
 use App\Http\Controllers\Guest\RoomController as GuestRoomController;
 use App\Http\Controllers\Guest\OfferController as GuestOfferController;
 use App\Http\Controllers\Guest\PageController as GuestPageController;
@@ -46,6 +48,7 @@ Route::middleware(['web', 'resolve.hotel'])->group(function () {
     Route::get('/timing', [InfoPageController::class, 'timing'])->name('guest.timing');
     Route::get('/short-calls', [InfoPageController::class, 'shortCalls'])->name('guest.short-calls');
     Route::get('/gallery', GuestGalleryController::class)->name('guest.gallery');
+    Route::get('/map', GuestMapController::class)->name('guest.map');
 
     Route::get('/restaurants', [GuestRestaurantController::class, 'index'])->name('guest.restaurants.index');
     Route::get('/restaurants/{restaurant:slug}', [GuestRestaurantController::class, 'show'])->name('guest.restaurants.show');
@@ -80,7 +83,7 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/', DashboardController::class)
+        Route::get('/dashboard', DashboardController::class)
             ->middleware('role:super_admin,hotel_admin,hotel_staff')
             ->name('dashboard');
 
@@ -105,6 +108,10 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             Route::put('short-calls', [InfoEntryController::class, 'update'])->defaults('kind', 'short_call')->name('short-calls.update');
 
             Route::get('gallery', [AdminGalleryController::class, 'index'])->name('gallery.index');
+
+            Route::get('map', [AdminMapController::class, 'edit'])->name('map.edit');
+            Route::put('map', [AdminMapController::class, 'update'])->name('map.update');
+            Route::post('map/demo', [AdminMapController::class, 'demo'])->name('map.demo');
 
             // Image upload / delete / reorder for any HasMedia owner
             Route::post('media', [MediaController::class, 'store'])->name('media.store');

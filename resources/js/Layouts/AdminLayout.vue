@@ -24,6 +24,7 @@ const nav = [
       { label: 'Timing', href: '/admin/timing' },
       { label: 'Short Calls', href: '/admin/short-calls' },
       { label: 'Gallery', href: '/admin/gallery' },
+      { label: 'Hotel Map', href: '/admin/map' },
       { label: 'Restaurants', href: '/admin/restaurants' },
       { label: 'Services', href: '/admin/services' },
       { label: 'Events', href: '/admin/events' },
