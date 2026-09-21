@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class HotelSettings extends Model
 {
     protected $fillable = [
-        'hotel_id', 'checkin_time', 'checkout_time', 'default_locale', 'metadata',
+        'hotel_id', 'checkin_time', 'checkout_time', 'default_locale', 'guest_view', 'metadata',
     ];
 
     protected $casts = [

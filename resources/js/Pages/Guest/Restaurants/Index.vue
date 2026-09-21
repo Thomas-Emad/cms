@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import RestaurantCard from '@/Components/Cards/RestaurantCard.vue';
 import type { Restaurant } from '@/types/restaurant';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 defineProps<{
     restaurants: Restaurant[];

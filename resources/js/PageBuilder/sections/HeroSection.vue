@@ -30,8 +30,21 @@ const isEditorCanvas = props.mode === 'edit';
     <section
         ref="heroRef"
         class="relative w-full overflow-hidden flex items-end"
-        :class="isEditorCanvas ? 'h-[420px]' : 'h-[92vh] min-h-[560px]'"
-        :style="{ background: !data?.media ? 'var(--luxury-forest)' : undefined }"
+        :class="isEditorCanvas ? 'h-[420px]' : undefined"
+        :style="{
+            background: !data?.media ? 'var(--luxury-forest)' : undefined,
+            // Fills the viewport minus whatever dock is reserved at the
+            // bottom (0 on the TV shell - see TvGuestLayout.vue). Not
+            // subtracting topbar height too: the hero is meant to render
+            // full-bleed BEHIND the fixed topbar (see FULL_BLEED_FIRST in
+            // PageView.vue), not stop above it. The classic shell's dock
+            // used to hide an 8vh gap here; without it, a fixed 92vh left
+            // the next section visibly peeking in at the bottom.
+            ...(isEditorCanvas ? {} : {
+                height: 'calc(100vh - var(--kiosk-dock-h, 0px))',
+                minHeight: '560px',
+            }),
+        }"
     >
         <!--
           Sequence, slowest/foundational first:

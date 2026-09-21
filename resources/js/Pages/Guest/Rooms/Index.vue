@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import Showcase from '@/Components/Showcase.vue';
 import type { Room } from '@/types/room';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = defineProps<{ rooms: Room[] }>();
 

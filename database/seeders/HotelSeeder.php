@@ -14,10 +14,10 @@ class HotelSeeder extends Seeder
     public function run(): void
     {
         $hotel = Hotel::create([
-            'name' => 'Grand Horizon Hotel',
-            'slug' => 'grand-horizon',
+            'name' => 'Hilton Grand Horizon',
+            'slug' => 'hilton-grand-horizon',
             'status' => 'active',
-            'contact_email' => 'info@grandhorizonhotel.example',
+            'contact_email' => 'info@hiltongrandhorizon.example',
             'contact_phone' => '+1 555 010 2020',
             'address' => '1 Horizon Bay Drive',
             'timezone' => 'UTC',
@@ -31,12 +31,14 @@ class HotelSeeder extends Seeder
             'default_locale' => 'en',
         ]);
 
+        // Hilton brand palette: deep Hilton Blue as primary, Hilton Gold as
+        // the accent/secondary color used for CTAs, highlights and dividers.
         Theme::create([
             'hotel_id' => $hotel->id,
-            'name' => 'Grand Horizon Default',
+            'name' => 'Hilton Brand Theme',
             'is_active' => true,
-            'primary_color' => '#1F4B5A',
-            'secondary_color' => '#D4AF37',
+            'primary_color' => '#002F61',
+            'secondary_color' => '#B99A62',
             'font_family' => 'Inter',
             'border_radius' => 'medium',
             'button_style' => 'rounded',

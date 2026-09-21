@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import FacilityCard from '@/Components/Cards/FacilityCard.vue';
 import Showcase from '@/Components/Showcase.vue';
 import { computed } from 'vue';
 import type { Facility } from '@/types/facility';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = withDefaults(
     defineProps<{

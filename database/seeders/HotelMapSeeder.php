@@ -11,7 +11,7 @@ class HotelMapSeeder extends Seeder
 {
     public function run(): void
     {
-        $hotel = Hotel::where('slug', 'grand-horizon')->first();
+        $hotel = Hotel::where('slug', 'hilton-grand-horizon')->first();
         if (! $hotel || HotelMap::withoutGlobalScopes()->where('hotel_id', $hotel->id)->exists()) {
             return;
         }

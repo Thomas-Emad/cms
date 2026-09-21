@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { provide, computed } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { provide, computed, ref } from 'vue';
+import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ComponentLibrary from '@/PageBuilder/ComponentLibrary.vue';
 import Canvas from '@/PageBuilder/Canvas.vue';
@@ -20,12 +20,25 @@ interface BuilderContext {
 }
 
 const props = defineProps<{
-  page: { id: number; name: string; slug: string; status: string; published_version_id: number | null };
+  page: { id: number; name: string; slug: string; status: string; layout?: 'scroll' | 'fullscreen'; published_version_id: number | null };
   schemaVersion: number;
   sections: Section[];
   availableSectionTypes: string[];
   context: BuilderContext;
 }>();
+
+// Layout ('scroll' vs 'fullscreen') only applies to standalone Pages, not
+// entity-backed contexts like restaurants (isEntityContext below) - those
+// don't have a page-level layout field at all.
+const layout = ref(props.page.layout ?? 'scroll');
+const isSavingLayout = ref(false);
+function onLayoutChange() {
+  isSavingLayout.value = true;
+  router.patch(`${props.context.apiBase}/layout`, { layout: layout.value }, {
+    preserveScroll: true,
+    onFinish: () => { isSavingLayout.value = false; },
+  });
+}
 
 const store = usePageBuilderStore(
   { apiBase: props.context.apiBase },
@@ -70,6 +83,21 @@ function onKeydown(e: KeyboardEvent) {
       </div>
 
       <div class="flex items-center gap-2">
+        <label v-if="!isEntityContext" class="flex items-center gap-1.5 text-xs text-slate-500">
+          Layout
+          <select
+            v-model="layout"
+            :disabled="isSavingLayout"
+            class="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700"
+            @change="onLayoutChange"
+          >
+            <option value="scroll">Scrollable</option>
+            <option value="fullscreen">Full screen (no scroll)</option>
+          </select>
+        </label>
+
+        <span v-if="!isEntityContext" class="w-px h-5 bg-slate-200" />
+
         <button
           type="button"
           :disabled="!store.canUndo.value"

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import StoryPlayer from '@/Components/StoryPlayer.vue';
 import type { MediaItem, Room } from '@/types/room';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = defineProps<{ room: Room & { slides: MediaItem[] } }>();
 

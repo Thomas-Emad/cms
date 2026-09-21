@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import ServiceCard from '@/Components/Cards/ServiceCard.vue';
 import type { Service } from '@/types/content';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 defineProps<{ services: Service[] }>();
 </script>

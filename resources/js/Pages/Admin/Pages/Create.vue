@@ -9,6 +9,7 @@ const form = useForm({
     name: '',
     slug: '',
     is_home: false,
+    layout: 'scroll',
 });
 
 // Light auto-slugify convenience, not a hard requirement - the admin can
@@ -65,6 +66,29 @@ function submit() {
                 Set as home page
                 <span class="text-xs text-slate-400">(replaces the current homepage)</span>
             </label>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Layout</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <label
+                        class="cursor-pointer rounded-md border px-3 py-2 text-sm"
+                        :class="form.layout === 'scroll' ? 'border-slate-800 bg-slate-50' : 'border-slate-300'"
+                    >
+                        <input v-model="form.layout" type="radio" value="scroll" class="sr-only" />
+                        <span class="block font-medium text-slate-800">Scrollable</span>
+                        <span class="block text-xs text-slate-500">Content flows, page scrolls normally.</span>
+                    </label>
+                    <label
+                        class="cursor-pointer rounded-md border px-3 py-2 text-sm"
+                        :class="form.layout === 'fullscreen' ? 'border-slate-800 bg-slate-50' : 'border-slate-300'"
+                    >
+                        <input v-model="form.layout" type="radio" value="fullscreen" class="sr-only" />
+                        <span class="block font-medium text-slate-800">Full screen</span>
+                        <span class="block text-xs text-slate-500">No scrolling - sections fill the screen (e.g. main/home screen).</span>
+                    </label>
+                </div>
+                <p v-if="form.errors.layout" class="mt-1 text-xs text-red-600">{{ form.errors.layout }}</p>
+            </div>
 
             <div class="flex justify-end gap-2 pt-2">
                 <Link href="/admin/pages"

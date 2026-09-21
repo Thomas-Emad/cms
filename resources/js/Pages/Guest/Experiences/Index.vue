@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import ExperienceCard from '@/Components/Cards/ExperienceCard.vue';
 import type { Experience } from '@/types/content';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 defineProps<{ experiences: Experience[]; category: string | null }>();
 </script>

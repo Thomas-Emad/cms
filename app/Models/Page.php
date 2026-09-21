@@ -13,7 +13,7 @@ class Page extends Model
     use BelongsToHotel;
 
     protected $fillable = [
-        'hotel_id', 'name', 'slug', 'is_home',
+        'hotel_id', 'name', 'slug', 'is_home', 'layout',
         'seo_title', 'seo_description', 'seo_og_image_media_id',
         'status', 'draft_version_id', 'published_version_id',
     ];

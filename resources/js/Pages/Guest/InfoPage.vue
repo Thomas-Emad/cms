@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 defineProps<{
     kind: 'timing' | 'short_call';

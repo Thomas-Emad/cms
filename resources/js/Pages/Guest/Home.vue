@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import { useTheme } from '@/composables/useTheme';
 import type { Hotel } from '@/types/hotel';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = defineProps<{
   hotel: Hotel;

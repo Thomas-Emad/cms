@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import type { Offer } from '@/types/content';
 import { useParallax, vRevealMount } from '@/lib/motion';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 defineProps<{ offer: Offer }>();
 

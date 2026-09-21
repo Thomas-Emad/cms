@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import EventCard from '@/Components/Cards/EventCard.vue';
 import type { HotelEvent } from '@/types/content';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 defineProps<{ events: HotelEvent[] }>();
 </script>

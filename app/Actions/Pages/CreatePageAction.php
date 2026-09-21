@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class CreatePageAction
 {
     /**
-     * @param array{name: string, slug: string, is_home?: bool} $attributes
+     * @param array{name: string, slug: string, is_home?: bool, layout?: string} $attributes
      */
     public function execute(Hotel $hotel, array $attributes, array $initialSections = []): Page
     {
@@ -24,6 +24,7 @@ class CreatePageAction
                 'name' => $attributes['name'],
                 'slug' => $attributes['slug'],
                 'is_home' => $attributes['is_home'] ?? false,
+                'layout' => $attributes['layout'] ?? 'scroll',
                 'status' => 'draft',
             ]);
 

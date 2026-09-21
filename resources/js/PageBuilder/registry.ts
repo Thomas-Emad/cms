@@ -1,5 +1,6 @@
 import type { Component } from 'vue';
 import HeroSection from './sections/HeroSection.vue';
+import AppLauncherSection from './sections/AppLauncherSection.vue';
 import TextSection from './sections/TextSection.vue';
 import ImageSection from './sections/ImageSection.vue';
 import GallerySection from './sections/GallerySection.vue';
@@ -57,6 +58,21 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
       { key: 'media_id', type: 'media', label: 'Background image' },
       { key: 'button_text', type: 'text', label: 'Button label' },
       { key: 'button_url', type: 'url', label: 'Button link' },
+    ],
+  },
+  'app-launcher': {
+    component: AppLauncherSection, label: 'App Launcher (TV Home Screen)', icon: '📺', contexts: ['page'],
+    defaultProps: {
+      eyebrow: '', title: '', subtitle: '', media_id: null,
+      apps_text: 'Apps\nYouTube | https://youtube.com\nNetflix | https://netflix.com\nPrime Video | https://primevideo.com\nDisney+ | https://disneyplus.com',
+    },
+    defaultSettings: { padding: 'none' }, isDynamic: false,
+    editorFields: [
+      { key: 'eyebrow', type: 'text', label: 'Eyebrow' },
+      { key: 'title', type: 'text', label: 'Title' },
+      { key: 'subtitle', type: 'text', label: 'Subtitle' },
+      { key: 'media_id', type: 'media', label: 'Background image' },
+      { key: 'apps_text', type: 'textarea', label: 'App tiles - one per line: Label | URL (URL optional)' },
     ],
   },
   text: {

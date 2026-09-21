@@ -27,7 +27,7 @@ class PageSeeder extends Seeder
 {
     public function run(): void
     {
-        $hotel = Hotel::where('slug', 'grand-horizon')->firstOrFail();
+        $hotel = Hotel::where('slug', 'hilton-grand-horizon')->firstOrFail();
 
         $this->seedHomepage($hotel);
         $this->seedAboutPage($hotel);

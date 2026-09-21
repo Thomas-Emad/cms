@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import StoryPlayer from '@/Components/StoryPlayer.vue';
 import { computed } from 'vue';
 import type { Facility } from '@/types/facility';
 import type { MediaItem } from '@/types/room';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = defineProps<{
     facility: Facility & { gallery_urls?: string[] };

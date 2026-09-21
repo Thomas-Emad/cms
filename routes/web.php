@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\OfferController as AdminOfferController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Guest\EventController as GuestEventController;
 use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController;
 use App\Http\Controllers\Guest\FacilityController as GuestFacilityController;
@@ -127,6 +128,7 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             Route::get('pages/{page}/builder', [AdminPageController::class, 'edit'])->name('pages.builder');
             Route::get('pages/{page}/preview', [AdminPageController::class, 'preview'])->name('pages.preview');
             Route::put('pages/{page}/draft', [AdminPageController::class, 'updateDraft'])->name('pages.draft.update');
+            Route::patch('pages/{page}/layout', [AdminPageController::class, 'updateLayout'])->name('pages.layout.update');
             Route::post('pages/{page}/resolve-preview', [AdminPageController::class, 'resolvePreviewSection'])
                 ->name('pages.resolve-preview');
             // Publishing has its own tighter policy check (hotel_admin+
@@ -135,6 +137,9 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             // route-middleware level since the role gate here already
             // covers hotel_staff for the OTHER page actions above.
             Route::post('pages/{page}/publish', [AdminPageController::class, 'publish'])->name('pages.publish');
+
+            Route::get('settings', [AdminSettingsController::class, 'index'])->name('settings.index');
+            Route::patch('settings/guest-view', [AdminSettingsController::class, 'updateGuestView'])->name('settings.guest-view.update');
         });
     });
 

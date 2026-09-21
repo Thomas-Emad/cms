@@ -28,6 +28,10 @@ class StorePageRequest extends FormRequest
                 Rule::unique('pages', 'slug')->where('hotel_id', Auth::user()->hotel_id),
             ],
             'is_home' => ['boolean'],
+            // 'scroll' = normal page (default); 'fullscreen' = no page
+            // scroll, sections fill the viewport (Smart-TV-style home
+            // screens). See migration 2026_09_21_000001.
+            'layout' => ['nullable', 'string', Rule::in(['scroll', 'fullscreen'])],
         ];
     }
 

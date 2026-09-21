@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import MapExperience from '@/Map/MapExperience.vue';
 import type { HotelMapData } from '@/Map/types';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = defineProps<{ map: HotelMapData | null; place?: string | null }>();
 

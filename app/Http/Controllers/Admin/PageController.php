@@ -6,8 +6,10 @@ use App\Actions\Pages\CreatePageAction;
 use App\Actions\Pages\PublishPageAction;
 use App\Actions\Pages\SaveDraftAction;
 use App\Http\Controllers\Controller;
+use App\Actions\Pages\UpdatePageLayoutAction;
 use App\Http\Requests\Admin\PageSectionsRequest;
 use App\Http\Requests\Admin\StorePageRequest;
+use App\Http\Requests\Admin\UpdatePageLayoutRequest;
 use App\Models\Page;
 use App\Services\PageBuilder\PageRenderService;
 use App\Services\PageBuilder\SectionRegistry;
@@ -84,7 +86,7 @@ class PageController extends Controller
         $draft = $page->draftVersion()->firstOrFail();
 
         return Inertia::render('Admin/Pages/Builder', [
-            'page' => $page->only(['id', 'name', 'slug', 'status', 'published_version_id']),
+            'page' => $page->only(['id', 'name', 'slug', 'status', 'layout', 'published_version_id']),
             'schemaVersion' => $draft->sections['schema_version'] ?? 1,
             'sections' => $draft->sections['sections'] ?? [],
             'availableSectionTypes' => SectionRegistry::typesForContext('page'),
@@ -103,6 +105,18 @@ class PageController extends Controller
         $action->execute($page, $request->validated('sections'));
 
         return back()->with('success', 'Draft saved.');
+    }
+
+    /**
+     * Layout ('scroll' vs 'fullscreen') is a display setting on the Page
+     * itself, editable independently of the draft/publish cycle - see
+     * UpdatePageLayoutAction.
+     */
+    public function updateLayout(UpdatePageLayoutRequest $request, Page $page, UpdatePageLayoutAction $action): RedirectResponse
+    {
+        $action->execute($page, $request->validated('layout'));
+
+        return back()->with('success', 'Layout updated.');
     }
 
     public function publish(Page $page, PublishPageAction $action): RedirectResponse
@@ -134,7 +148,7 @@ class PageController extends Controller
         );
 
         return Inertia::render('Admin/Pages/Preview', [
-            'page' => $page->only(['id', 'name', 'slug']),
+            'page' => $page->only(['id', 'name', 'slug', 'layout']),
             'sections' => $sections,
             'backToBuilderHref' => "/admin/pages/{$page->id}/builder",
         ]);

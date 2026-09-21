@@ -3,6 +3,7 @@
 namespace App\Services\PageBuilder;
 
 use App\Services\PageBuilder\Contracts\SectionDefinition;
+use App\Services\PageBuilder\Sections\AppLauncherSectionDefinition;
 use App\Services\PageBuilder\Sections\CtaSectionDefinition;
 use App\Services\PageBuilder\Sections\EventsSectionDefinition;
 use App\Services\PageBuilder\Sections\ExperiencesSectionDefinition;
@@ -37,6 +38,7 @@ class SectionRegistry
     /** @var array<string, class-string<SectionDefinition>> */
     private static array $definitions = [
         'hero' => HeroSectionDefinition::class,
+        'app-launcher' => AppLauncherSectionDefinition::class,
         'text' => TextSectionDefinition::class,
         'image' => ImageSectionDefinition::class,
         'gallery' => GallerySectionDefinition::class,
@@ -63,6 +65,7 @@ class SectionRegistry
      */
     private static array $contexts = [
         'hero' => ['page'],
+        'app-launcher' => ['page'],
         'text' => ['any'],
         'image' => ['any'],
         'gallery' => ['page'],

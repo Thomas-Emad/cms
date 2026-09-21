@@ -20,6 +20,17 @@ export interface HeroProps {
   button_url?: string;
 }
 
+export interface AppLauncherProps {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  media_id?: number | null;
+  // One app tile per line: "Label | URL" (URL optional). See
+  // AppLauncherSectionDefinition's docblock - same convention as
+  // info-list's items_text, parsed client-side in AppLauncherSection.vue.
+  apps_text?: string;
+}
+
 export interface TextProps {
   heading?: string;
   body?: string;

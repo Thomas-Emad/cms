@@ -25,7 +25,7 @@ class GuestScreenPagesSeeder extends Seeder
 {
     public function run(): void
     {
-        $hotel = Hotel::where('slug', 'grand-horizon')->first() ?? Hotel::orderBy('id')->firstOrFail();
+        $hotel = Hotel::where('slug', 'hilton-grand-horizon')->first() ?? Hotel::orderBy('id')->firstOrFail();
 
         $mediaIds = Media::query()
             ->where('hotel_id', $hotel->id)

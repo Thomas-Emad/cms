@@ -50,7 +50,7 @@ class PageController extends Controller
         );
 
         return Inertia::render('Guest/PageView', [
-            'page' => $page->only(['id', 'name', 'slug', 'seo_title', 'seo_description']),
+            'page' => $page->only(['id', 'name', 'slug', 'layout', 'seo_title', 'seo_description']),
             'sections' => $sections,
         ]);
     }

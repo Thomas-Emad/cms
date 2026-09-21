@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestShell from '@/Layouts/GuestShell.vue';
 import SectionRenderer from '@/PageBuilder/SectionRenderer.vue';
 import type { Section } from '@/types/pageBuilder';
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestShell });
 
 const props = defineProps<{
   restaurant: { id: number; name: string; slug: string };

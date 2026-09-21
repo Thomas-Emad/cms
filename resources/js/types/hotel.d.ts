@@ -28,4 +28,7 @@ export interface SharedPageProps {
     user: AuthUser | null;
   };
   hotel?: Hotel;
+  // Site-wide guest shell choice from Admin > Settings > Guest View
+  // (HotelSettings.guest_view) - see GuestShell.vue.
+  guestView?: 'classic' | 'tv';
 }

@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
+
         $middleware->alias([
             'resolve.hotel' => \App\Http\Middleware\ResolveCurrentHotel::class,
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
