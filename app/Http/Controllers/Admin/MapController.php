@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Facility;
 use App\Models\HotelMap;
+use App\Models\Restaurant;
+use App\Models\Room;
 use App\Services\Map\MapDataValidator;
 use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Http\RedirectResponse;
@@ -19,6 +22,38 @@ use Inertia\Response;
 class MapController extends Controller
 {
     public const DEMO_FILE = 'database/data/demo-hotel-map.json';
+
+    /** The visual map builder. */
+    public function builder(): Response
+    {
+        $hotel = app(CurrentHotel::class)->get();
+        $this->authorize('view', $hotel);
+
+        $content = collect()
+            ->merge(Facility::published()->orderBy('name')->get(['name', 'slug'])->map(fn ($m) => ['type' => 'facility', 'slug' => $m->slug, 'name' => $m->name]))
+            ->merge(Restaurant::published()->orderBy('name')->get(['name', 'slug'])->map(fn ($m) => ['type' => 'restaurant', 'slug' => $m->slug, 'name' => $m->name]))
+            ->merge(Room::published()->orderBy('name')->get(['name', 'slug'])->map(fn ($m) => ['type' => 'room', 'slug' => $m->slug, 'name' => $m->name]))
+            ->values();
+
+        return Inertia::render('Admin/Map/Builder', [
+            'map' => HotelMap::query()->first()?->data,
+            'content' => $content,
+            'errors_list' => session()->pull('map_errors', []),
+            'warnings' => session()->pull('map_warnings', []),
+            'flash_ok' => session()->pull('map_saved'),
+        ]);
+    }
+
+    /** Save from the builder (same validation as the JSON page). */
+    public function save(Request $request, MapDataValidator $validator): RedirectResponse
+    {
+        $hotel = app(CurrentHotel::class)->get();
+        $this->authorize('update', $hotel);
+
+        $request->validate(['data' => ['required', 'array']]);
+
+        return $this->store($hotel->id, $request->input('data'), $validator, null, 'admin.map.builder');
+    }
 
     public function edit(): Response
     {
@@ -71,24 +106,24 @@ class MapController extends Controller
         return $this->store($hotel->id, $data, $validator);
     }
 
-    private function store(int $hotelId, mixed $data, MapDataValidator $validator, ?string $raw = null): RedirectResponse
+    private function store(int $hotelId, mixed $data, MapDataValidator $validator, ?string $raw = null, string $route = 'admin.map.edit'): RedirectResponse
     {
         $result = $validator->validate($data);
         if ($result['errors']) {
-            return $this->fail($result['errors'], $raw);
+            return $this->fail($result['errors'], $raw, $route);
         }
 
         HotelMap::withoutGlobalScopes()->updateOrCreate(['hotel_id' => $hotelId], ['data' => $data]);
 
-        return redirect()->route('admin.map.edit')
+        return redirect()->route($route)
             ->with('map_saved', 'Map saved.')
             ->with('map_warnings', $result['warnings']);
     }
 
     /** Show every problem at once (Inertia only surfaces the first message of an error bag). */
-    private function fail(array $errors, ?string $raw): RedirectResponse
+    private function fail(array $errors, ?string $raw, string $route = 'admin.map.edit'): RedirectResponse
     {
-        return redirect()->route('admin.map.edit')
+        return redirect()->route($route)
             ->with('map_errors', $errors)
             ->with('map_json', $raw);
     }

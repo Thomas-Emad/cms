@@ -29,8 +29,12 @@ function loadDemo() {
     <h1 class="text-xl font-semibold text-slate-800">Hotel Map</h1>
     <p class="mt-1 mb-4 text-sm text-slate-500">
       The interactive map guests see at <code class="rounded bg-slate-100 px-1">/map</code>: floors, walkways and places. It is stored as one JSON document that is
-      checked before saving. A visual map editor will come later; until then you can load the demo hotel or paste a map here.
+      checked before saving. This is the advanced view of the same data the visual builder edits.
     </p>
+
+    <div class="mb-4 rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800">
+      Want to edit visually? <a href="/admin/map/builder" class="font-medium underline">Open the map builder</a> — draw rooms and walkways, place restaurants, connect lifts.
+    </div>
 
     <div class="mb-4 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white p-4">
       <template v-if="summary">

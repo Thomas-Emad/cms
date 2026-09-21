@@ -110,6 +110,8 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             Route::get('gallery', [AdminGalleryController::class, 'index'])->name('gallery.index');
 
             Route::get('map', [AdminMapController::class, 'edit'])->name('map.edit');
+            Route::get('map/builder', [AdminMapController::class, 'builder'])->name('map.builder');
+            Route::put('map/save', [AdminMapController::class, 'save'])->name('map.save');
             Route::put('map', [AdminMapController::class, 'update'])->name('map.update');
             Route::post('map/demo', [AdminMapController::class, 'demo'])->name('map.demo');
 

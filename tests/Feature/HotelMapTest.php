@@ -124,4 +124,72 @@ class HotelMapTest extends TestCase
         $this->get('/admin/map')->assertRedirect();
         $this->put('/admin/map', ['json' => '{}'])->assertRedirect();
     }
+
+    /* ---------------- visual builder endpoints ---------------- */
+
+    /** @test */
+    public function the_builder_page_gets_the_map_and_only_published_content_of_this_hotel_to_link_to(): void
+    {
+        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Serenity Spa', 'slug' => 'serenity-spa', 'status' => 'published']);
+        Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Secret Draft', 'slug' => 'secret-draft', 'status' => 'draft']);
+        Facility::create(['hotel_id' => $this->hotelB->id, 'name' => 'Other Hotel Pool', 'slug' => 'other-pool', 'status' => 'published']);
+        HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $this->demo]);
+
+        $this->actingAs($this->adminA)->get('/admin/map/builder')->assertInertia(function ($page) {
+            $page->component('Admin/Map/Builder')->has('map.floors', 5);
+            $slugs = collect($page->toArray()['props']['content'])->pluck('slug')->all();
+            $this->assertSame(['serenity-spa'], $slugs);
+        });
+    }
+
+    /** @test */
+    public function the_builder_starts_empty_for_a_hotel_with_no_map(): void
+    {
+        $this->actingAs($this->adminA)->get('/admin/map/builder')
+            ->assertInertia(fn ($page) => $page->component('Admin/Map/Builder')->where('map', null));
+    }
+
+    /** @test */
+    public function saving_from_the_builder_stores_the_map_and_returns_to_the_builder(): void
+    {
+        $this->demo['locations'][0]['name'] = 'Edited In Builder';
+
+        $this->actingAs($this->adminA)->put('/admin/map/save', ['data' => $this->demo])
+            ->assertRedirect('/admin/map/builder')->assertSessionHas('map_saved');
+
+        $this->assertSame('Edited In Builder', HotelMap::withoutGlobalScopes()->where('hotel_id', $this->hotelA->id)->first()->data['locations'][0]['name']);
+    }
+
+    /** @test */
+    public function the_builder_save_survives_laravels_empty_string_to_null_middleware(): void
+    {
+        // The builder sends null for blank optional fields, but a browser/proxy may send "".
+        $this->demo['locations'][0]['description'] = '';
+        $this->demo['floors'][0]['plan_image'] = '';
+
+        $this->actingAs($this->adminA)->put('/admin/map/save', ['data' => $this->demo])->assertSessionHas('map_saved');
+    }
+
+    /** @test */
+    public function a_broken_builder_save_is_refused_with_every_problem_listed_and_the_old_map_kept(): void
+    {
+        HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $this->demo]);
+        $broken = $this->demo;
+        $broken['locations'][0]['floor'] = 'nope';
+        $broken['locations'][1]['category'] = 'spaceship';
+
+        $this->actingAs($this->adminA)->put('/admin/map/save', ['data' => $broken])
+            ->assertRedirect('/admin/map/builder')
+            ->assertSessionHas('map_errors', fn ($errors) => count($errors) >= 2);
+
+        $this->assertSame($this->demo['locations'][0]['floor'], HotelMap::withoutGlobalScopes()->where('hotel_id', $this->hotelA->id)->first()->data['locations'][0]['floor']);
+    }
+
+    /** @test */
+    public function builder_endpoints_require_sign_in(): void
+    {
+        $this->get('/admin/map/builder')->assertRedirect();
+        $this->put('/admin/map/save', ['data' => $this->demo])->assertRedirect();
+    }
 }
