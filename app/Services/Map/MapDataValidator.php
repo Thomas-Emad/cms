@@ -14,7 +14,7 @@ final class MapDataValidator
     public const CATEGORIES = ['reception', 'lobby', 'dining', 'cafe', 'wellness', 'fitness', 'pool', 'meeting', 'room', 'facility', 'transport', 'restroom', 'entrance', 'other'];
     public const NODE_TYPES = ['walk', 'elevator', 'stairs', 'entrance'];
     public const AREA_KINDS = ['building', 'corridor', 'room', 'public', 'service', 'water', 'outdoor'];
-    public const REF_TYPES = ['facility', 'restaurant', 'room'];
+    public const REF_TYPES = ['facility', 'restaurant', 'room', 'page'];
 
     private const MAX_FLOORS = 40;
     private const MAX_NODES = 5000;
@@ -212,6 +212,13 @@ final class MapDataValidator
                 $ok = is_array($l['ref']) && in_array($l['ref']['type'] ?? null, self::REF_TYPES, true) && is_string($l['ref']['slug'] ?? null) && $l['ref']['slug'] !== '';
                 if (! $ok) {
                     $this->err("Location \"$id\" has an invalid \"ref\" (needs type facility|restaurant|room and a slug).");
+                }
+            }
+            if (isset($l['link']) && $l['link'] !== '') {
+                $link = $l['link'];
+                $ok = is_string($link) && strlen($link) <= 300 && ((str_starts_with($link, '/') && ! str_starts_with($link, '//')) || preg_match('#^https?://#i', $link));
+                if (! $ok) {
+                    $this->err("Location \"$id\": \"link\" must be a page address on this site (starting with /) or a full http(s) address.");
                 }
             }
             foreach (['image'] as $k) {

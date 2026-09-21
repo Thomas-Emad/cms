@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
 use App\Models\HotelMap;
+use App\Models\Page;
 use App\Models\Restaurant;
 use App\Models\Room;
 use App\Services\Map\MapDataValidator;
@@ -29,10 +30,13 @@ class MapController extends Controller
         $hotel = app(CurrentHotel::class)->get();
         $this->authorize('view', $hotel);
 
+        // Everything a place can link to, with whether guests can actually open it (published).
+        $pub = fn ($m) => ($m->status ?? null) === 'published';
         $content = collect()
-            ->merge(Facility::published()->orderBy('name')->get(['name', 'slug'])->map(fn ($m) => ['type' => 'facility', 'slug' => $m->slug, 'name' => $m->name]))
-            ->merge(Restaurant::published()->orderBy('name')->get(['name', 'slug'])->map(fn ($m) => ['type' => 'restaurant', 'slug' => $m->slug, 'name' => $m->name]))
-            ->merge(Room::published()->orderBy('name')->get(['name', 'slug'])->map(fn ($m) => ['type' => 'room', 'slug' => $m->slug, 'name' => $m->name]))
+            ->merge(Facility::orderBy('name')->get(['name', 'slug', 'status'])->map(fn ($m) => ['type' => 'facility', 'slug' => $m->slug, 'name' => $m->name, 'published' => $pub($m)]))
+            ->merge(Restaurant::orderBy('name')->get(['name', 'slug', 'status'])->map(fn ($m) => ['type' => 'restaurant', 'slug' => $m->slug, 'name' => $m->name, 'published' => $pub($m)]))
+            ->merge(Room::orderBy('name')->get(['name', 'slug', 'status'])->map(fn ($m) => ['type' => 'room', 'slug' => $m->slug, 'name' => $m->name, 'published' => $pub($m)]))
+            ->merge(Page::where('is_home', false)->orderBy('name')->get(['name', 'slug', 'status', 'published_version_id'])->map(fn ($m) => ['type' => 'page', 'slug' => $m->slug, 'name' => $m->name, 'published' => $m->status === 'published' && $m->published_version_id !== null]))
             ->values();
 
         return Inertia::render('Admin/Map/Builder', [

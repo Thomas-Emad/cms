@@ -11,7 +11,7 @@ import { useCamera } from './camera';
 import { useMapNavigation } from './useMapNavigation';
 import type { HotelMapData, MapFloor, Point } from './types';
 
-const props = defineProps<{ data: HotelMapData }>();
+const props = defineProps<{ data: HotelMapData; /** Open with this place selected (from /map?place=...). */ place?: string | null }>();
 
 const nav = useMapNavigation(props.data);
 const camera = useCamera();
@@ -22,15 +22,47 @@ let initialised = false;
 const floor = computed(() => props.data.floors.find((f) => f.id === nav.floorId.value)!);
 const floorName = (id: string) => props.data.floors.find((f) => f.id === id)?.name ?? '';
 
-/* ---------------- layout: keep the map's focus in the VISIBLE part ---------------- */
-function updatePadding() {
-    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    const wide = window.matchMedia?.('(min-width: 768px)').matches ?? true;
-    const panelOpen = nav.state.value !== 'explore' || pickingOrigin.value;
-    camera.padding.value = wide
-        ? { left: 29 * rem, right: 6 * rem, top: 0, bottom: 0 } // side panel on the left, floor selector on the right
-        : { left: 0, right: 0, top: 9 * rem, bottom: panelOpen ? camera.height.value * 0.5 : 0 }; // bottom sheet
+/* ---------------- layout: keep the map's focus in the VISIBLE part ----------------
+ * Side panel from 1024px wide, bottom sheet below that. Instead of guessing sizes, we MEASURE
+ * the real panel / search / chips / floor selector, so it stays right on any screen or font scale. */
+const stage = ref<HTMLElement | null>(null);
+const panelEl = ref<HTMLElement | null>(null);
+const chipsEl = ref<HTMLElement | null>(null);
+const floorEl = ref<HTMLElement | null>(null);
+const wide = ref(true);
+const box = ref({ panelH: 0, chipsBottom: 0, floorW: 0, stageH: 0 });
+
+function measure() {
+    wide.value = window.matchMedia?.('(min-width: 1024px)').matches ?? true;
+    box.value = {
+        panelH: panelEl.value?.offsetHeight ?? 0,
+        chipsBottom: (chipsEl.value?.offsetTop ?? 0) + (chipsEl.value?.offsetHeight ?? 0),
+        floorW: floorEl.value?.offsetWidth ?? 0,
+        stageH: stage.value?.offsetHeight ?? 0,
+    };
 }
+
+function updatePadding() {
+    measure();
+    const m = box.value;
+    const gap = 16;
+    const rightSide = m.floorW + 24 + gap; // floor selector column
+    camera.padding.value = wide.value
+        ? { left: (panelEl.value?.offsetLeft ?? 0) + (panelEl.value?.offsetWidth ?? 0) + gap, right: rightSide, top: 0, bottom: 0 }
+        : { left: 0, right: rightSide, top: m.chipsBottom + 8, bottom: m.panelH > 0 ? m.panelH + 24 : 0 };
+}
+
+/** Floor selector: centred on wide screens; tucked under the chips (and above the sheet) on small ones. */
+const floorStyle = computed(() => {
+    if (wide.value) return { top: '50%', transform: 'translateY(-50%)', maxHeight: 'calc(100% - 140px)' };
+    const top = box.value.chipsBottom + 8;
+    const bottom = (box.value.panelH > 0 ? box.value.panelH + 24 : 12) + 3 * 46 + 12; // leave room for the zoom buttons
+    return { top: `${top}px`, maxHeight: `${Math.max(120, box.value.stageH - top - bottom)}px` };
+});
+const zoomStyle = computed(() => (wide.value ? { bottom: '24px' } : { bottom: `${box.value.panelH > 0 ? box.value.panelH + 24 : 16}px` }));
+
+let ro: ResizeObserver | null = null;
+const onResize = () => updatePadding();
 
 function floorBounds(f: MapFloor) {
     const b = f.areas.find((a) => a.kind === 'building');
@@ -52,7 +84,8 @@ watch(
             initialised = true;
             updatePadding();
             camera.fitHome(floorBounds(floor.value), 28, true);
-            if (nav.here.value) camera.focus(nav.here.value.x, nav.here.value.y, camera.fitZoom.value * 1.5);
+            if (props.place && nav.byId.has(props.place)) nav.select(props.place);
+            else if (nav.here.value) camera.focus(nav.here.value.x, nav.here.value.y, camera.fitZoom.value * 1.5);
         }
     },
     { immediate: true },
@@ -183,9 +216,19 @@ watch(() => nav.state.value, (s) => {
     if (s !== 'navigating') simulating.value = false;
 });
 
-onMounted(() => window.addEventListener('keydown', onKey));
+onMounted(() => {
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('resize', onResize);
+    if (typeof ResizeObserver !== 'undefined') {
+        ro = new ResizeObserver(() => measure()); // the panel grows/shrinks as cards change
+        [panelEl.value, chipsEl.value, floorEl.value].forEach((el) => el && ro!.observe(el));
+    }
+    measure();
+});
 onBeforeUnmount(() => {
     window.removeEventListener('keydown', onKey);
+    window.removeEventListener('resize', onResize);
+    ro?.disconnect();
     window.clearInterval(simTimer);
 });
 
@@ -201,11 +244,11 @@ const panelKind = computed(() => {
 
 <template>
     <div
-        class="relative box-border"
+        class="map-ui relative box-border"
         style="height: calc(100dvh - var(--kiosk-dock-h, 0px)); padding-top: var(--kiosk-topbar-h, 0px); background: #e9e2d3"
         data-testid="map-experience"
     >
-        <div class="relative h-full w-full overflow-hidden">
+        <div ref="stage" class="relative h-full w-full overflow-hidden">
             <MapCanvas
                 :data="data"
                 :floor-id="nav.floorId.value"
@@ -226,22 +269,22 @@ const panelKind = computed(() => {
             />
 
             <!-- search -->
-            <div v-if="!pickingOrigin" class="absolute left-3 right-3 top-3 z-40 md:left-6 md:right-auto md:top-6 md:w-[26rem]">
+            <div v-if="!pickingOrigin" class="absolute left-3 right-3 top-3 z-40 lg:left-6 lg:right-auto lg:top-6 lg:w-[var(--panel-w)]">
                 <SearchPanel v-model="nav.query.value" :results="nav.results.value" :suggestions="nav.suggestions.value" :floors="data.floors" @select="onSelect" />
             </div>
 
             <!-- quick actions -->
-            <div class="absolute left-3 right-3 top-[5.25rem] z-30 md:left-[28.5rem] md:right-24 md:top-6">
+            <div ref="chipsEl" class="absolute left-3 right-3 top-[72px] z-30 lg:left-[calc(var(--panel-w)+48px)] lg:right-28 lg:top-6">
                 <CategoryChips :groups="GROUPS" :active="nav.group.value" @select="chooseGroup" />
             </div>
 
             <!-- info card / directions: side panel on wide screens, bottom sheet on phones -->
-            <div class="absolute z-30 max-md:inset-x-3 max-md:bottom-3 max-md:max-h-[55%] md:left-6 md:top-[6.25rem] md:w-[26rem] md:max-h-[calc(100%-7.5rem)] overflow-y-auto no-scrollbar">
+            <div ref="panelEl" class="absolute z-30 flex flex-col max-lg:inset-x-3 max-lg:bottom-3 max-lg:max-h-[62%] lg:left-6 lg:top-[84px] lg:w-[var(--panel-w)] lg:max-h-[calc(100%-100px)]">
                 <Transition name="sheet">
-                    <div v-if="panelKind === 'origin'" key="origin" class="glass rounded-[32px] p-5" data-testid="origin-picker">
+                    <div v-if="panelKind === 'origin'" key="origin" class="glass rounded-3xl p-5" data-testid="origin-picker">
                         <p class="mb-3 text-lg font-semibold text-slate-900">Choose your starting point</p>
                         <SearchPanel v-model="nav.query.value" :results="nav.results.value" :suggestions="nav.suggestions.value" :floors="data.floors" placeholder="Search where you are" @select="onSelect" />
-                        <button type="button" class="mt-3 h-14 w-full rounded-full border border-[#183c2d]/25 text-lg font-semibold text-[#183c2d] active:scale-95" @click="startPickOnMap">Tap my location on the map</button>
+                        <button type="button" class="mt-3 h-12 w-full rounded-full border border-[#183c2d]/25 text-lg font-semibold text-[#183c2d] active:scale-95" @click="startPickOnMap">Tap my location on the map</button>
                         <button type="button" class="mt-1 h-12 w-full text-base text-slate-500" @click="pickingOrigin = false">Cancel</button>
                     </div>
                     <LocationSheet
@@ -282,23 +325,23 @@ const panelKind = computed(() => {
             </div>
 
             <!-- floors -->
-            <div class="absolute right-3 top-1/2 z-30 -translate-y-1/2 md:right-6">
+            <div ref="floorEl" class="absolute right-3 z-30 lg:right-6" :style="floorStyle">
                 <FloorSelector :floors="nav.floorsSorted" :current="nav.floorId.value" :route-floors="nav.routeFloors.value" @select="nav.setFloor" />
             </div>
 
             <!-- zoom / recentre / set start -->
-            <div class="absolute bottom-6 right-6 z-30 flex flex-col gap-3 max-md:hidden">
-                <button type="button" class="glass h-14 w-14 rounded-full text-2xl text-[#183c2d] active:scale-90" aria-label="Set my starting point" title="Set my starting point" data-testid="set-start" :class="{ 'ring-4 ring-[#2b6fd6]/40': nav.pickingStart.value }" @click="nav.pickingStart.value = !nav.pickingStart.value">📍</button>
-                <button type="button" class="glass h-14 w-14 rounded-full text-xl text-[#183c2d] active:scale-90" aria-label="Centre on my location" data-testid="recenter" @click="recenter">◎</button>
+            <div class="absolute right-3 z-30 flex flex-col gap-2.5 lg:right-6 lg:gap-3" :style="zoomStyle">
+                <button type="button" class="glass h-11 w-11 rounded-full text-xl text-[#183c2d] active:scale-90" aria-label="Set my starting point" title="Set my starting point" data-testid="set-start" :class="{ 'ring-4 ring-[#2b6fd6]/40': nav.pickingStart.value }" @click="nav.pickingStart.value = !nav.pickingStart.value">📍</button>
+                <button type="button" class="glass h-11 w-11 rounded-full text-lg text-[#183c2d] active:scale-90" aria-label="Centre on my location" data-testid="recenter" @click="recenter">◎</button>
                 <div class="glass overflow-hidden rounded-full">
-                    <button type="button" class="block h-14 w-14 text-3xl text-[#183c2d] active:bg-black/10" aria-label="Zoom in" data-testid="zoom-in" @click="camera.zoomBy(1.45)">+</button>
-                    <button type="button" class="block h-14 w-14 border-t border-black/5 text-3xl text-[#183c2d] active:bg-black/10" aria-label="Zoom out" data-testid="zoom-out" @click="camera.zoomBy(1 / 1.45)">−</button>
+                    <button type="button" class="block h-11 w-11 text-2xl text-[#183c2d] active:bg-black/10" aria-label="Zoom in" data-testid="zoom-in" @click="camera.zoomBy(1.45)">+</button>
+                    <button type="button" class="block h-11 w-11 border-t border-black/5 text-2xl text-[#183c2d] active:bg-black/10" aria-label="Zoom out" data-testid="zoom-out" @click="camera.zoomBy(1 / 1.45)">−</button>
                 </div>
             </div>
 
             <!-- "tap your location" hint -->
             <Transition name="hint">
-                <div v-if="nav.pickingStart.value" class="glass absolute left-1/2 top-24 z-40 flex -translate-x-1/2 items-center gap-4 rounded-full py-2 pl-7 pr-2 text-lg font-medium text-slate-900 max-md:top-40" data-testid="pick-hint">
+                <div v-if="nav.pickingStart.value" class="glass absolute left-1/2 top-24 z-40 flex -translate-x-1/2 items-center gap-4 rounded-full py-2 pl-7 pr-2 text-lg font-medium text-slate-900 max-lg:top-40" data-testid="pick-hint">
                     Tap where you are on the map
                     <button type="button" class="h-11 rounded-full bg-black/5 px-5 text-base active:scale-95" @click="nav.pickingStart.value = false">Cancel</button>
                 </div>

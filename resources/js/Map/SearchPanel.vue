@@ -26,8 +26,8 @@ function choose(id: string) {
 </script>
 
 <template>
-    <div class="glass rounded-[28px] transition-shadow duration-300" :class="{ 'shadow-2xl': focused }" data-testid="search">
-        <label class="flex h-16 items-center gap-3 px-5">
+    <div class="glass rounded-3xl transition-shadow duration-300" :class="{ 'shadow-2xl': focused }" data-testid="search">
+        <label class="flex h-12 items-center gap-3 px-4">
             <svg viewBox="0 0 24 24" class="h-6 w-6 shrink-0 text-[#183c2d]" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
             </svg>
@@ -47,19 +47,19 @@ function choose(id: string) {
         <!-- results: expand smoothly beneath the field -->
         <div class="expander" :class="{ 'expander--open': open }">
             <div>
-                <ul class="max-h-[22rem] overflow-y-auto border-t border-black/5 px-2 py-2" role="listbox">
+                <ul class="max-h-[min(320px,45vh)] overflow-y-auto overscroll-contain border-t border-black/5 px-2 py-2" role="listbox">
                     <li v-if="!list.length" class="px-4 py-6 text-center text-slate-400">No places match “{{ query }}”.</li>
                     <li v-for="(loc, i) in list" :key="loc.id" role="option">
                         <button
                             type="button"
-                            class="search-row flex w-full items-center gap-4 rounded-2xl px-3 py-3 text-left active:bg-black/5"
+                            class="search-row flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left active:bg-black/5"
                             :style="{ animationDelay: `${i * 25}ms` }"
                             @pointerdown.prevent
                             @click="choose(loc.id)"
                         >
-                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg text-white" :style="{ background: CATEGORY_META[loc.category].color }">{{ CATEGORY_META[loc.category].icon }}</span>
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base text-white" :style="{ background: CATEGORY_META[loc.category].color }">{{ CATEGORY_META[loc.category].icon }}</span>
                             <span class="min-w-0">
-                                <span class="block truncate text-lg font-medium text-slate-900">{{ loc.name }}</span>
+                                <span class="block truncate text-base font-medium text-slate-900">{{ loc.name }}</span>
                                 <span class="block text-sm text-slate-500">{{ CATEGORY_META[loc.category].label }} · {{ floorName(loc.floor) }}</span>
                             </span>
                         </button>

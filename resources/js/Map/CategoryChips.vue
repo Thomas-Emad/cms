@@ -13,7 +13,7 @@ const emit = defineEmits<{ (e: 'select', id: string): void }>();
             type="button"
             role="tab"
             :aria-selected="g.id === active"
-            class="shrink-0 h-12 px-6 rounded-full text-base font-medium whitespace-nowrap transition-all duration-300 active:scale-95"
+            class="shrink-0 h-10 px-5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 active:scale-95"
             :class="g.id === active ? 'bg-[#183c2d] text-white shadow-lg' : 'glass text-[#183c2d]'"
             :style="{ transitionTimingFunction: 'var(--ease-spring)' }"
             @click="emit('select', g.id)"

@@ -15,7 +15,7 @@ beforeEach(() => {
 })
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals() })
 
-const props = (over: any = {}) => ({ map: structuredClone(demo), content: [{ type: 'facility', slug: 'serenity-spa', name: 'Serenity Spa' }], errors_list: [], warnings: [], flash_ok: null, ...over })
+const props = (over: any = {}) => ({ map: structuredClone(demo), content: [['facility','infinity-pool','Infinity Pool'],['facility','serenity-spa','Serenity Spa'],['facility','fitness-center','Fitness Center'],['facility','business-center','Business Center'],['restaurant','azure-restaurant','Azure Restaurant'],['restaurant','sky-lounge','Sky Lounge'],['page','spa-menu','Spa Menu'],['page','draft-page','Draft Page']].map(([type,slug,name]) => ({ type, slug, name, published: slug !== 'draft-page' })), errors_list: [], warnings: [], flash_ok: null, ...over })
 const mk = (over?: any) => mount(Builder, { props: props(over), attachTo: document.body })
 const t = (w: any, id: string) => w.find(`[data-testid=${id}]`)
 const el = (w: any, kind: string, id: string) => w.find(`[data-el=${kind}][data-id="${id}"]`)
@@ -153,5 +153,34 @@ describe('map builder page', () => {
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); await flushPromises(); expect(t(w, 'tool-select').classes().join(' ')).toContain('bg-slate-800')
     await tap(w, el(w, 'location', 'concierge'), 335, 155); const n = t(w, 'loc-name'); (n.element as HTMLInputElement).value = 'X'; await n.trigger('change'); expect(t(w, 'dirty').exists()).toBe(true)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true })); await flushPromises(); await t(w, 'undo'); expect(t(w, 'undo').attributes('disabled')).toBeDefined(); w.unmount()
+  })
+
+  it('links: the dropdown groups Facilities / Restaurants / Pages; picking a Page saves ref type "page"', async () => {
+    const w = mk(); await flushPromises(); await tap(w, el(w, 'location', 'concierge'), 335, 155)
+    const groups = t(w, 'loc-ref').findAll('optgroup').map((g: any) => g.attributes('label')); expect(groups).toEqual(['Facilities', 'Restaurants', 'Pages'])
+    await t(w, 'loc-ref').setValue('page:spa-menu'); await save(w); expect(floorData(w).locations.find((l: any) => l.id === 'concierge').ref).toEqual({ type: 'page', slug: 'spa-menu' }); w.unmount()
+  })
+
+  it('links: a draft / deleted target warns in the inspector AND in Checks (guests would silently get no link)', async () => {
+    const w = mk(); await flushPromises(); await tap(w, el(w, 'location', 'concierge'), 335, 155)
+    await t(w, 'loc-ref').setValue('page:draft-page'); await flushPromises()
+    expect(t(w, 'ref-unpublished').text()).toContain("isn't published"); expect(t(w, 'issues').text()).toContain('which isn\'t published')
+    const m = structuredClone(demo); m.locations.find((l: any) => l.id === 'spa')!.ref = { type: 'facility', slug: 'deleted-thing' } as any
+    const w2 = mk({ map: m }); await flushPromises(); expect(t(w2, 'issues').text()).toContain('no longer exists'); w.unmount(); w2.unmount()
+  })
+
+  it('links: a place named like an existing page gets a one-click suggestion', async () => {
+    const w = mk(); await flushPromises(); await tap(w, el(w, 'location', 'concierge'), 335, 155)
+    const name = t(w, 'loc-name'); (name.element as HTMLInputElement).value = 'spa menu'; await name.trigger('change'); await flushPromises()
+    await t(w, 'ref-suggest').trigger('click'); await save(w); expect(floorData(w).locations.find((l: any) => l.id === 'concierge').ref).toEqual({ type: 'page', slug: 'spa-menu' })
+    expect(t(w, 'ref-suggest').exists()).toBe(false); w.unmount()
+  })
+
+  it('links: a typed address is saved (and trimmed); one that does not start with / or http(s) blocks Save', async () => {
+    const w = mk(); await flushPromises(); await tap(w, el(w, 'location', 'concierge'), 335, 155)
+    const link = t(w, 'loc-link'); (link.element as HTMLInputElement).value = '  /pages/tours  '; await link.trigger('change'); await save(w)
+    expect(floorData(w).locations.find((l: any) => l.id === 'concierge').link).toBe('/pages/tours')
+    ;(link.element as HTMLInputElement).value = 'pages/tours'; await link.trigger('change'); await flushPromises()
+    expect(t(w, 'save').attributes('disabled')).toBeDefined(); expect(t(w, 'issues').text()).toContain('must start with'); w.unmount()
   })
 })

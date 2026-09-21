@@ -2,7 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import BuilderCanvas from '@/Map/builder/BuilderCanvas.vue';
 import BuilderInspector, { type ContentOption } from '@/Map/builder/BuilderInspector.vue';
-import { type Tool, useMapBuilder } from '@/Map/builder/useMapBuilder';
+import { type Issue, type Tool, useMapBuilder } from '@/Map/builder/useMapBuilder';
 import { useCamera } from '@/Map/camera';
 import { AREA_STYLE, CATEGORY_META } from '@/Map/categories';
 import { formatDistance, formatDuration } from '@/Map/routing';
@@ -69,7 +69,22 @@ function removeFloor() {
 const floorsTopDown = computed(() => [...b.floors.value].reverse());
 
 /* ------------------------------ checks & test route ------------------------------ */
-const errors = computed(() => b.issues.value.filter((i) => i.level === 'error'));
+/** Links that would silently not work for guests (draft / deleted / badly typed). */
+const linkIssues = computed(() => {
+  const out: Issue[] = [];
+  for (const l of b.data.value.locations) {
+    const target = { kind: 'location' as const, id: l.id, floor: l.floor };
+    if (l.link && !/^(\/(?!\/)|https?:\/\/)/i.test(l.link)) out.push({ level: 'error', text: `${l.name}: the page address must start with / or https://`, target });
+    if (l.ref && !l.link) {
+      const c = props.content.find((x) => x.type === l.ref!.type && x.slug === l.ref!.slug);
+      if (!c) out.push({ level: 'warning', text: `${l.name} is linked to a page that no longer exists: guests won't get "View Details".`, target });
+      else if (!c.published) out.push({ level: 'warning', text: `${l.name} is linked to "${c.name}", which isn't published: guests won't get "View Details" until you publish it.`, target });
+    }
+  }
+  return out;
+});
+const allIssues = computed<Issue[]>(() => [...b.issues.value, ...linkIssues.value]);
+const errors = computed(() => allIssues.value.filter((i) => i.level === 'error'));
 function jump(t?: { kind: 'area' | 'node' | 'location'; id: string; floor: string }) {
   if (!t) return;
   b.floorId.value = t.floor;
@@ -267,16 +282,16 @@ const sel = 'w-full rounded-md border border-slate-300 px-2 py-1.5 text-sm';
     <div class="border-t border-slate-200">
       <div class="flex gap-4 px-3 pt-1.5 text-sm">
         <button :class="bottom === 'checks' ? 'border-b-2 border-slate-800 font-medium text-slate-900' : 'text-slate-500'" data-testid="tab-checks" @click="bottom = 'checks'">
-          Checks <span v-if="b.issues.value.length" class="ml-1 rounded-full px-1.5 text-xs text-white" :class="errors.length ? 'bg-red-500' : 'bg-amber-500'">{{ b.issues.value.length }}</span><span v-else class="ml-1 text-emerald-600">✓</span>
+          Checks <span v-if="allIssues.length" class="ml-1 rounded-full px-1.5 text-xs text-white" :class="errors.length ? 'bg-red-500' : 'bg-amber-500'">{{ allIssues.length }}</span><span v-else class="ml-1 text-emerald-600">✓</span>
         </button>
         <button :class="bottom === 'route' ? 'border-b-2 border-slate-800 font-medium text-slate-900' : 'text-slate-500'" data-testid="tab-route" @click="bottom = 'route'">Test a route</button>
       </div>
 
       <div class="max-h-40 overflow-y-auto px-3 pb-2 pt-1.5 text-sm">
         <template v-if="bottom === 'checks'">
-          <p v-if="!b.issues.value.length" class="py-1 text-emerald-700" data-testid="all-good">Everything looks good. Guests can get directions to every place.</p>
+          <p v-if="!allIssues.length" class="py-1 text-emerald-700" data-testid="all-good">Everything looks good. Guests can get directions to every place.</p>
           <ul v-else class="space-y-0.5" data-testid="issues">
-            <li v-for="(i, n) in b.issues.value" :key="n">
+            <li v-for="(i, n) in allIssues" :key="n">
               <button class="flex w-full items-start gap-2 rounded px-1 py-0.5 text-left hover:bg-slate-50" @click="jump(i.target)">
                 <span :class="i.level === 'error' ? 'text-red-500' : 'text-amber-500'">●</span>
                 <span :class="i.level === 'error' ? 'text-red-700' : 'text-slate-600'">{{ i.text }}</span>

@@ -128,7 +128,7 @@ class HotelMapTest extends TestCase
     /* ---------------- visual builder endpoints ---------------- */
 
     /** @test */
-    public function the_builder_page_gets_the_map_and_only_published_content_of_this_hotel_to_link_to(): void
+    public function the_builder_page_gets_the_map_and_this_hotels_content_but_never_another_hotels(): void
     {
         app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Serenity Spa', 'slug' => 'serenity-spa', 'status' => 'published']);
@@ -138,8 +138,8 @@ class HotelMapTest extends TestCase
 
         $this->actingAs($this->adminA)->get('/admin/map/builder')->assertInertia(function ($page) {
             $page->component('Admin/Map/Builder')->has('map.floors', 5);
-            $slugs = collect($page->toArray()['props']['content'])->pluck('slug')->all();
-            $this->assertSame(['serenity-spa'], $slugs);
+            $slugs = collect($page->toArray()['props']['content'])->pluck('slug')->sort()->values()->all();
+            $this->assertSame(['secret-draft', 'serenity-spa'], $slugs); // this hotel's (draft flagged); never 'other-pool'
         });
     }
 
@@ -191,5 +191,89 @@ class HotelMapTest extends TestCase
     {
         $this->get('/admin/map/builder')->assertRedirect();
         $this->put('/admin/map/save', ['data' => $this->demo])->assertRedirect();
+    }
+
+    /* ---------------- "View Details" links ---------------- */
+
+    /** @test */
+    public function a_place_can_link_to_a_published_page_builder_page_but_never_a_draft(): void
+    {
+        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        // A guest-visible page = status "published" AND a published version (see Page::scopePublished).
+        $spaMenu = \App\Models\Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Spa Menu', 'slug' => 'spa-menu', 'status' => 'draft']);
+        $version = \App\Models\PageVersion::create(['page_id' => $spaMenu->id, 'sections' => [], 'state' => 'published', 'published_at' => now()]);
+        $spaMenu->update(['status' => 'published', 'published_version_id' => $version->id]);
+        \App\Models\Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Draft', 'slug' => 'draft-page', 'status' => 'draft']);
+
+        $map = $this->demo;
+        $map['locations'][0]['ref'] = ['type' => 'page', 'slug' => 'spa-menu'];
+        $map['locations'][1]['ref'] = ['type' => 'page', 'slug' => 'draft-page'];
+        HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $map]);
+
+        $this->get('/map')->assertInertia(function ($page) {
+            $locs = $page->toArray()['props']['map']['locations'];
+            $this->assertSame('/pages/spa-menu', $locs[0]['details_url']);
+            $this->assertArrayNotHasKey('details_url', $locs[1]); // a draft page has no guest URL, so no button to a 404
+        });
+    }
+
+    /** @test */
+    public function an_address_typed_on_the_place_wins_over_the_linked_content(): void
+    {
+        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Serenity Spa', 'slug' => 'serenity-spa', 'status' => 'published']);
+        $map = $this->demo;
+        $spa = array_search('spa', array_column($map['locations'], 'id'));
+        $map['locations'][$spa]['link'] = '/pages/spa-offers';
+        HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $map]);
+
+        $this->get('/map')->assertInertia(fn ($page) => $this->assertSame('/pages/spa-offers', collect($page->toArray()['props']['map']['locations'])->firstWhere('id', 'spa')['details_url']));
+    }
+
+    /** @test */
+    public function a_link_on_a_place_with_no_ref_still_works(): void
+    {
+        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        $map = $this->demo;
+        $map['locations'][2]['link'] = 'https://example.com/menu';
+        HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $map]);
+
+        $this->get('/map')->assertInertia(fn ($page) => $this->assertSame('https://example.com/menu', $page->toArray()['props']['map']['locations'][2]['details_url']));
+    }
+
+    /** @test */
+    public function unsafe_link_addresses_are_refused_when_saving(): void
+    {
+        foreach (['javascript:alert(1)', '//evil.example.com', 'pages/x'] as $bad) {
+            $map = $this->demo;
+            $map['locations'][0]['link'] = $bad;
+            $this->actingAs($this->adminA)->put('/admin/map/save', ['data' => $map])->assertSessionHas('map_errors');
+        }
+    }
+
+    /** @test */
+    public function map_place_query_is_passed_through_so_links_can_open_the_map_on_a_place(): void
+    {
+        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $this->demo]);
+
+        $this->get('/map?place=spa')->assertInertia(fn ($page) => $page->where('place', 'spa'));
+        $this->get('/map')->assertInertia(fn ($page) => $page->where('place', null));
+    }
+
+    /** @test */
+    public function the_builders_link_choices_include_pages_and_flag_unpublished_content(): void
+    {
+        Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Live Spa', 'slug' => 'live-spa', 'status' => 'published']);
+        Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Draft Pool', 'slug' => 'draft-pool', 'status' => 'draft']);
+        \App\Models\Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Offers', 'slug' => 'offers', 'status' => 'draft']);
+
+        $this->actingAs($this->adminA)->get('/admin/map/builder')->assertInertia(function ($page) {
+            $c = collect($page->toArray()['props']['content'])->keyBy('slug');
+            $this->assertTrue($c['live-spa']['published']);
+            $this->assertFalse($c['draft-pool']['published']);   // listed, but flagged so the admin is warned
+            $this->assertSame('page', $c['offers']['type']);
+            $this->assertFalse($c['offers']['published']);
+        });
     }
 }

@@ -313,3 +313,35 @@ html:has(.kiosk-root) body {
     .map-marker__body, .expander, .sheet-enter-active, .sheet-leave-active,
     .floor-up-enter-active, .floor-up-leave-active, .floor-down-enter-active, .floor-down-leave-active { transition-duration: 1ms !important; }
 }
+
+/* ------------------------------------------------------------------ */
+/* Map UI size                                                         */
+/* ------------------------------------------------------------------ */
+/*
+ * The kiosk shell grows the root font up to 32px on big screens, and everything in rem/Tailwind
+ * grows with it. The map has its own fixed-pixel scale so it stays compact on every screen.
+ *   --map-scale: 1    = normal   |   0.9 = smaller   |   1.15 = larger
+ * Change the number below to make the whole guest map UI smaller or larger.
+ */
+.map-ui {
+    --map-scale: 1;
+    --spacing: calc(4px * var(--map-scale));
+    --text-xs: calc(12px * var(--map-scale));
+    --text-sm: calc(13px * var(--map-scale));
+    --text-base: calc(15px * var(--map-scale));
+    --text-lg: calc(17px * var(--map-scale));
+    --text-xl: calc(19px * var(--map-scale));
+    --text-2xl: calc(22px * var(--map-scale));
+    --text-3xl: calc(26px * var(--map-scale));
+    --text-4xl: calc(30px * var(--map-scale));
+    --text-5xl: calc(38px * var(--map-scale));
+    --text-6xl: calc(48px * var(--map-scale));
+    --radius-xl: calc(12px * var(--map-scale));
+    --radius-2xl: calc(16px * var(--map-scale));
+    --radius-3xl: calc(24px * var(--map-scale));
+    --panel-w: 340px;
+    font-size: calc(15px * var(--map-scale));
+}
+@media (min-width: 1280px) { .map-ui { --panel-w: 380px; } }
+@media (min-width: 1700px) { .map-ui { --map-scale: 1.1; --panel-w: 400px; } }
+@media (max-width: 640px) { .map-ui { --map-scale: 0.95; } }

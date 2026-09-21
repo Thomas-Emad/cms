@@ -412,12 +412,14 @@ export function useMapBuilder(initial: HotelMapData | null) {
         l.y = clampY(y, f);
         if (!pinnedDoors.has(id)) l.node = nearestNode(data.value, l.floor, l)?.id ?? null;
     }
-    function updateLocation(id: string, patch: Partial<Pick<MapLocation, 'name' | 'description' | 'image' | 'category' | 'opening_hours' | 'ref' | 'node'>>) {
+    function updateLocation(id: string, patch: Partial<Pick<MapLocation, 'name' | 'description' | 'image' | 'category' | 'opening_hours' | 'ref' | 'node' | 'link'>>) {
         const l = location(id);
         if (!l) return;
         checkpoint();
         Object.assign(l, patch);
-        for (const k of ['description', 'image', 'opening_hours'] as const) if (l[k] === '') l[k] = null;
+        for (const k of ['description', 'image', 'opening_hours', 'link'] as const) if (l[k] === '') l[k] = null;
+        if (typeof l.link === 'string') l.link = l.link.trim() || null;
+        if (l.link === null) delete l.link;
         if (patch.node) pinnedDoors.add(id);
         if (!l.ref) l.ref = null;
     }

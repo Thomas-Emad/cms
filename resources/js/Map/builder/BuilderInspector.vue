@@ -5,9 +5,11 @@ import type { AreaKind, LocationCategory, NodeType } from '../types';
 import type { Builder, Side } from './useMapBuilder';
 
 export interface ContentOption {
-    type: 'facility' | 'restaurant' | 'room';
+    type: 'facility' | 'restaurant' | 'room' | 'page';
     slug: string;
     name: string;
+    /** Guests can only open published content. */
+    published: boolean;
 }
 
 const props = defineProps<{ b: Builder; content: ContentOption[] }>();
@@ -24,6 +26,17 @@ const num = (e: Event) => Number(val(e));
 const isLift = computed(() => b.selectedNode.value && (b.selectedNode.value.type === 'elevator' || b.selectedNode.value.type === 'stairs'));
 const refValue = computed(() => (b.selectedLocation.value?.ref ? `${b.selectedLocation.value.ref.type}:${b.selectedLocation.value.ref.slug}` : ''));
 const shaftFloors = computed(() => (b.selectedNode.value ? new Set(b.shaftOf(b.selectedNode.value.id).map((n) => n.floor)) : new Set<string>()));
+const TYPE_LABEL = { facility: 'Facility', restaurant: 'Restaurant', room: 'Room', page: 'Page' } as const;
+const TYPE_PLURAL = { facility: 'Facilities', restaurant: 'Restaurants', room: 'Rooms', page: 'Pages' } as const;
+const groups = computed(() => (['facility', 'restaurant', 'room', 'page'] as const).map((t) => ({ type: t, label: TYPE_PLURAL[t], items: props.content.filter((c) => c.type === t) })).filter((g) => g.items.length));
+const currentRef = computed(() => { const r = b.selectedLocation.value?.ref; return r ? props.content.find((c) => c.type === r.type && c.slug === r.slug) ?? null : null; });
+/** A page/facility/restaurant with the same name as this place: offer to link it in one click. */
+const suggestion = computed(() => {
+    const l = b.selectedLocation.value;
+    if (!l || l.ref || l.link || !l.name.trim()) return null;
+    const n = l.name.trim().toLowerCase();
+    return props.content.find((c) => c.published && c.name.trim().toLowerCase() === n) ?? null;
+});
 const doorNode = computed(() => (b.selectedLocation.value?.node ? b.node(b.selectedLocation.value.node) : null));
 
 function setRef(v: string) {
@@ -31,7 +44,7 @@ function setRef(v: string) {
     if (!l) return;
     if (!v) return b.updateLocation(l.id, { ref: null });
     const [type, slug] = v.split(':');
-    b.updateLocation(l.id, { ref: { type: type as 'facility', slug } });
+    b.updateLocation(l.id, { ref: { type: type as ContentOption['type'], slug } });
 }
 
 const field = 'w-full rounded-md border border-slate-300 px-2.5 py-1.5 text-sm';
@@ -58,12 +71,23 @@ const danger = 'mt-5 w-full rounded-md border border-red-200 px-3 py-2 text-sm t
             <label :class="label">Opening hours (optional)</label>
             <input :value="b.selectedLocation.value.opening_hours ?? ''" placeholder="e.g. 07:00 - 22:00" :class="field" @change="b.updateLocation(b.selectedLocation.value!.id, { opening_hours: val($event) })" />
 
-            <label :class="label">Show content from your site</label>
+            <label :class="label">"View Details" opens…</label>
             <select :value="refValue" :class="field" data-testid="loc-ref" @change="setRef(val($event))">
-                <option value="">— none —</option>
-                <option v-for="c in content" :key="c.type + c.slug" :value="`${c.type}:${c.slug}`">{{ c.name }} ({{ c.type }})</option>
+                <option value="">— nothing (card just expands) —</option>
+                <optgroup v-for="g in groups" :key="g.type" :label="g.label">
+                    <option v-for="c in g.items" :key="c.type + c.slug" :value="`${c.type}:${c.slug}`">{{ c.name }}{{ c.published ? '' : '  (not published)' }}</option>
+                </optgroup>
             </select>
-            <p class="mt-1 text-xs text-slate-400">Adds the photo, text and "View Details" link from that page (published pages only).</p>
+            <p v-if="currentRef && !currentRef.published" class="mt-1 rounded bg-amber-50 px-2 py-1 text-xs text-amber-700" data-testid="ref-unpublished">"{{ currentRef.name }}" isn't published, so guests won't get a link. Publish it first.</p>
+            <p v-else-if="b.selectedLocation.value.ref && !currentRef" class="mt-1 rounded bg-amber-50 px-2 py-1 text-xs text-amber-700" data-testid="ref-missing">That page no longer exists, so guests won't get a link.</p>
+            <button v-if="suggestion" type="button" class="mt-1.5 w-full rounded-md border border-sky-200 bg-sky-50 px-2 py-1.5 text-left text-xs text-sky-800 hover:bg-sky-100" data-testid="ref-suggest" @click="setRef(`${suggestion.type}:${suggestion.slug}`)">
+                💡 Link to the {{ TYPE_LABEL[suggestion.type].toLowerCase() }} “{{ suggestion.name }}”
+            </button>
+            <p class="mt-1 text-xs text-slate-400">Also fills the photo and text from that page when this place has none.</p>
+
+            <label :class="label">…or any page address (optional)</label>
+            <input :value="b.selectedLocation.value.link ?? ''" placeholder="/pages/spa-menu  or  https://…" :class="field" data-testid="loc-link" @change="b.updateLocation(b.selectedLocation.value!.id, { link: val($event) })" />
+            <p class="mt-1 text-xs text-slate-400">Overrides the choice above. Use a site address starting with <code>/</code>.</p>
 
             <label :class="label">Photo URL (optional)</label>
             <input :value="b.selectedLocation.value.image ?? ''" placeholder="https://…" :class="field" @change="b.updateLocation(b.selectedLocation.value!.id, { image: val($event) })" />

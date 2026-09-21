@@ -67,7 +67,9 @@ export interface MapLocation {
     node?: string | null;
     /** Filled in by the server from linked hotel content (Facility / Restaurant / Room). */
     details_url?: string | null;
-    ref?: { type: 'facility' | 'restaurant' | 'room'; slug: string } | null;
+    /** Address to open from "View Details": a page on this site (starts with /) or a full http(s) address. Wins over `ref`. */
+    link?: string | null;
+    ref?: { type: 'facility' | 'restaurant' | 'room' | 'page'; slug: string } | null;
 }
 
 export interface HotelMapData {

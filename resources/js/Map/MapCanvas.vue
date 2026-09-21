@@ -306,18 +306,18 @@ const destLoc = computed(() => (props.destinationId ? props.data.locations.find(
                         @keydown.enter.prevent="emit('select', loc.id)"
                         @keydown.space.prevent="emit('select', loc.id)"
                     >
-                        <circle r="30" fill="transparent" />
-                        <circle v-if="markerState(loc).selected || markerState(loc).dest" class="map-ring" r="22" :fill="markerState(loc).dest ? DEST_COLOR : CATEGORY_META[loc.category].color" />
+                        <circle r="26" fill="transparent" />
+                        <circle v-if="markerState(loc).selected || markerState(loc).dest" class="map-ring" r="19" :fill="markerState(loc).dest ? DEST_COLOR : CATEGORY_META[loc.category].color" />
                         <g class="map-marker__body" :style="{ transform: `scale(${markerState(loc).selected || markerState(loc).dest ? 1.28 : markerState(loc).highlighted ? 1.12 : 1})` }">
                             <g :class="{ 'map-float': !reduced }" :style="{ animationDelay: `${(i % 7) * -0.6}s` }">
                                 <g :class="{ 'map-bounce': markerState(loc).dest }">
-                                    <circle cy="2" r="17" fill="rgba(0,0,0,0.16)" />
-                                    <circle class="map-marker__disc" r="17" :fill="markerState(loc).dest ? DEST_COLOR : CATEGORY_META[loc.category].color" stroke="#fff" stroke-width="3" />
-                                    <text text-anchor="middle" dominant-baseline="central" font-size="16" fill="#fff">{{ CATEGORY_META[loc.category].icon }}</text>
+                                    <circle cy="2" r="14" fill="rgba(0,0,0,0.16)" />
+                                    <circle class="map-marker__disc" r="14" :fill="markerState(loc).dest ? DEST_COLOR : CATEGORY_META[loc.category].color" stroke="#fff" stroke-width="3" />
+                                    <text text-anchor="middle" dominant-baseline="central" font-size="13" fill="#fff">{{ CATEGORY_META[loc.category].icon }}</text>
                                 </g>
                             </g>
                         </g>
-                        <text v-if="showLabel(loc)" y="36" text-anchor="middle" font-size="14" font-weight="600" fill="#20241f" stroke="#fbf9f4" stroke-width="4" paint-order="stroke" class="map-label">
+                        <text v-if="showLabel(loc)" y="30" text-anchor="middle" font-size="12" font-weight="600" fill="#20241f" stroke="#fbf9f4" stroke-width="4" paint-order="stroke" class="map-label">
                             {{ loc.name }}
                         </text>
                     </g>
@@ -329,14 +329,14 @@ const destLoc = computed(() => (props.destinationId ? props.data.locations.find(
 
                     <!-- destination emphasis -->
                     <g v-if="destLoc && destLoc.floor === floorId && routeActive" :transform="`translate(${destLoc.x} ${destLoc.y}) scale(${k})`" pointer-events="none">
-                        <circle class="map-ring map-ring--slow" r="26" fill="none" :stroke="DEST_COLOR" stroke-width="3" />
+                        <circle class="map-ring map-ring--slow" r="22" fill="none" :stroke="DEST_COLOR" stroke-width="3" />
                     </g>
 
                     <!-- YOU ARE HERE -->
                     <g v-if="youXY" :transform="`translate(${youXY.x} ${youXY.y}) scale(${k})`" pointer-events="none" data-testid="you-are-here">
-                        <circle class="map-you-pulse" r="26" :fill="YOU_COLOR" />
-                        <circle r="11" fill="#fff" />
-                        <circle r="7.5" :fill="YOU_COLOR" />
+                        <circle class="map-you-pulse" r="22" :fill="YOU_COLOR" />
+                        <circle r="9" fill="#fff" />
+                        <circle r="6" :fill="YOU_COLOR" />
                     </g>
                 </g>
             </Transition>
