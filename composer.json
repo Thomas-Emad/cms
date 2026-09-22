@@ -74,7 +74,7 @@
         ],
         "vercel": [
             "npm run build",
-            "php artisan migrate",
+            "php artisan migrate --force",
             "php artisan db:seed"
         ]
     },
