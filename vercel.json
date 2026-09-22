@@ -7,6 +7,10 @@
     },
     "rewrites": [
         {
+            "source": "/",
+            "destination": "/api/runable.php"
+        },
+        {
             "source": "/build/(.*)",
             "destination": "/public/build/$1"
         },
