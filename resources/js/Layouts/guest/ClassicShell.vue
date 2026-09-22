@@ -9,9 +9,9 @@ import { useKioskShell } from './useKioskShell';
  * pill buttons. Both are `fixed`, so every guest page keeps its own natural document scroll.
  * The top bar is ALWAYS dark so it is legible over photos and over white pages.
  */
-defineProps<{ hotel?: Hotel; config: GuestLayoutConfig }>();
+const props = defineProps<{ hotel?: Hotel; config: GuestLayoutConfig; preview?: boolean }>();
 
-const { onHome, isActive, clock } = useKioskShell();
+const { onHome, isActive, clock } = useKioskShell({ skipFontScale: props.preview });
 </script>
 
 <template>

@@ -10,7 +10,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
  */
 export const IDLE_MS = 90_000;
 
-export function useKioskShell() {
+export function useKioskShell(opts: { skipFontScale?: boolean } = {}) {
     const page = usePage();
     const path = () => page.url.split('?')[0];
 
@@ -37,16 +37,23 @@ export function useKioskShell() {
     }
     const IDLE_EVENTS = ['pointerdown', 'touchstart', 'scroll', 'keydown'] as const;
 
+    // opts.skipFontScale: the admin's live layout preview mounts this same
+    // shell inline (not in an iframe), so document.documentElement is the
+    // REAL page root - scaling it there would blow up the whole dashboard's
+    // font size, not just the small preview box. Real guest screens keep
+    // the scaling; the preview opts out of it.
     let previousFontSize = '';
     onMounted(() => {
-        previousFontSize = document.documentElement.style.fontSize;
-        document.documentElement.style.fontSize = 'clamp(16px, 0.75vw + 8px, 32px)';
+        if (!opts.skipFontScale) {
+            previousFontSize = document.documentElement.style.fontSize;
+            document.documentElement.style.fontSize = 'clamp(16px, 0.75vw + 8px, 32px)';
+        }
         clockTimer = window.setInterval(() => (now.value = new Date()), 15_000);
         IDLE_EVENTS.forEach((e) => window.addEventListener(e, resetIdle, { passive: true }));
         resetIdle();
     });
     onUnmounted(() => {
-        document.documentElement.style.fontSize = previousFontSize;
+        if (!opts.skipFontScale) document.documentElement.style.fontSize = previousFontSize;
         window.clearInterval(clockTimer);
         window.clearTimeout(idleTimer);
         IDLE_EVENTS.forEach((e) => window.removeEventListener(e, resetIdle));

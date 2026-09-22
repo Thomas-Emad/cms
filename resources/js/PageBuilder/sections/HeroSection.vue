@@ -43,6 +43,13 @@ const isEditorCanvas = props.mode === 'edit';
             ...(isEditorCanvas ? {} : {
                 height: 'calc(100vh - var(--kiosk-dock-h, 0px))',
                 minHeight: '560px',
+                // On TV home, --kiosk-dock-h is 0 (intentional full-bleed),
+                // but the fixed tile dock still sits over the bottom of the
+                // screen. --kiosk-dock-overlay-h carries that real height
+                // separately so the content stays clear of it. It's 0px
+                // (via the fallback) everywhere else, so this is a no-op
+                // for Classic mode and for TV's non-home pages.
+                paddingBottom: 'var(--kiosk-dock-overlay-h, 0px)',
             }),
         }"
     >

@@ -131,7 +131,7 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
       <div class="overflow-hidden rounded-xl border border-slate-300 bg-slate-900" style="aspect-ratio: 16 / 9" data-testid="preview">
         <div class="h-full w-full origin-top-left" style="width: 177.78%; height: 177.78%; transform: scale(0.5625); font-size: 22px">
           <div :key="previewTab" style="height: 100%">
-            <component :is="previewConfig.template === 'tv' ? TvShell : ClassicShell" :hotel="previewHotel" :config="previewConfig" :data-preview-page="previewTab">
+            <component :is="previewConfig.template === 'tv' ? TvShell : ClassicShell" :hotel="previewHotel" :config="previewConfig" :preview="true" :data-preview-page="previewTab">
               <div v-if="previewTab === 'home' && previewConfig.template === 'tv'" class="h-full w-full bg-gradient-to-br from-slate-700 to-slate-900" />
               <div v-else class="min-h-[140%] bg-white p-10 pt-28 text-slate-400">— page content —<div class="mt-4 h-96 rounded-lg bg-slate-100" /></div>
             </component>

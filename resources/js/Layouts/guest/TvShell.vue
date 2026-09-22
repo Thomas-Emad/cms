@@ -13,9 +13,9 @@ import { useKioskShell } from './useKioskShell';
  *  - Every OTHER page scrolls normally, with a slimmer top bar and a compact tile row.
  * Arrow keys / a TV remote move between tiles; Enter opens one.
  */
-const props = defineProps<{ hotel?: Hotel; config: GuestLayoutConfig }>();
+const props = defineProps<{ hotel?: Hotel; config: GuestLayoutConfig; preview?: boolean }>();
 
-const { onHome, isActive, clock } = useKioskShell();
+const { onHome, isActive, clock } = useKioskShell({ skipFontScale: props.preview });
 
 const items = computed(() => visibleItems(props.config));
 const dims = computed(() => TILE_DIMENSIONS[props.config.tile_size]);
@@ -79,6 +79,12 @@ const tileStyle = (color: string | null) => ({ background: color ?? '#1f2937', c
             // On home the picture runs behind everything; other pages keep clear of the bars.
             '--kiosk-topbar-h': onHome ? '0px' : '5rem',
             '--kiosk-dock-h': onHome ? '0px' : 'calc(var(--tv-tile-h) + 2rem)',
+            // Unlike --kiosk-dock-h, this always reflects the tile row's real
+            // on-screen footprint - including on home, where dock-h is
+            // zeroed out on purpose for the full-bleed hero. Sections like
+            // HeroSection use this to keep their own content clear of the
+            // fixed dock instead of relying on a guessed fixed padding.
+            '--kiosk-dock-overlay-h': onHome ? 'calc(var(--tv-tile-h) + 3rem)' : '0px',
         }"
         data-testid="tv-shell"
         @contextmenu.prevent
