@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\FacilityController as AdminFacilityController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\LayoutController as AdminLayoutController;
 use App\Http\Controllers\Admin\MapController as AdminMapController;
 use App\Http\Controllers\Admin\InfoEntryController;
 use App\Http\Controllers\Admin\MediaController;
@@ -13,7 +14,6 @@ use App\Http\Controllers\Admin\OfferController as AdminOfferController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
-use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Guest\EventController as GuestEventController;
 use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController;
 use App\Http\Controllers\Guest\FacilityController as GuestFacilityController;
@@ -110,6 +110,9 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
 
             Route::get('gallery', [AdminGalleryController::class, 'index'])->name('gallery.index');
 
+            Route::get('layout', [AdminLayoutController::class, 'edit'])->name('layout.edit');
+            Route::put('layout', [AdminLayoutController::class, 'update'])->name('layout.update');
+
             Route::get('map', [AdminMapController::class, 'edit'])->name('map.edit');
             Route::get('map/builder', [AdminMapController::class, 'builder'])->name('map.builder');
             Route::put('map/save', [AdminMapController::class, 'save'])->name('map.save');
@@ -128,7 +131,6 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             Route::get('pages/{page}/builder', [AdminPageController::class, 'edit'])->name('pages.builder');
             Route::get('pages/{page}/preview', [AdminPageController::class, 'preview'])->name('pages.preview');
             Route::put('pages/{page}/draft', [AdminPageController::class, 'updateDraft'])->name('pages.draft.update');
-            Route::patch('pages/{page}/layout', [AdminPageController::class, 'updateLayout'])->name('pages.layout.update');
             Route::post('pages/{page}/resolve-preview', [AdminPageController::class, 'resolvePreviewSection'])
                 ->name('pages.resolve-preview');
             // Publishing has its own tighter policy check (hotel_admin+
@@ -137,9 +139,6 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
             // route-middleware level since the role gate here already
             // covers hotel_staff for the OTHER page actions above.
             Route::post('pages/{page}/publish', [AdminPageController::class, 'publish'])->name('pages.publish');
-
-            Route::get('settings', [AdminSettingsController::class, 'index'])->name('settings.index');
-            Route::patch('settings/guest-view', [AdminSettingsController::class, 'updateGuestView'])->name('settings.guest-view.update');
         });
     });
 

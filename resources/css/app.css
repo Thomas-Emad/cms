@@ -38,20 +38,19 @@
     /* Atmosphere — dark gradient used to lay text over imagery without
        hardcoding the whole site to one color (theme --color-primary
        from the hotel's theme system is layered on top, not replaced). */
-    /* Hilton brand palette — Hilton Blue (primary) + Hilton Gold (accent) */
     --luxury-ivory: #faf9f6;
     --luxury-cream: #f3efe8;
-    --luxury-forest: #002f61;
-    --luxury-olive: #0e3f7a;
+    --luxury-forest: #183c2d;
+    --luxury-olive: #637052;
     --luxury-champagne: #b99a62;
-    --luxury-ink: #14213d;
+    --luxury-ink: #20241f;
     --atmosphere-gradient: linear-gradient(
         180deg,
-        rgba(0, 26, 53, 0.1) 0%,
-        rgba(0, 26, 53, 0.16) 38%,
-        rgba(0, 15, 33, 0.76) 100%
+        rgba(26, 32, 25, 0.08) 0%,
+        rgba(26, 32, 25, 0.12) 38%,
+        rgba(17, 25, 18, 0.74) 100%
     );
-    --atmosphere-scrim: rgba(0, 47, 97, 0.42);
+    --atmosphere-scrim: rgba(24, 60, 45, 0.4);
 }
 
 html {
@@ -346,3 +345,25 @@ html:has(.kiosk-root) body {
 @media (min-width: 1280px) { .map-ui { --panel-w: 380px; } }
 @media (min-width: 1700px) { .map-ui { --map-scale: 1.1; --panel-w: 400px; } }
 @media (max-width: 640px) { .map-ui { --map-scale: 0.95; } }
+
+/* ------------------------------------------------------------------ */
+/* Smart TV template tiles                                             */
+/* ------------------------------------------------------------------ */
+.tv-tile {
+    outline: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    transition: transform 200ms var(--ease-standard, ease), box-shadow 200ms var(--ease-standard, ease);
+}
+/* "Focused" like a TV: bigger, with a white ring. Hover (mouse), keyboard focus and the current page all get it. */
+.tv-tile:hover,
+.tv-tile:focus-visible,
+.tv-tile--active {
+    transform: scale(1.07);
+    box-shadow: 0 0 0 4px #fff, 0 14px 34px rgba(0, 0, 0, 0.5);
+}
+.tv-tile:active {
+    transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+    .tv-tile { transition: none; }
+}

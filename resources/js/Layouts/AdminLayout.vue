@@ -12,7 +12,7 @@ const nav = [
     children: [
       { label: 'Hotel Information', href: '#', disabled: true },
       { label: 'Theme', href: '#', disabled: true },
-      { label: 'Settings', href: '/admin/settings' },
+      { label: 'Settings', href: '#', disabled: true },
     ],
   },
   {
@@ -36,7 +36,7 @@ const nav = [
     label: 'Website',
     children: [
       { label: 'Pages', href: '/admin/pages' },
-      { label: 'Navigation', href: '#', disabled: true },
+      { label: 'Guest Layout', href: '/admin/layout', disabled: false },
     ],
   },
   {

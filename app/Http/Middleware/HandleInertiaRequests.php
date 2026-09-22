@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Layout\GuestLayoutStore;
 use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -21,14 +22,10 @@ class HandleInertiaRequests extends Middleware
             'hotel' => fn () => app(CurrentHotel::class)->has()
                 ? app(CurrentHotel::class)->get()->only(['id', 'name', 'slug', 'status'])
                 : null,
-            // Site-wide guest shell choice ('classic' | 'tv') - read by
-            // GuestShell.vue to decide which layout component wraps every
-            // guest page. Defaults to 'classic' if settings row is
-            // missing so a hotel with no HotelSettings row yet still
-            // renders exactly as before this feature existed.
-            'guestView' => fn () => app(CurrentHotel::class)->has()
-                ? (app(CurrentHotel::class)->get()->settings?->guest_view ?? 'classic')
-                : 'classic',
+            // Which guest-screen template + menu to use. Not needed (so not queried) in the admin area.
+            'guestLayout' => fn () => $request->is('admin*') || ! app(CurrentHotel::class)->has()
+                ? null
+                : app(GuestLayoutStore::class)->forHotel(app(CurrentHotel::class)->get()->id),
         ]);
     }
 }
