@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([see
+        $this->call([
             HotelSeeder::class,
             DemoContentSeeder::class,
             PageSeeder::class,
