@@ -1,16 +1,18 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
-    "outputDirectory": "public",
     "functions": {
-        "api/runable.php": {
+        "api/index.php": {
             "runtime": "vercel-php@0.7.4"
         }
     },
-    "rewrites": [
+    "routes": [
         {
-            "source": "/(.*)",
-            "destination": "/api/runable.php"
+            "src": "/build/(.*)",
+            "dest": "/public/build/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
         }
-    ],
-    "buildCommand": "Echo Skip..."
+    ]
 }
