@@ -75,7 +75,7 @@ const isEditorCanvas = props.mode === 'edit';
             />
         </div>
 
-        <div class="relative z-10 w-full px-6 lg:px-10 pb-16 lg:pb-36" :class="{ 'pb-8': isEditorCanvas }">
+        <div class="relative z-10 w-full px-6 lg:px-10 pb-16 lg:pb-36 xl:pb-12" :class="{ 'pb-8': isEditorCanvas }">
             <div class="mx-auto max-w-7xl">
                 <p
                     class="text-white/80 text-xs uppercase tracking-[0.24em] mb-4"
