@@ -3,7 +3,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
@@ -68,6 +71,12 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "vercel": [
+            "npm run build",
+            "mkdir -p /vercel/output/static",
+            "cp -r public/build /vercel/output/static",
+            "php artisan migrate:fresh --seed"
         ]
     },
     "extra": {
