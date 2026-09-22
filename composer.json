@@ -73,9 +73,7 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "vercel": [
-            "npm run build",
-            "mkdir -p /vercel/output/static",
-            "cp -r public/build /vercel/output/static"
+            "npm run build"
         ]
     },
     "extra": {
