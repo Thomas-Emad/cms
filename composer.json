@@ -73,10 +73,11 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "vercel": [
+            "php -v",
+            "composer show symfony/http-foundation",
             "npm run build",
             "mkdir -p /vercel/output/static",
-            "cp -r public/build /vercel/output/static",
-            "php artisan migrate --force"
+            "cp -r public/build /vercel/output/static"
         ]
     },
     "extra": {
