@@ -11,6 +11,5 @@
             "source": "/(.*)",
             "destination": "/api/runable.php"
         }
-    ],
-    "buildCommand": "echo Skip.."
+    ]
 }
