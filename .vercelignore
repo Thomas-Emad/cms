@@ -1,1 +1,10 @@
-public/index.php
+.git
+.github
+node_modules
+.env
+.env.*
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+tests
