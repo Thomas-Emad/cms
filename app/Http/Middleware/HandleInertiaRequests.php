@@ -26,6 +26,48 @@ class HandleInertiaRequests extends Middleware
             'guestLayout' => fn () => $request->is('admin*') || ! app(CurrentHotel::class)->has()
                 ? null
                 : app(GuestLayoutStore::class)->forHotel(app(CurrentHotel::class)->get()->id),
+            'theme' => function () {
+                if (! app(CurrentHotel::class)->has()) {
+                    return null;
+                }
+                $hotel = app(CurrentHotel::class)->get();
+                $theme = $hotel->activeTheme ?? $hotel->themes()->first();
+
+                if ($theme) {
+                    return array_merge(
+                        $theme->only([
+                            'id', 'name', 'primary_color', 'secondary_color',
+                            'font_family', 'border_radius', 'button_style', 'card_style',
+                        ]),
+                        [
+                            'header_bg' => $theme->header_bg,
+                            'footer_bg' => $theme->footer_bg,
+                            'css_variables' => $theme->toCssVariables(),
+                        ]
+                    );
+                }
+
+                return [
+                    'primary_color' => '#059669',
+                    'secondary_color' => '#10B981',
+                    'header_bg' => '#064e3b',
+                    'footer_bg' => '#022c22',
+                    'font_family' => 'Instrument Sans',
+                    'border_radius' => 'medium',
+                    'button_style' => 'rounded',
+                    'card_style' => 'elevated',
+                    'css_variables' => [
+                        '--color-primary' => '#059669',
+                        '--color-secondary' => '#10B981',
+                        '--header-bg' => 'rgba(6, 78, 59, 0.88)',
+                        '--header-bg-solid' => '#064e3b',
+                        '--footer-bg' => '#022c22',
+                        '--dock-bg' => 'rgba(2, 44, 34, 0.92)',
+                        '--font-family' => 'Instrument Sans',
+                        '--radius' => '8px',
+                    ],
+                ];
+            },
             'locale' => fn () => app()->getLocale(),
             'direction' => fn () => app()->getLocale() === 'ar' ? 'rtl' : 'ltr',
             'translations' => fn () => $this->translations(),

@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ThemeController as AdminThemeController;
 use App\Http\Controllers\Guest\BranchController as GuestBranchController;
 use App\Http\Controllers\Guest\EventController as GuestEventController;
 use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController;
@@ -119,6 +121,13 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
 
             Route::get('layout', [AdminLayoutController::class, 'edit'])->name('layout.edit');
             Route::put('layout', [AdminLayoutController::class, 'update'])->name('layout.update');
+
+            // Hotel Settings & Guest Layout Theme
+            Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+            Route::patch('settings/guest-view', [SettingsController::class, 'updateGuestView'])->name('settings.guest-view.update');
+
+            Route::get('theme', [AdminThemeController::class, 'edit'])->name('theme.edit');
+            Route::put('theme', [AdminThemeController::class, 'update'])->name('theme.update');
 
             Route::get('map', [AdminMapController::class, 'edit'])->name('map.edit');
             Route::get('map/builder', [AdminMapController::class, 'builder'])->name('map.builder');

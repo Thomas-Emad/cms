@@ -47,16 +47,20 @@ class DemoContentSeeder extends Seeder
 
     protected function attachCover(Model $model, string $url, ?string $alt = null): void
     {
-        Media::create([
-            'hotel_id' => $this->hotel->id,
-            'disk' => 'external',
-            'path' => $url,
-            'mediable_type' => get_class($model),
-            'mediable_id' => $model->id,
-            'collection' => 'cover',
-            'alt_text' => $alt,
-            'sort_order' => 0,
-        ]);
+        Media::updateOrCreate(
+            [
+                'hotel_id' => $this->hotel->id,
+                'mediable_type' => get_class($model),
+                'mediable_id' => $model->id,
+                'collection' => 'cover',
+            ],
+            [
+                'disk' => 'external',
+                'path' => $url,
+                'alt_text' => $alt,
+                'sort_order' => 0,
+            ]
+        );
     }
 
     protected function attachGalleryImage(
@@ -65,16 +69,20 @@ class DemoContentSeeder extends Seeder
         ?string $alt = null,
         int $sortOrder = 0
     ): void {
-        Media::create([
-            'hotel_id' => $this->hotel->id,
-            'disk' => 'external',
-            'path' => $url,
-            'mediable_type' => get_class($model),
-            'mediable_id' => $model->id,
-            'collection' => 'gallery',
-            'alt_text' => $alt,
-            'sort_order' => $sortOrder,
-        ]);
+        Media::updateOrCreate(
+            [
+                'hotel_id' => $this->hotel->id,
+                'mediable_type' => get_class($model),
+                'mediable_id' => $model->id,
+                'collection' => 'gallery',
+                'sort_order' => $sortOrder,
+            ],
+            [
+                'disk' => 'external',
+                'path' => $url,
+                'alt_text' => $alt,
+            ]
+        );
     }
 
     protected function seedRooms(): void

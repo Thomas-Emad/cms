@@ -367,3 +367,118 @@ html:has(.kiosk-root) body {
 @media (prefers-reduced-motion: reduce) {
     .tv-tile { transition: none; }
 }
+
+/* ------------------------------------------------------------------ */
+/* Admin Panel Themes (Green default, Forest, Slate, Blue, Purple, Amber) */
+/* ------------------------------------------------------------------ */
+:root {
+    --admin-primary: #059669;
+    --admin-primary-hover: #047857;
+    --admin-primary-active: #065f46;
+    --admin-primary-light: #ecfdf5;
+    --admin-primary-border: #a7f3d0;
+    --admin-primary-ring: rgba(5, 150, 105, 0.28);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #ecfdf5;
+    --admin-sidebar-active-text: #065f46;
+    --admin-accent: #10b981;
+}
+
+[data-admin-theme="green"], html[data-admin-theme="green"] {
+    --admin-primary: #059669;
+    --admin-primary-hover: #047857;
+    --admin-primary-active: #065f46;
+    --admin-primary-light: #ecfdf5;
+    --admin-primary-border: #a7f3d0;
+    --admin-primary-ring: rgba(5, 150, 105, 0.28);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #ecfdf5;
+    --admin-sidebar-active-text: #065f46;
+    --admin-accent: #10b981;
+}
+
+[data-admin-theme="forest"], html[data-admin-theme="forest"] {
+    --admin-primary: #183c2d;
+    --admin-primary-hover: #112b20;
+    --admin-primary-active: #0a1b14;
+    --admin-primary-light: #edf5f0;
+    --admin-primary-border: #9ec1b0;
+    --admin-primary-ring: rgba(24, 60, 45, 0.28);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #edf5f0;
+    --admin-sidebar-active-text: #183c2d;
+    --admin-accent: #2d6a4f;
+}
+
+[data-admin-theme="slate"], html[data-admin-theme="slate"] {
+    --admin-primary: #1e293b;
+    --admin-primary-hover: #0f172a;
+    --admin-primary-active: #020617;
+    --admin-primary-light: #f1f5f9;
+    --admin-primary-border: #cbd5e1;
+    --admin-primary-ring: rgba(30, 41, 59, 0.25);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #f1f5f9;
+    --admin-sidebar-active-text: #0f172a;
+    --admin-accent: #0284c7;
+}
+
+[data-admin-theme="blue"], html[data-admin-theme="blue"] {
+    --admin-primary: #2563eb;
+    --admin-primary-hover: #1d4ed8;
+    --admin-primary-active: #1e40af;
+    --admin-primary-light: #eff6ff;
+    --admin-primary-border: #bfdbfe;
+    --admin-primary-ring: rgba(37, 99, 235, 0.28);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #eff6ff;
+    --admin-sidebar-active-text: #1e40af;
+    --admin-accent: #3b82f6;
+}
+
+[data-admin-theme="purple"], html[data-admin-theme="purple"] {
+    --admin-primary: #7c3aed;
+    --admin-primary-hover: #6d28d9;
+    --admin-primary-active: #5b21b6;
+    --admin-primary-light: #f5f3ff;
+    --admin-primary-border: #ddd6fe;
+    --admin-primary-ring: rgba(124, 58, 237, 0.28);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #f5f3ff;
+    --admin-sidebar-active-text: #5b21b6;
+    --admin-accent: #8b5cf6;
+}
+
+[data-admin-theme="amber"], html[data-admin-theme="amber"] {
+    --admin-primary: #d97706;
+    --admin-primary-hover: #b45309;
+    --admin-primary-active: #92400e;
+    --admin-primary-light: #fffbeb;
+    --admin-primary-border: #fde68a;
+    --admin-primary-ring: rgba(217, 119, 6, 0.28);
+    --admin-primary-text: #ffffff;
+    --admin-sidebar-active-bg: #fffbeb;
+    --admin-sidebar-active-text: #92400e;
+    --admin-accent: #f59e0b;
+}
+
+/* Reusable Theme Classes */
+.admin-theme-btn-primary {
+    background-color: var(--admin-primary);
+    color: var(--admin-primary-text);
+}
+.admin-theme-btn-primary:hover:not(:disabled) {
+    background-color: var(--admin-primary-hover);
+}
+.admin-theme-btn-primary:active:not(:disabled) {
+    background-color: var(--admin-primary-active);
+}
+.admin-theme-btn-primary:focus-visible {
+    box-shadow: 0 0 0 3px var(--admin-primary-ring);
+}
+.admin-theme-input:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 2px var(--admin-primary-ring);
+    outline: none;
+}
+

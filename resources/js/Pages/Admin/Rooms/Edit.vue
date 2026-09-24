@@ -7,6 +7,7 @@ import { useI18n } from '@/i18n';
 import MediaManager from '@/Components/Admin/MediaManager.vue';
 import TagListInput from '@/Components/Admin/TagListInput.vue';
 import type { MediaItem, Room } from '@/types/room';
+import { AdminCard, AdminInput, AdminTextarea, AdminSelect, AdminButton, PageHeader } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -51,195 +52,180 @@ const submit = () => {
   else form.post('/admin/rooms');
 };
 
-const input = 'w-full rounded-md border border-slate-300 px-3 py-2 text-sm';
+const statuses = [
+  { value: 'draft', label: 'Draft (hidden)' },
+  { value: 'published', label: 'Published' },
+  { value: 'archived', label: 'Archived' },
+];
 </script>
 
 <template>
-  <div class="max-w-3xl">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-xl font-semibold text-slate-800">
-        {{ isEdit ? t('admin.edit_room', undefined, 'Edit Room & Suite') : t('admin.add_room', undefined, 'Add Room & Suite') }}
-      </h1>
-      <Link href="/admin/rooms" class="text-sm text-slate-500 hover:text-slate-800">
-        {{ t('admin.all_rooms', undefined, '← All rooms') }}
-      </Link>
-    </div>
+  <div class="max-w-3xl space-y-6">
+    <PageHeader
+      :title="isEdit ? t('admin.edit_room', undefined, 'Edit Room & Suite') : t('admin.add_room', undefined, 'Add Room & Suite')"
+      :subtitle="isEdit ? t('admin.room_edit_desc', undefined, 'Update room details, pricing specifications, and features.') : t('admin.room_create_desc', undefined, 'Add a new accommodation type to your hotel.')"
+      back-url="/admin/rooms"
+      :back-label="t('admin.all_rooms', undefined, 'All rooms')"
+    />
 
-    <form @submit.prevent="submit" class="space-y-4 rounded-lg border border-slate-200 bg-white p-6">
-      <BilingualTabs v-model="activeTab" />
+    <form @submit.prevent="submit" class="space-y-4">
+      <AdminCard>
+        <div class="mb-4">
+          <BilingualTabs v-model="activeTab" />
+        </div>
 
-      <!-- Arabic Translation Fields -->
-      <div v-if="activeTab === 'ar'" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ t('admin.common.name_ar', undefined, 'Name (AR) / الاسم بالعربية') }}
-          </label>
-          <input
+        <!-- Arabic Translation Fields -->
+        <div v-if="activeTab === 'ar'" class="space-y-4">
+          <AdminInput
             v-model="form.translations.ar.name"
-            type="text"
+            :label="t('admin.common.name_ar', undefined, 'Name (AR) / الاسم بالعربية')"
             dir="rtl"
             :placeholder="form.name || 'اسم الغرفة أو الجناح بالعربية...'"
-            :class="input"
+            :hint="`EN: ${form.name || '—'}`"
           />
-          <p class="mt-1 text-xs text-slate-400">EN: {{ form.name || '—' }}</p>
-        </div>
 
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ t('admin.common.short_description_ar', undefined, 'Short Description (AR) / الوصف القصير بالعربية') }}
-          </label>
-          <input
+          <AdminInput
             v-model="form.translations.ar.short_description"
-            type="text"
+            :label="t('admin.common.short_description_ar', undefined, 'Short Description (AR) / الوصف القصير بالعربية')"
             dir="rtl"
             :placeholder="form.short_description || 'نبذة قصيرة بالعربية...'"
-            :class="input"
           />
-        </div>
 
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ t('admin.common.description_ar', undefined, 'Description (AR) / الوصف التفصيلي بالعربية') }}
-          </label>
-          <textarea
+          <AdminTextarea
             v-model="form.translations.ar.description"
-            rows="4"
+            :label="t('admin.common.description_ar', undefined, 'Description (AR) / الوصف التفصيلي بالعربية')"
+            :rows="4"
             dir="rtl"
             :placeholder="form.description || 'الوصف الكامل بالعربية...'"
-            :class="input"
           />
-        </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('rooms.bed', undefined, 'Bed') }} (AR)
-            </label>
-            <input
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <AdminInput
               v-model="form.translations.ar.bed_type"
-              type="text"
+              :label="`${t('rooms.bed', undefined, 'Bed')} (AR)`"
               dir="rtl"
               :placeholder="form.bed_type || 'سرير كينغ مريح'"
-              :class="input"
             />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('rooms.view', undefined, 'View') }} (AR)
-            </label>
-            <input
+            <AdminInput
               v-model="form.translations.ar.view"
-              type="text"
+              :label="`${t('rooms.view', undefined, 'View')} (AR)`"
               dir="rtl"
               :placeholder="form.view || 'إطلالة بانورامية على البحر'"
-              :class="input"
             />
           </div>
         </div>
-      </div>
 
-      <!-- English & Base Fields -->
-      <div v-else class="space-y-4">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('admin.common.name_en', undefined, 'Name (EN)') }}
-            </label>
-            <input v-model="form.name" type="text" :class="input" placeholder="e.g. Deluxe Sea View Room" />
-            <p v-if="form.errors.name" class="mt-1 text-xs text-red-600">{{ form.errors.name }}</p>
+        <!-- English & Base Fields -->
+        <div v-else class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <AdminInput
+              v-model="form.name"
+              :label="t('admin.common.name_en', undefined, 'Name (EN)')"
+              :error="form.errors.name"
+              placeholder="e.g. Deluxe Sea View Room"
+              required
+            />
+            <AdminInput
+              v-model="form.slug"
+              :label="t('admin.common.slug', undefined, 'Slug')"
+              :error="form.errors.slug"
+              placeholder="auto from name"
+              required
+            />
           </div>
+
+          <AdminInput
+            v-model="form.short_description"
+            :label="t('admin.common.short_description_en', undefined, 'Short description')"
+          />
+
+          <AdminTextarea
+            v-model="form.description"
+            :label="t('admin.common.description_en', undefined, 'Description')"
+            :rows="4"
+          />
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <AdminInput
+              v-model.number="form.size_sqm"
+              type="number"
+              :label="`${t('rooms.size', undefined, 'Size')} (m²)`"
+              min="1"
+            />
+            <AdminInput
+              v-model.number="form.max_guests"
+              type="number"
+              :label="t('rooms.occupancy', undefined, 'Max guests')"
+              min="1"
+            />
+            <AdminInput
+              v-model="form.bed_type"
+              :label="t('rooms.bed', undefined, 'Bed')"
+              placeholder="King"
+            />
+            <AdminInput
+              v-model="form.view"
+              :label="t('rooms.view', undefined, 'View')"
+              placeholder="Sea"
+            />
+          </div>
+
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('admin.common.slug', undefined, 'Slug') }}
+              {{ t('rooms.amenities', undefined, 'Features') }}
             </label>
-            <input v-model="form.slug" type="text" :class="input" placeholder="auto from name" />
-            <p v-if="form.errors.slug" class="mt-1 text-xs text-red-600">{{ form.errors.slug }}</p>
+            <TagListInput
+              v-model="form.features"
+              :placeholder="t('admin.common.features_placeholder', undefined, 'e.g. Balcony — press Enter to add')"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+            <AdminSelect
+              v-model="form.status"
+              :label="t('admin.common.status', undefined, 'Status')"
+              :options="statuses"
+            />
+            <AdminInput
+              v-model.number="form.sort_order"
+              type="number"
+              min="0"
+              :label="t('admin.common.sort_order', undefined, 'Order')"
+            />
+            <label class="flex items-center gap-2 pb-2.5 text-sm text-slate-700 cursor-pointer">
+              <input v-model="form.featured" type="checkbox" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
+              <span class="font-medium">{{ t('admin.common.featured', undefined, 'Featured Room') }}</span>
+            </label>
           </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ t('admin.common.short_description_en', undefined, 'Short description') }}
-          </label>
-          <input v-model="form.short_description" type="text" :class="input" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ t('admin.common.description_en', undefined, 'Description') }}
-          </label>
-          <textarea v-model="form.description" rows="4" :class="input" />
-        </div>
-
-        <div class="grid grid-cols-4 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('rooms.size', undefined, 'Size') }} (m²)
-            </label>
-            <input v-model.number="form.size_sqm" type="number" min="1" :class="input" />
+        <template #footer>
+          <div class="flex justify-end pt-1">
+            <AdminButton
+              type="submit"
+              :loading="form.processing"
+              :disabled="form.processing"
+            >
+              {{ isEdit ? t('admin.common.save', undefined, 'Save changes') : t('common.create', undefined, 'Create room') }}
+            </AdminButton>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('rooms.occupancy', undefined, 'Max guests') }}
-            </label>
-            <input v-model.number="form.max_guests" type="number" min="1" :class="input" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('rooms.bed', undefined, 'Bed') }}
-            </label>
-            <input v-model="form.bed_type" type="text" :class="input" placeholder="King" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('rooms.view', undefined, 'View') }}
-            </label>
-            <input v-model="form.view" type="text" :class="input" placeholder="Sea" />
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">
-            {{ t('rooms.amenities', undefined, 'Features') }}
-          </label>
-          <TagListInput v-model="form.features" :placeholder="t('admin.common.features_placeholder', undefined, 'e.g. Balcony — press Enter to add')" />
-        </div>
-
-        <div class="grid grid-cols-3 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('admin.common.status', undefined, 'Status') }}
-            </label>
-            <select v-model="form.status" :class="input">
-              <option value="draft">{{ t('status.draft', undefined, 'Draft (hidden)') }}</option>
-              <option value="published">{{ t('status.published', undefined, 'Published') }}</option>
-              <option value="archived">{{ t('status.archived', undefined, 'Archived') }}</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">
-              {{ t('admin.common.sort_order', undefined, 'Order') }}
-            </label>
-            <input v-model.number="form.sort_order" type="number" min="0" :class="input" />
-          </div>
-          <label class="flex items-end gap-2 pb-2 text-sm text-slate-700">
-            <input v-model="form.featured" type="checkbox" /> {{ t('admin.common.featured', undefined, 'Featured') }}
-          </label>
-        </div>
-      </div>
-
-      <div class="flex justify-end pt-2 border-t border-slate-100">
-        <button type="submit" :disabled="form.processing" class="rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50">
-          {{ isEdit ? t('admin.common.save', undefined, 'Save changes') : t('common.create', undefined, 'Create room') }}
-        </button>
-      </div>
+        </template>
+      </AdminCard>
     </form>
 
-    <div class="mt-6 space-y-6 rounded-lg border border-slate-200 bg-white p-6">
+    <AdminCard
+      :title="t('admin.rooms.photos_title', undefined, 'Photos & Gallery')"
+      :subtitle="t('admin.rooms.photos_desc', undefined, 'Upload high-resolution photography for this room.')"
+    >
       <template v-if="isEdit">
-        <MediaManager mediable-type="room" :mediable-id="room!.id" collection="cover" :items="cover" label="Main photo" hint="Shown on the room card and at the top of its page." />
-        <MediaManager mediable-type="room" :mediable-id="room!.id" collection="gallery" :items="gallery" label="Gallery" hint="Guests can tap a photo to view it full screen." />
+        <div class="space-y-6">
+          <MediaManager mediable-type="room" :mediable-id="room!.id" collection="cover" :items="cover" label="Main photo" hint="Shown on the room card and at the top of its page." />
+          <MediaManager mediable-type="room" :mediable-id="room!.id" collection="gallery" :items="gallery" label="Gallery" hint="Guests can tap a photo to view it full screen." />
+        </div>
       </template>
-      <p v-else class="text-sm text-slate-500">Save the room first, then you can add photos.</p>
-    </div>
+      <p v-else class="text-sm text-slate-500">
+        {{ t('admin.rooms.save_first_photos', undefined, 'Save the room first, then you can add photos.') }}
+      </p>
+    </AdminCard>
   </div>
 </template>

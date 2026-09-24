@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { useI18n } from '@/i18n';
 import type { Restaurant } from '@/types/restaurant';
 import type { Paginated } from '@/types/facility';
+import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -14,55 +15,55 @@ defineProps<{
 const { t } = useI18n();
 
 const destroy = (restaurant: Restaurant) => {
-    if (confirm(`${t('admin.common.delete_confirm', 'Delete')} "${restaurant.name}"? ${t('admin.common.cannot_be_undone', 'This cannot be undone.')}`)) {
-        router.delete(`/admin/restaurants/${restaurant.id}`);
-    }
+    router.delete(`/admin/restaurants/${restaurant.id}`);
 };
 </script>
 
 <template>
     <div>
-        <div class="flex items-center justify-between mb-4">
-            <h1 class="text-xl font-semibold text-slate-800">{{ t('admin.restaurants.title', 'Restaurants') }}</h1>
-            <Link href="/admin/restaurants/create"
-                class="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900">
-                {{ t('admin.restaurants.create', '+ Add Restaurant') }}
-            </Link>
+        <div class="flex items-center justify-between mb-5">
+            <div>
+                <h1 class="text-xl font-semibold text-slate-800">{{ t('admin.restaurants.title', undefined, 'Restaurants & Dining') }}</h1>
+                <p class="text-xs text-slate-500 mt-0.5">{{ t('admin.restaurants.subtitle', undefined, 'Manage hotel restaurants, bars, and dining venues.') }}</p>
+            </div>
+            <CreateButton href="/admin/restaurants/create">
+                {{ t('admin.restaurants.create', undefined, '+ Add Restaurant') }}
+            </CreateButton>
         </div>
 
-        <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
-            <table class="w-full text-sm">
-                <thead class="bg-slate-50 text-start text-xs uppercase text-slate-400">
-                    <tr>
-                        <th class="px-4 py-2 text-start">{{ $t('common.name') }}</th>
-                        <th class="px-4 py-2 text-start">{{ $t('restaurants.cuisine') }}</th>
-                        <th class="px-4 py-2 text-start">{{ $t('common.status_label') }}</th>
-                        <th class="px-4 py-2"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    <tr v-for="restaurant in restaurants.data" :key="restaurant.id">
-                        <td class="px-4 py-2 font-medium text-slate-700">{{ restaurant.name }}</td>
-                        <td class="px-4 py-2 text-slate-500">{{ restaurant.cuisine }}</td>
-                        <td class="px-4 py-2">
-                            <span class="rounded-full px-2 py-0.5 text-xs"
-                                :class="restaurant.status === 'published' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'">
-                                {{ $t(`admin.status.${restaurant.status}`, restaurant.status) }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-2 text-end space-x-3 rtl:space-x-reverse">
-                            <Link :href="`/admin/restaurants/${restaurant.id}/edit`"
-                                class="text-slate-500 hover:text-slate-800">{{ $t('common.edit') }}</Link>
-                            <button class="text-red-500 hover:text-red-700" @click="destroy(restaurant)">{{
-                                $t('common.delete') }}</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <AdminTable
+            :items="restaurants.data"
+            :empty-message="t('admin.common.empty', undefined, 'Nothing here yet — add your first one.')"
+        >
+            <template #header>
+                <tr>
+                    <th class="px-4 py-3 text-start">{{ t('common.name', undefined, 'Name') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('restaurants.cuisine', undefined, 'Cuisine') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('common.status_label', undefined, 'Status') }}</th>
+                    <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
+                </tr>
+            </template>
 
-        <p v-if="!restaurants.data.length" class="text-sm text-slate-400 mt-6 text-center">
-            {{ $t('admin.common.empty', 'Nothing here yet — add your first one.') }}
-        </p>
+            <tr
+                v-for="restaurant in restaurants.data"
+                :key="restaurant.id"
+                class="hover:bg-slate-50/70 transition-colors"
+            >
+                <td class="px-4 py-3 font-medium text-slate-800">{{ restaurant.name }}</td>
+                <td class="px-4 py-3 text-slate-500">{{ restaurant.cuisine || '—' }}</td>
+                <td class="px-4 py-3">
+                    <AdminBadge :variant="restaurant.status === 'published' ? 'published' : 'draft'" dot>
+                        {{ t(`admin.status.${restaurant.status}`, undefined, restaurant.status) }}
+                    </AdminBadge>
+                </td>
+                <td class="px-4 py-3 text-end space-x-2 rtl:space-x-reverse whitespace-nowrap">
+                    <EditButton :href="`/admin/restaurants/${restaurant.id}/edit`" />
+                    <DeleteButton
+                        :confirm-message="`${t('admin.common.delete_confirm', undefined, 'Delete')} '${restaurant.name}'? ${t('admin.common.cannot_be_undone', undefined, 'This cannot be undone.')}`"
+                        @confirm="destroy(restaurant)"
+                    />
+                </td>
+            </tr>
+        </AdminTable>
     </div>
 </template>

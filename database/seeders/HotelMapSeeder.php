@@ -12,11 +12,14 @@ class HotelMapSeeder extends Seeder
     public function run(): void
     {
         $hotel = Hotel::where('slug', 'hilton-grand-horizon')->first();
-        if (! $hotel || HotelMap::withoutGlobalScopes()->where('hotel_id', $hotel->id)->exists()) {
+        if (! $hotel) {
             return;
         }
 
         $data = json_decode((string) file_get_contents(base_path('database/data/demo-hotel-map.json')), true);
-        HotelMap::withoutGlobalScopes()->create(['hotel_id' => $hotel->id, 'data' => $data]);
+        HotelMap::withoutGlobalScopes()->updateOrCreate(
+            ['hotel_id' => $hotel->id],
+            ['data' => $data]
+        );
     }
 }

@@ -480,8 +480,8 @@ class DemoArabicTranslationsSeeder extends Seeder
         $hotel = Hotel::where('slug', 'hilton-grand-horizon')->first() ?? Hotel::first();
         if ($hotel) {
             $hotel->setTranslations('ar', [
-                'name' => 'هيلتون جراند هورايزون',
-                'address' => '١ طريق هورايزون باي',
+                'name' => 'فندق ومنتجع هيلتون دبي نخلة جميرا',
+                'address' => 'بالم ويست بيتش، نخلة جميرا، دبي، الإمارات العربية المتحدة',
             ]);
         }
     }

@@ -13,54 +13,66 @@ class HotelSeeder extends Seeder
 {
     public function run(): void
     {
-        $hotel = Hotel::create([
-            'name' => 'Hilton Grand Horizon',
-            'slug' => 'hilton-grand-horizon',
-            'status' => 'active',
-            'contact_email' => 'info@hiltongrandhorizon.example',
-            'contact_phone' => '+1 555 010 2020',
-            'address' => '1 Horizon Bay Drive',
-            'timezone' => 'UTC',
-            'currency' => 'USD',
-        ]);
+        $hotel = Hotel::updateOrCreate(
+            ['slug' => 'hilton-grand-horizon'],
+            [
+                'name' => 'Hilton Dubai Palm Jumeirah',
+                'status' => 'active',
+                'contact_email' => 'info.palmjumeirah@hilton.com',
+                'contact_phone' => '+971 4 230 0000',
+                'address' => 'Palm West Beach, The Palm Jumeirah, Dubai, United Arab Emirates',
+                'timezone' => 'Asia/Dubai',
+                'currency' => 'AED',
+            ]
+        );
 
-        HotelSettings::create([
-            'hotel_id' => $hotel->id,
-            'checkin_time' => '15:00:00',
-            'checkout_time' => '11:00:00',
-            'default_locale' => 'en',
-        ]);
+        HotelSettings::updateOrCreate(
+            ['hotel_id' => $hotel->id],
+            [
+                'checkin_time' => '15:00:00',
+                'checkout_time' => '12:00:00',
+                'default_locale' => 'en',
+            ]
+        );
 
-        // Hilton brand palette: deep Hilton Blue as primary, Hilton Gold as
-        // the accent/secondary color used for CTAs, highlights and dividers.
-        Theme::create([
-            'hotel_id' => $hotel->id,
-            'name' => 'Hilton Brand Theme',
-            'is_active' => true,
-            'primary_color' => '#002F61',
-            'secondary_color' => '#B99A62',
-            'font_family' => 'Inter',
-            'border_radius' => 'medium',
-            'button_style' => 'rounded',
-            'card_style' => 'elevated',
-        ]);
+        Theme::updateOrCreate(
+            ['hotel_id' => $hotel->id],
+            [
+                'name' => 'Hilton Dubai Palm Luxury Theme',
+                'is_active' => true,
+                'primary_color' => '#059669',
+                'secondary_color' => '#10B981',
+                'font_family' => 'Instrument Sans',
+                'border_radius' => 'medium',
+                'button_style' => 'rounded',
+                'card_style' => 'elevated',
+                'config' => [
+                    'header_bg' => '#064e3b',
+                    'footer_bg' => '#022c22',
+                ],
+            ]
+        );
 
-        User::create([
-            'name' => 'Platform Super Admin',
-            'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('password'),
-            'hotel_id' => null,
-            'role' => 'super_admin',
-            'status' => 'active',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name' => 'Platform Super Admin',
+                'password' => Hash::make('password'),
+                'hotel_id' => null,
+                'role' => 'super_admin',
+                'status' => 'active',
+            ]
+        );
 
-        User::create([
-            'name' => 'Grand Horizon Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
-            'hotel_id' => $hotel->id,
-            'role' => 'hotel_admin',
-            'status' => 'active',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Hilton Palm Jumeirah Admin',
+                'password' => Hash::make('password'),
+                'hotel_id' => $hotel->id,
+                'role' => 'hotel_admin',
+                'status' => 'active',
+            ]
+        );
     }
 }

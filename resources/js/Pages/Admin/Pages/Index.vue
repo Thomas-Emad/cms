@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
+import { useI18n } from '@/i18n';
+import { AdminTable, CreateButton, EditButton, ShowButton, AdminInput, AdminBadge } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -25,6 +27,7 @@ const props = defineProps<{
   filters: { q: string | null };
 }>();
 
+const { t } = useI18n();
 const search = ref(props.filters.q ?? '');
 
 let searchTimeout: ReturnType<typeof setTimeout>;
@@ -35,12 +38,6 @@ watch(search, (value) => {
   }, 300);
 });
 
-function statusBadgeClass(status: PageRow['status']): string {
-  if (status === 'published') return 'bg-emerald-50 text-emerald-700';
-  if (status === 'archived') return 'bg-slate-100 text-slate-400';
-  return 'bg-amber-50 text-amber-700';
-}
-
 function formatDate(value: string): string {
   return new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 }
@@ -50,102 +47,77 @@ function formatDate(value: string): string {
   <div>
     <div class="flex items-start justify-between mb-6">
       <div>
-        <h1 class="text-xl font-semibold text-slate-800">{{ $t('admin.pages.title', 'Pages') }}</h1>
+        <h1 class="text-xl font-semibold text-slate-800">{{ t('admin.pages.title', undefined, 'Pages') }}</h1>
         <p class="mt-1 text-sm text-slate-500">
-          {{ $t('admin.pages.subtitle', "Build and manage the pages that make up your hotel's guest website.") }}
+          {{ t('admin.pages.subtitle', undefined, "Build and manage the pages that make up your hotel's guest website.") }}
         </p>
       </div>
-      <Link
-        href="/admin/pages/create"
-        class="shrink-0 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900"
-      >
-        {{ $t('admin.pages.create', '+ Create Page') }}
-      </Link>
+      <CreateButton href="/admin/pages/create">
+        {{ t('admin.pages.create', undefined, '+ Create Page') }}
+      </CreateButton>
     </div>
 
-    <div v-if="pages.data.length || filters.q" class="mb-4">
-      <input
+    <div v-if="pages.data.length || filters.q" class="mb-4 max-w-sm">
+      <AdminInput
         v-model="search"
         type="text"
-        :placeholder="$t('admin.pages.search_placeholder', 'Search pages by name or slug…')"
-        class="w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm"
+        :placeholder="t('admin.pages.search_placeholder', undefined, 'Search pages by name or slug…')"
+        prefix="🔍"
       />
     </div>
 
-    <div
-      v-if="!pages.data.length && !filters.q"
-      class="rounded-lg border border-dashed border-slate-300 bg-white p-16 text-center"
+    <AdminTable
+      :items="pages.data"
+      :empty-message="filters.q ? `${t('admin.pages.no_match', undefined, 'No pages match')} '${filters.q}'` : t('admin.pages.empty_title', undefined, 'No pages yet')"
+      :empty-description="filters.q ? undefined : t('admin.pages.empty_desc', undefined, 'Create your first page to start building your hotel website.')"
     >
-      <p class="text-slate-600 font-medium">{{ $t('admin.pages.empty_title', 'No pages yet') }}</p>
-      <p class="mt-1 text-sm text-slate-400">
-        {{ $t('admin.pages.empty_desc', 'Create your first page to start building your hotel website.') }}
-      </p>
-      <Link
-        href="/admin/pages/create"
-        class="mt-4 inline-block rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900"
+      <template #header>
+        <tr>
+          <th class="px-4 py-3 text-start">{{ t('common.name', undefined, 'Name') }}</th>
+          <th class="px-4 py-3 text-start">{{ t('admin.pages.slug', undefined, 'Slug') }}</th>
+          <th class="px-4 py-3 text-start">{{ t('common.status', undefined, 'Status') }}</th>
+          <th class="px-4 py-3 text-start">{{ t('admin.pages.updated', undefined, 'Updated') }}</th>
+          <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
+        </tr>
+      </template>
+
+      <tr
+        v-for="pageRow in pages.data"
+        :key="pageRow.id"
+        class="hover:bg-slate-50/70 transition-colors"
       >
-        {{ $t('admin.pages.create', '+ Create Page') }}
-      </Link>
-    </div>
-
-    <div
-      v-else-if="!pages.data.length && filters.q"
-      class="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center text-sm text-slate-400"
-    >
-      {{ $t('admin.pages.no_match', 'No pages match') }} "{{ filters.q }}".
-    </div>
-
-    <div v-else class="overflow-hidden rounded-lg border border-slate-200 bg-white">
-      <table class="w-full text-sm">
-        <thead class="bg-slate-50 text-start text-xs uppercase text-slate-400">
-          <tr>
-            <th class="px-4 py-2 text-start">{{ $t('common.name') }}</th>
-            <th class="px-4 py-2 text-start">{{ $t('admin.pages.slug', 'Slug') }}</th>
-            <th class="px-4 py-2 text-start">{{ $t('common.status') }}</th>
-            <th class="px-4 py-2 text-start">{{ $t('admin.pages.updated', 'Updated') }}</th>
-            <th class="px-4 py-2"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr v-for="pageRow in pages.data" :key="pageRow.id" class="hover:bg-slate-50">
-            <td class="px-4 py-3 font-medium text-slate-700">
-              {{ pageRow.name }}
-              <span
-                v-if="pageRow.is_home"
-                class="ms-2 rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-600"
-                :title="$t('admin.pages.is_home_tooltip', 'This is the homepage')"
-              >
-                {{ $t('common.home') }}
-              </span>
-            </td>
-            <td class="px-4 py-3 text-slate-500 font-mono text-xs">
-              {{ pageRow.is_home ? '/' : `/pages/${pageRow.slug}` }}
-            </td>
-            <td class="px-4 py-3">
-              <span class="rounded-full px-2 py-0.5 text-xs" :class="statusBadgeClass(pageRow.status)">
-                {{ $t(`admin.status.${pageRow.status}`, pageRow.status) }}
-              </span>
-            </td>
-            <td class="px-4 py-3 text-slate-400">{{ formatDate(pageRow.updated_at) }}</td>
-            <td class="px-4 py-3 text-end space-x-3 rtl:space-x-reverse whitespace-nowrap">
-              <Link
-                :href="`/admin/pages/${pageRow.id}/builder`"
-                class="font-medium hover:underline"
-                style="color: var(--color-primary, #1F4B5A)"
-              >
-                {{ $t('admin.pages.open_builder', 'Open Builder') }}
-              </Link>
-              <Link
-                v-if="pageRow.status !== 'draft'"
-                :href="`/admin/pages/${pageRow.id}/preview`"
-                class="text-slate-500 hover:text-slate-800"
-              >
-                {{ $t('admin.pages.preview', 'Preview') }}
-              </Link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <td class="px-4 py-3 font-medium text-slate-800">
+          {{ pageRow.name }}
+          <span
+            v-if="pageRow.is_home"
+            class="ms-2 rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-600 font-normal"
+            :title="t('admin.pages.is_home_tooltip', undefined, 'This is the homepage')"
+          >
+            {{ t('common.home', undefined, 'Home') }}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-slate-500 font-mono text-xs">
+          {{ pageRow.is_home ? '/' : `/pages/${pageRow.slug}` }}
+        </td>
+        <td class="px-4 py-3">
+          <AdminBadge :variant="pageRow.status" dot>
+            {{ t(`admin.status.${pageRow.status}`, undefined, pageRow.status) }}
+          </AdminBadge>
+        </td>
+        <td class="px-4 py-3 text-slate-400 text-xs">{{ formatDate(pageRow.updated_at) }}</td>
+        <td class="px-4 py-3 text-end space-x-2 rtl:space-x-reverse whitespace-nowrap">
+          <EditButton
+            :href="`/admin/pages/${pageRow.id}/builder`"
+            :label="t('admin.pages.open_builder', undefined, 'Open Builder')"
+          />
+          <ShowButton
+            v-if="pageRow.status !== 'draft'"
+            :href="`/admin/pages/${pageRow.id}/preview`"
+            :label="t('admin.pages.preview', undefined, 'Preview')"
+            target="_blank"
+          />
+        </td>
+      </tr>
+    </AdminTable>
   </div>
 </template>
