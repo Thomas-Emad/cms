@@ -22,11 +22,12 @@ const nav = computed(() => [
     key: 'nav.hotel',
     label: 'Hotel',
     children: [
-      { key: 'nav.hotel_info', label: 'Hotel Information', href: '#', disabled: true },
+      { key: 'nav.branches', label: 'Branches', href: '/admin/branches' },
       { key: 'nav.theme', label: 'Theme', href: '/admin/theme', disabled: false },
       { key: 'nav.settings', label: 'Settings', href: '/admin/settings', disabled: false },
     ],
   },
+
   {
     key: 'nav.content',
     label: 'Content',

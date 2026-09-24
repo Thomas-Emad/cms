@@ -38,9 +38,9 @@ return [
     'weather' => [
         'provider' => env('WEATHER_PROVIDER', 'open-meteo'),
         'api_key' => env('WEATHER_API_KEY'),
-        'city' => env('WEATHER_CITY', 'Horizon Bay'),
-        'latitude' => (float) env('WEATHER_LATITUDE', 25.2048),
-        'longitude' => (float) env('WEATHER_LONGITUDE', 55.2708),
+        'city' => env('WEATHER_CITY', 'Cairo'),
+        'latitude' => (float) env('WEATHER_LATITUDE', 30.0444),
+        'longitude' => (float) env('WEATHER_LONGITUDE', 31.2357),
         'cache_ttl' => (int) env('WEATHER_CACHE_TTL', 3600),
     ],
 

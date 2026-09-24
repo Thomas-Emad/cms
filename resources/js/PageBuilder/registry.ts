@@ -50,9 +50,10 @@ const FACILITY_CATEGORIES = ['wellness', 'fitness', 'pool', 'kids', 'business', 
 export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
   hero: {
     component: HeroSection, label: 'Hero', icon: '🖼️', contexts: ['page'],
-    defaultProps: { title: '', subtitle: '', media_id: null, button_text: '', button_url: '' },
+    defaultProps: { eyebrow: '', title: '', subtitle: '', media_id: null, button_text: '', button_url: '' },
     defaultSettings: { background: 'transparent', padding: 'large' }, isDynamic: false,
     editorFields: [
+      { key: 'eyebrow', type: 'text', label: 'Eyebrow' },
       { key: 'title', type: 'text', label: 'Title' },
       { key: 'subtitle', type: 'text', label: 'Subtitle' },
       { key: 'media_id', type: 'media', label: 'Background image' },
@@ -60,6 +61,7 @@ export const SECTION_REGISTRY: Record<string, SectionRegistryEntry> = {
       { key: 'button_url', type: 'url', label: 'Button link' },
     ],
   },
+
   'app-launcher': {
     component: AppLauncherSection, label: 'App Launcher (TV Home Screen)', icon: '📺', contexts: ['page'],
     defaultProps: {

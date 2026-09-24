@@ -6,6 +6,7 @@ use App\Actions\Pages\CreatePageAction;
 use App\Actions\Pages\PublishPageAction;
 use App\Models\Hotel;
 use App\Models\Media;
+use App\Models\Page;
 use Illuminate\Database\Seeder;
 
 /**
@@ -35,6 +36,12 @@ class PageSeeder extends Seeder
 
     protected function seedHomepage(Hotel $hotel): void
     {
+        if (Page::where('hotel_id', $hotel->id)->where('is_home', true)->exists()) {
+            $this->command?->info('Homepage already exists, skipping.');
+
+            return;
+        }
+
         $heroMediaId = Media::query()
             ->where('hotel_id', $hotel->id)
             ->where('collection', 'cover')
@@ -47,11 +54,13 @@ class PageSeeder extends Seeder
                 'type' => 'hero',
                 'props' => [
                     'media_id' => $heroMediaId,
-                    'title' => 'Welcome to Grand Horizon',
-                    'subtitle' => 'Discover an unforgettable hotel experience on the water\'s edge.',
+                    'eyebrow' => 'Luxury Hospitality on the Nile',
+                    'title' => 'Welcome to Smarttel Hotel Cairo',
+                    'subtitle' => 'Experience timeless Egyptian hospitality on the banks of the River Nile.',
                     'button_text' => 'Explore Facilities',
                     'button_url' => '/facilities',
                 ],
+
                 'settings' => ['background' => 'transparent', 'padding' => 'large'],
             ],
             [
@@ -59,7 +68,7 @@ class PageSeeder extends Seeder
                 'type' => 'facility-grid',
                 'props' => [
                     'title' => 'Explore Our Facilities',
-                    'description' => 'Everything you need for the perfect stay.',
+                    'description' => 'Everything you need for the perfect Cairo stay.',
                     'category' => null,
                     'featured_only' => true,
                     'limit' => 6,
@@ -71,7 +80,7 @@ class PageSeeder extends Seeder
                 'id' => 'restaurant-grid-home',
                 'type' => 'restaurant-grid',
                 'props' => [
-                    'title' => 'Dining at Grand Horizon',
+                    'title' => 'Dining at Smarttel Hotel',
                     'description' => null,
                     'cuisine' => null,
                     'featured_only' => true,
@@ -104,8 +113,8 @@ class PageSeeder extends Seeder
                 'id' => 'cta-home',
                 'type' => 'cta',
                 'props' => [
-                    'heading' => 'Ready to book your stay?',
-                    'subheading' => 'Our concierge team is here to help you plan the perfect visit.',
+                    'heading' => 'Ready to book your stay on the Nile?',
+                    'subheading' => 'Our concierge team is here to help you plan the perfect Cairo experience.',
                     'button_text' => 'Contact Us',
                     'button_url' => '/facilities',
                 ],
@@ -126,13 +135,19 @@ class PageSeeder extends Seeder
 
     protected function seedAboutPage(Hotel $hotel): void
     {
+        if (Page::where('hotel_id', $hotel->id)->where('slug', 'about')->exists()) {
+            $this->command?->info('About page already exists, skipping.');
+
+            return;
+        }
+
         $sections = [
             [
                 'id' => 'text-about',
                 'type' => 'text',
                 'props' => [
-                    'heading' => 'About Grand Horizon',
-                    'body' => "Grand Horizon Hotel has welcomed guests to the bay for over two decades, blending Mediterranean hospitality with modern comfort.\n\nFrom our award-winning restaurants to our tranquil spa, every detail is designed around your stay.",
+                    'heading' => 'About Smarttel Hotel Cairo',
+                    'body' => "Smarttel Hotel Cairo has welcomed guests to the shores of the Nile for decades, blending authentic Egyptian hospitality with world-class luxury.\n\nFrom the legendary Nile Grill and the rooftop Nile infinity pool to our Egyptian-inspired spa and state-of-the-art meeting facilities, every detail is designed around your stay.",
                 ],
                 'settings' => ['padding' => 'large'],
             ],
@@ -147,7 +162,7 @@ class PageSeeder extends Seeder
                 'type' => 'experiences',
                 'props' => [
                     'title' => 'Experiences',
-                    'description' => 'Curated moments, made for you.',
+                    'description' => 'Curated Egyptian moments, made for you.',
                     'category' => null,
                     'featured_only' => false,
                     'limit' => 4,

@@ -155,14 +155,14 @@ class WeatherService
 
         return [
             [
-                'id' => 'horizon-bay',
+                'id' => 'cairo-main',
                 'name' => [
-                    'en' => 'Horizon Bay (Beach Resort)',
-                    'ar' => 'هورايزون باي (المنتجع الشاطئي)',
+                    'en' => 'Smarttel Cairo (Garden City)',
+                    'ar' => 'سمارتيل القاهرة (جاردن سيتي)',
                 ],
                 'city' => [
                     'en' => (string) $mainCity,
-                    'ar' => 'هورايزون باي',
+                    'ar' => 'القاهرة',
                 ],
                 'latitude' => $mainLat,
                 'longitude' => $mainLng,
@@ -170,33 +170,63 @@ class WeatherService
                 'is_default' => true,
             ],
             [
-                'id' => 'downtown-city',
+                'id' => 'alexandria',
                 'name' => [
-                    'en' => 'Downtown Skyline Branch',
-                    'ar' => 'فرع وسط المدينة (داون تاون)',
+                    'en' => 'Smarttel Alexandria (Mediterranean)',
+                    'ar' => 'سمارتيل الإسكندرية (المتوسط)',
                 ],
                 'city' => [
-                    'en' => 'Downtown City Center',
-                    'ar' => 'وسط المدينة',
+                    'en' => 'Alexandria',
+                    'ar' => 'الإسكندرية',
                 ],
-                'latitude' => 25.1972,
-                'longitude' => 55.2744,
-                'timezone' => $tz,
+                'latitude' => 31.2001,
+                'longitude' => 29.9187,
+                'timezone' => 'Africa/Cairo',
                 'is_default' => false,
             ],
             [
-                'id' => 'palm-island',
+                'id' => 'sharm-el-sheikh',
                 'name' => [
-                    'en' => 'Palm Island Retreat',
-                    'ar' => 'فرع ملاذ جزيرة النخلة',
+                    'en' => 'Smarttel Sharm El Sheikh (Red Sea)',
+                    'ar' => 'سمارتيل شرم الشيخ (البحر الأحمر)',
                 ],
                 'city' => [
-                    'en' => 'Palm Island Coast',
-                    'ar' => 'ساحل جزيرة النخلة',
+                    'en' => 'Sharm El Sheikh',
+                    'ar' => 'شرم الشيخ',
                 ],
-                'latitude' => 25.1124,
-                'longitude' => 55.1390,
-                'timezone' => $tz,
+                'latitude' => 27.9158,
+                'longitude' => 34.3300,
+                'timezone' => 'Africa/Cairo',
+                'is_default' => false,
+            ],
+            [
+                'id' => 'hurghada',
+                'name' => [
+                    'en' => 'Smarttel Hurghada (Red Sea)',
+                    'ar' => 'سمارتيل الغردقة (البحر الأحمر)',
+                ],
+                'city' => [
+                    'en' => 'Hurghada',
+                    'ar' => 'الغردقة',
+                ],
+                'latitude' => 27.2579,
+                'longitude' => 33.8116,
+                'timezone' => 'Africa/Cairo',
+                'is_default' => false,
+            ],
+            [
+                'id' => 'luxor',
+                'name' => [
+                    'en' => 'Smarttel Luxor (Nile Valley)',
+                    'ar' => 'سمارتيل الأقصر (وادي النيل)',
+                ],
+                'city' => [
+                    'en' => 'Luxor',
+                    'ar' => 'الأقصر',
+                ],
+                'latitude' => 25.6872,
+                'longitude' => 32.6396,
+                'timezone' => 'Africa/Cairo',
                 'is_default' => false,
             ],
         ];
@@ -246,8 +276,8 @@ class WeatherService
             ->get('https://api.open-meteo.com/v1/forecast', [
                 'latitude' => $location['latitude'],
                 'longitude' => $location['longitude'],
-                'past_days' => $days,
-                'forecast_days' => 0,
+                'past_days' => (($days - 1) / 2),
+                'forecast_days' => ceil($days / 2),
                 'daily' => implode(',', [
                     'weather_code',
                     'temperature_2m_max',

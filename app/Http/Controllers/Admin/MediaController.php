@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
 use App\Models\Hotel;
+use App\Models\HotelBranch;
 use App\Models\Media;
 use App\Models\Room;
 use App\Services\Tenancy\CurrentHotel;
@@ -31,6 +32,8 @@ class MediaController extends Controller
         'facility' => Facility::class,
         'room' => Room::class,
         'hotel' => Hotel::class,
+        'branch' => HotelBranch::class,
+        'hotel_branch' => HotelBranch::class,
     ];
 
     public function store(Request $request): JsonResponse

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BranchController as AdminBranchController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
@@ -111,6 +112,7 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
 
             // Guest-screen content
             Route::resource('rooms', AdminRoomController::class)->except(['show']);
+            Route::resource('branches', AdminBranchController::class)->except(['show']);
 
             Route::get('timing', [InfoEntryController::class, 'edit'])->defaults('kind', 'timing')->name('timing.edit');
             Route::put('timing', [InfoEntryController::class, 'update'])->defaults('kind', 'timing')->name('timing.update');

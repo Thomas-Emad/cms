@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import type { HeroProps, SectionSettings, RenderMode } from '@/types/pageBuilder';
+import type { SharedPageProps } from '@/types/hotel';
 import { useParallax, vRevealMount } from '@/lib/motion';
 
 interface HeroData {
@@ -14,24 +16,30 @@ const props = defineProps<{
     mode: RenderMode;
 }>();
 
+const page = usePage<SharedPageProps>();
+
 const heroRef = ref<HTMLElement | null>(null);
 const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
 
-// The Builder canvas renders many sections stacked in a small scroll
-// area, so a real 100vh hero there would make editing unusable. Only go
-// full-cinematic in the actual guest-facing render. The canvas also
-// skips the mount-sequenced entrance entirely - an admin editing the
-// hero shouldn't wait for a ~1s sequence to replay every time a prop
-// changes and the section re-renders.
 const isEditorCanvas = props.mode === 'edit';
+
+const dynamicEyebrow = computed(() => {
+    const raw = props.props.eyebrow;
+    if (!raw || typeof raw !== 'string') return '';
+    const trimmed = raw.trim();
+    if (!trimmed) return '';
+    const hotelName = page.props?.hotel?.name ?? '';
+    return trimmed
+        .replace(/\{hotel(_name)?\}/gi, hotelName)
+        .replace(/\{hotel\.name\}/gi, hotelName)
+        .replace(/\{year\}/gi, String(new Date().getFullYear()));
+});
 </script>
 
+
 <template>
-    <section
-        ref="heroRef"
-        class="relative w-full overflow-hidden flex items-end"
-        :class="isEditorCanvas ? 'h-[420px]' : undefined"
-        :style="{
+    <section ref="heroRef" class="relative w-full overflow-hidden flex items-end"
+        :class="isEditorCanvas ? 'h-[420px]' : undefined" :style="{
             background: !data?.media ? 'var(--luxury-forest)' : undefined,
             // Fills the viewport minus whatever dock is reserved at the
             // bottom (0 on the TV shell - see TvGuestLayout.vue). Not
@@ -51,8 +59,7 @@ const isEditorCanvas = props.mode === 'edit';
                 // for Classic mode and for TV's non-home pages.
                 paddingBottom: 'var(--kiosk-dock-overlay-h, 0px)',
             }),
-        }"
-    >
+        }">
         <!--
           Sequence, slowest/foundational first:
             1. image scale-settles
@@ -62,71 +69,53 @@ const isEditorCanvas = props.mode === 'edit';
                reads as arriving rather than everything popping at once.
         -->
         <div class="absolute inset-0">
-            <img
-                v-if="data?.media"
-                :src="data.media.url"
-                :alt="data.media.alt_text ?? ''"
+            <img v-if="data?.media" :src="data.media.url" :alt="data.media.alt_text ?? ''"
                 :class="isEditorCanvas ? 'w-full h-full object-cover' : 'reveal-scale w-full h-full object-cover'"
                 :style="isEditorCanvas ? {} : parallaxStyle()"
-                v-reveal-mount="isEditorCanvas ? undefined : { delay: 0 }"
-            />
+                v-reveal-mount="isEditorCanvas ? undefined : { delay: 0 }" />
             <div v-else class="w-full h-full flex items-center justify-center text-white/40 text-sm">
                 <span v-if="isEditorCanvas">No image selected</span>
             </div>
 
-            <div
-                class="absolute inset-0"
-                :class="isEditorCanvas ? '' : 'reveal'"
+            <div class="absolute inset-0" :class="isEditorCanvas ? '' : 'reveal'"
                 :style="{ background: 'var(--atmosphere-gradient)' }"
-                v-reveal-mount="isEditorCanvas ? undefined : { delay: 150 }"
-            />
+                v-reveal-mount="isEditorCanvas ? undefined : { delay: 150 }" />
         </div>
 
         <div class="relative z-10 w-full px-6 lg:px-10 pb-16 lg:pb-36 xl:pb-12" :class="{ 'pb-8': isEditorCanvas }">
             <div class="mx-auto max-w-7xl">
-                <p
-                    class="text-white/80 text-xs uppercase tracking-[0.24em] mb-4"
+                <p v-if="dynamicEyebrow" class="text-white/80 text-xs uppercase tracking-[0.24em] mb-4"
                     :class="isEditorCanvas ? '' : 'reveal'"
-                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 300 }"
-                >
-                    Grand Horizon
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 300 }">
+                    {{ dynamicEyebrow }}
                 </p>
 
                 <!-- The heading gets the masked line-rise, not a plain fade -
                      it's the most important element on the page, and this is
                      what makes it feel like it's arriving into the scene
                      rather than fading like everything else. -->
-                <div
-                    :class="isEditorCanvas ? '' : 'reveal-mask'"
-                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 460 }"
-                >
-                    <h1
-                        class="text-white font-normal leading-[1.05]"
+                <div :class="isEditorCanvas ? '' : 'reveal-mask'"
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 460 }">
+                    <h1 class="text-white font-normal leading-[1.05]"
                         :class="[isEditorCanvas ? 'text-3xl' : 'reveal-mask-inner text-5xl lg:text-8xl max-w-4xl']"
-                        style="font-family: var(--font-display)"
-                    >
+                        style="font-family: var(--font-display)">
                         {{ props.props.title }}
                     </h1>
                 </div>
 
-                <p
-                    v-if="props.props.subtitle"
-                    class="mt-4 text-white/85 max-w-lg"
+                <p v-if="props.props.subtitle" class="mt-4 text-white/85 max-w-lg"
                     :class="isEditorCanvas ? 'text-sm' : 'reveal text-lg lg:text-xl'"
-                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 640 }"
-                >
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 640 }">
                     {{ props.props.subtitle }}
                 </p>
 
-                <a
-                    v-if="props.props.button_text && props.props.button_url"
-                    :href="props.props.button_url"
+                <a v-if="props.props.button_text && props.props.button_url" :href="props.props.button_url"
                     class="group mt-8 inline-flex items-center gap-2 text-white text-sm uppercase tracking-wide border-b border-white/40 pb-1 hover:border-white transition-colors"
                     :class="isEditorCanvas ? '' : 'reveal'"
-                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 820 }"
-                >
+                    v-reveal-mount="isEditorCanvas ? undefined : { delay: 820 }">
                     {{ props.props.button_text }}
-                    <span class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
+                    <span
+                        class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
                 </a>
             </div>
         </div>
@@ -136,12 +125,9 @@ const isEditorCanvas = props.mode === 'edit';
           Tailwind's animate-bounce, which reads as playful rather than
           cinematic for a premium hotel scene.
         -->
-        <div
-            v-if="!isEditorCanvas"
+        <div v-if="!isEditorCanvas"
             class="reveal absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-white/70 scroll-cue"
-            v-reveal-mount="{ delay: 1000 }"
-            aria-hidden="true"
-        >
+            v-reveal-mount="{ delay: 1000 }" aria-hidden="true">
             <div class="w-px h-8 bg-white/40 mx-auto" />
         </div>
     </section>
@@ -155,12 +141,15 @@ const isEditorCanvas = props.mode === 'edit';
 .scroll-cue {
     animation: scroll-cue-drift 3.2s var(--ease-standard) infinite;
 }
+
 @keyframes scroll-cue-drift {
+
     0%,
     100% {
         transform: translate(-50%, 0);
         opacity: 0.7;
     }
+
     50% {
         transform: translate(-50%, 6px);
         opacity: 0.35;

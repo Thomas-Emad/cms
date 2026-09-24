@@ -6,6 +6,7 @@ return [
     'five_day_history' => 'طقس الأيام الخمسة الماضية',
     'historical_notice' => 'بيانات الرصد اليومية المسجلة خلال الأيام الخمسة الماضية',
     'latest_observation' => 'أحدث يوم مسجل',
+    'today' => 'اليوم',
     'daily_history' => 'السجل اليومي',
     'temperature' => 'درجة الحرارة',
     'high' => 'العظمى',

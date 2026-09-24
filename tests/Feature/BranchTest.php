@@ -40,32 +40,33 @@ class BranchTest extends TestCase
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
             ->component('Guest/Branches/Index')
-            ->has('branches', 3)
-            ->where('branches.0.slug', 'horizon-bay-resort')
-            ->where('branches.0.name', 'Horizon Bay Resort & Marina')
-            ->where('branches.0.address', '1 Horizon Bay Drive, Coastal Boulevard')
-            ->has('branches.0.all_photos', 4)
-            ->where('branches.0.phone', '+1 555 010 2020')
+            ->has('branches', 5)
+            ->where('branches.0.slug', 'smarttel-cairo-garden-city')
+            ->where('branches.0.name', 'Smarttel Hotel Cairo')
+            ->where('branches.0.address', 'Nile Corniche, Garden City, Cairo, Egypt')
+            ->has('branches.0.all_photos', 7)
+            ->where('branches.0.phone', '+20 2 2578 0444')
             ->where('branches.0.is_main', true)
-            ->where('branches.1.slug', 'downtown-towers')
-            ->where('branches.1.address', '450 Financial Avenue, Skyline District')
-            ->has('branches.1.all_photos', 4)
-            ->where('branches.2.slug', 'palm-island-oasis')
-            ->where('branches.2.address', 'Crescent West 12, The Palm Archipelago')
-            ->has('branches.2.all_photos', 4)
+            ->where('branches.1.slug', 'smarttel-alexandria-corniche')
+            ->where('branches.1.address', 'Alexandria Corniche, Sidi Bishr, Alexandria, Egypt')
+            ->has('branches.1.all_photos', 7)
+            ->where('branches.2.slug', 'smarttel-sharm-el-sheikh')
+            ->where('branches.2.address', 'Naama Bay, Sharm El Sheikh, South Sinai, Egypt')
+            ->has('branches.2.all_photos', 9)
         );
+
     }
 
     public function test_branches_page_respects_branch_query_parameter_for_tab_selection(): void
     {
         $this->seed(HotelBranchSeeder::class);
 
-        $response = $this->get('/branches?branch=downtown-towers');
+        $response = $this->get('/branches?branch=smarttel-alexandria-corniche');
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
             ->component('Guest/Branches/Index')
-            ->where('active_branch', 'downtown-towers')
+            ->where('active_branch', 'smarttel-alexandria-corniche')
         );
     }
 
@@ -97,9 +98,9 @@ class BranchTest extends TestCase
         $this->assertSame('Photos', __('branches.photos'));
         $this->assertSame('Branches', __('nav.branches'));
 
-        $branch = HotelBranch::where('slug', 'horizon-bay-resort')->first();
-        $this->assertSame('Horizon Bay Resort & Marina', $branch->name);
-        $this->assertSame('1 Horizon Bay Drive, Coastal Boulevard', $branch->address);
+        $branch = HotelBranch::where('slug', 'smarttel-cairo-garden-city')->first();
+        $this->assertSame('Smarttel Hotel Cairo', $branch->name);
+        $this->assertSame('Nile Corniche, Garden City, Cairo, Egypt', $branch->address);
 
         app()->setLocale('ar');
         $this->assertSame('فروعنا', __('branches.title'));
@@ -107,7 +108,7 @@ class BranchTest extends TestCase
         $this->assertSame('الصور', __('branches.photos'));
         $this->assertSame('الفروع', __('nav.branches'));
 
-        $this->assertSame('منتجع ومارينا هورايزون باي', $branch->name);
-        $this->assertSame('١ طريق هورايزون باي، شارع الساحل', $branch->address);
+        $this->assertSame('فندق سمارتيل القاهرة', $branch->name);
+        $this->assertSame('كورنيش النيل، جاردن سيتي، القاهرة، مصر', $branch->address);
     }
 }

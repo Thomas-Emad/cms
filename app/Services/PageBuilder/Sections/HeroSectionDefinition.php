@@ -19,6 +19,7 @@ class HeroSectionDefinition implements SectionDefinition
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'eyebrow' => ['nullable', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:500'],
             // Reference, not embedded content - re-validated against the
             // page's own hotel_id at resolve time (see PageRenderService).
@@ -31,6 +32,7 @@ class HeroSectionDefinition implements SectionDefinition
     public function defaultProps(): array
     {
         return [
+            'eyebrow' => '',
             'title' => '',
             'subtitle' => '',
             'media_id' => null,

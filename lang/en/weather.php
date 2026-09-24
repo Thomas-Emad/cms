@@ -6,6 +6,7 @@ return [
     'five_day_history' => 'Past 5 Days Weather',
     'historical_notice' => 'Historical daily observations recorded over the last 5 days',
     'latest_observation' => 'Most Recent Day',
+    'today' => 'Today',
     'daily_history' => 'Daily History',
     'temperature' => 'Temperature',
     'high' => 'High',

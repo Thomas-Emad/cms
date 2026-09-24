@@ -43,7 +43,7 @@ class SectionValidationTest extends TestCase
     public static function validSectionProvider(): array
     {
         return [
-            'hero' => ['hero', ['title' => 'Welcome', 'subtitle' => 'Sub', 'button_text' => 'Go', 'button_url' => '/facilities']],
+            'hero' => ['hero', ['eyebrow' => 'Luxury Retreat', 'title' => 'Welcome', 'subtitle' => 'Sub', 'button_text' => 'Go', 'button_url' => '/facilities']],
             'text' => ['text', ['heading' => 'About', 'body' => 'Some text.']],
             'cta' => ['cta', ['heading' => 'Book now', 'button_text' => 'Book', 'button_url' => 'https://example.com']],
             'spacer' => ['spacer', ['height' => 'large']],

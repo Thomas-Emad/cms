@@ -14,6 +14,7 @@ export interface SectionSettings {
 
 export interface HeroProps {
   title: string;
+  eyebrow?: string;
   subtitle?: string;
   media_id?: number | null;
   button_text?: string;

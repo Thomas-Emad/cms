@@ -89,76 +89,76 @@ class DemoContentSeeder extends Seeder
     {
         $rooms = [
             [
-                'name' => 'King Guest Room',
-                'slug' => 'king-guest-room',
-                'short_description' => 'Modern comfort with a plush king bed and city views.',
-                'description' => 'Our King Guest Room blends contemporary Hilton design with a Serta Suite Dreams bed, a spacious work desk, and floor-to-ceiling windows overlooking the skyline.',
-                'size_sqm' => 32,
+                'name' => 'Deluxe Nile View Room',
+                'slug' => 'deluxe-nile-view-room',
+                'short_description' => 'Elegant room with sweeping Nile River panoramas and modern comforts.',
+                'description' => 'Wake up to breathtaking views of the River Nile from your Deluxe Nile View Room, featuring a Serta pillow-top king bed, floor-to-ceiling windows, marble bathroom with rain shower, and a dedicated work desk.',
+                'size_sqm' => 38,
                 'max_guests' => 2,
                 'bed_type' => '1 King Bed',
-                'view' => 'City View',
+                'view' => 'Nile River View',
                 'features' => ['Free WiFi', '55" Smart TV', 'Rainfall Shower', 'Nespresso Machine', 'In-room Safe'],
                 'featured' => false,
                 'image' => 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1000',
             ],
             [
-                'name' => 'Double Queen Room',
-                'slug' => 'double-queen-room',
-                'short_description' => 'Two queen beds, ideal for families and small groups.',
-                'description' => 'Spacious and flexible, this room offers two queen beds, a seating area, and all the connectivity families need for a comfortable stay together.',
-                'size_sqm' => 36,
-                'max_guests' => 4,
-                'bed_type' => '2 Queen Beds',
-                'view' => 'Garden View',
-                'features' => ['Free WiFi', '55" Smart TV', 'Mini Fridge', 'Blackout Curtains', 'Sofa Chair'],
+                'name' => 'Superior City View Room',
+                'slug' => 'superior-city-view-room',
+                'short_description' => 'Spacious room overlooking the vibrant skyline of Cairo.',
+                'description' => 'Our Superior City View Room offers modern Egyptian-inspired décor, a plush king bed, and panoramic city-skyline views. The spacious marble bathroom features a deep soaking tub and separate rainfall shower.',
+                'size_sqm' => 35,
+                'max_guests' => 2,
+                'bed_type' => '1 King Bed',
+                'view' => 'Cairo City View',
+                'features' => ['Free WiFi', '55" Smart TV', 'Soaking Tub', 'Bathrobe & Slippers', 'Mini Fridge'],
                 'featured' => false,
                 'image' => 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1000',
             ],
             [
-                'name' => 'Executive King Suite',
-                'slug' => 'executive-king-suite',
-                'short_description' => 'A separate living area plus Executive Lounge access.',
-                'description' => 'Unwind in a separate living room with a king bedroom, upgraded amenities, and complimentary access to the Executive Lounge for breakfast and evening hors d\'oeuvres.',
-                'size_sqm' => 55,
+                'name' => 'Executive Nile Suite',
+                'slug' => 'executive-nile-suite',
+                'short_description' => 'A separate living area with uninterrupted Nile views and Executive Lounge access.',
+                'description' => 'The Executive Nile Suite offers a grand separate living room and master bedroom, both facing the iconic Nile River. Complimentary access to the Executive Lounge, turndown service, and personalized butler assistance complete this exceptional suite experience.',
+                'size_sqm' => 65,
                 'max_guests' => 3,
                 'bed_type' => '1 King Bed',
-                'view' => 'Ocean View',
+                'view' => 'Nile River View',
                 'features' => ['Executive Lounge Access', 'Separate Living Room', 'Soaking Tub', 'Bathrobe & Slippers', 'Premium Minibar'],
                 'featured' => true,
                 'image' => 'https://images.unsplash.com/photo-1590073242678-70ee3fc28f8e?w=1000',
             ],
             [
-                'name' => 'Junior Suite',
-                'slug' => 'junior-suite',
-                'short_description' => 'Open-plan suite with a lounge corner and city skyline views.',
-                'description' => 'An open-plan layout with a dedicated lounge corner, walk-in closet, and floor-to-ceiling windows framing the skyline — ideal for extended stays.',
-                'size_sqm' => 48,
-                'max_guests' => 3,
-                'bed_type' => '1 King Bed',
-                'view' => 'City Skyline',
-                'features' => ['Walk-in Closet', 'Lounge Area', 'Espresso Machine', 'Two Smart TVs', 'Free WiFi'],
+                'name' => 'Twin Nile View Room',
+                'slug' => 'twin-nile-view-room',
+                'short_description' => 'Two twin beds with direct Nile River views, ideal for colleagues or friends.',
+                'description' => 'Perfect for two guests traveling together, this elegantly appointed room offers two plush twin beds, floor-to-ceiling Nile River panoramas, and all the modern amenities expected from Smarttel Hotel.',
+                'size_sqm' => 36,
+                'max_guests' => 2,
+                'bed_type' => '2 Twin Beds',
+                'view' => 'Nile River View',
+                'features' => ['Free WiFi', '55" Smart TV', 'Rainfall Shower', 'Work Desk', 'Blackout Curtains'],
                 'featured' => false,
                 'image' => 'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1000',
             ],
             [
-                'name' => 'Grand Horizon Suite',
-                'slug' => 'grand-horizon-suite',
-                'short_description' => 'Our top-floor signature suite with a private terrace.',
-                'description' => 'The pinnacle of the property: a top-floor suite with a private terrace, dining area for six, and panoramic views of the bay from every room.',
-                'size_sqm' => 90,
+                'name' => 'Presidential Suite',
+                'slug' => 'presidential-suite',
+                'short_description' => 'The pinnacle of luxury — a top-floor suite with private terrace and Nile vistas.',
+                'description' => 'The crown of Smarttel Hotel Cairo: a top-floor Presidential Suite featuring a private terrace, a formal dining area for eight, a master bedroom with a king bed, a separate study, and breathtaking 270-degree Nile and city views. Butler service and private limousine included.',
+                'size_sqm' => 120,
                 'max_guests' => 4,
                 'bed_type' => '1 King Bed + Sofa Bed',
-                'view' => 'Panoramic Bay View',
-                'features' => ['Private Terrace', 'Dining Area for 6', 'Butler Service on Request', 'Jacuzzi Tub', 'Complimentary Airport Transfer'],
+                'view' => 'Panoramic Nile & City View',
+                'features' => ['Private Terrace', 'Dining Area for 8', 'Butler Service', 'Jacuzzi Tub', 'Complimentary Airport Transfer'],
                 'featured' => true,
                 'image' => 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1000',
             ],
             [
-                'name' => 'Accessible King Room',
-                'slug' => 'accessible-king-room',
-                'short_description' => 'ADA-compliant room with a roll-in shower and wide doorways.',
-                'description' => 'Thoughtfully designed for accessibility, with a roll-in shower, grab bars, wider doorways, and a lowered wardrobe rail, without compromising on comfort.',
-                'size_sqm' => 34,
+                'name' => 'Accessible Deluxe Room',
+                'slug' => 'accessible-deluxe-room',
+                'short_description' => 'Fully ADA-compliant room with roll-in shower and accessible amenities.',
+                'description' => 'Thoughtfully designed for guests with mobility needs, this accessible room features a roll-in shower, grab bars, wider doorways, and lower furniture rails, delivering full Smarttel comfort without compromise.',
+                'size_sqm' => 36,
                 'max_guests' => 2,
                 'bed_type' => '1 King Bed',
                 'view' => 'Garden View',
@@ -172,11 +172,17 @@ class DemoContentSeeder extends Seeder
             $image = $data['image'];
             unset($data['image']);
 
-            $room = Room::create(array_merge($data, [
-                'hotel_id' => $this->hotel->id,
-                'status' => 'published',
-                'sort_order' => $i,
-            ]));
+            $room = Room::updateOrCreate(
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'slug' => $data['slug'],
+                ],
+                array_merge($data, [
+                    'hotel_id' => $this->hotel->id,
+                    'status' => 'published',
+                    'sort_order' => $i,
+                ])
+            );
 
             $this->attachCover($room, $image, $room->name);
         }
@@ -186,11 +192,11 @@ class DemoContentSeeder extends Seeder
     {
         $facilities = [
             [
-                'name' => 'Eforea Spa',
-                'slug' => 'eforea-spa',
+                'name' => 'Nile Spa & Wellness',
+                'slug' => 'nile-spa-wellness',
                 'category' => 'wellness',
-                'short_description' => 'Hilton\'s signature spa brand, with massages and thermal suites.',
-                'description' => 'Eforea Spa offers a full menu of massages, facials, and thermal experiences designed to help you unwind, blending global techniques with modern wellness science.',
+                'short_description' => 'Immersive spa retreat inspired by ancient Egyptian beauty rituals.',
+                'description' => 'The Nile Spa & Wellness at Smarttel Hotel Cairo draws on ancient Egyptian beauty secrets — cleopatra milk baths, papyrus-extract facials, and hot-stone massage treatments — blended with modern therapeutic techniques in a serene Nile-facing sanctuary.',
                 'building' => 'Main Building',
                 'floor' => '2',
                 'wing' => 'West Wing',
@@ -201,13 +207,14 @@ class DemoContentSeeder extends Seeder
                     'Steam Room',
                     'Hot Tub',
                     'Relaxation Lounge',
+                    'Couples Treatment Room',
                 ],
                 'opening_hours' => [
-                    'mon_fri' => '09:00-20:00',
-                    'sat_sun' => '09:00-21:00',
+                    'mon_fri' => '09:00-21:00',
+                    'sat_sun' => '09:00-22:00',
                 ],
-                'phone' => '+1 555 010 2031',
-                'email' => 'spa@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'spa@smarttelhotel.com',
                 'featured' => true,
 
                 'cover' => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200',
@@ -219,11 +226,11 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'LivingWell Fitness Center',
-                'slug' => 'livingwell-fitness-center',
+                'name' => 'Pharaoh Fitness Club',
+                'slug' => 'pharaoh-fitness-club',
                 'category' => 'fitness',
-                'short_description' => '24-hour gym with Peloton bikes and skyline views.',
-                'description' => 'Fully equipped with Peloton bikes, free weights, and a dedicated studio for group classes. Personal trainers available by appointment.',
+                'short_description' => '24-hour fully equipped gym with Nile panoramic views.',
+                'description' => 'Pharaoh Fitness Club spans two floors of state-of-the-art equipment including Technogym machines, Peloton bikes, free weights, and a dedicated yoga & pilates studio with panoramic Nile River views. Personal trainers available on request.',
                 'building' => 'Main Building',
                 'floor' => '1',
                 'wing' => 'East Wing',
@@ -233,13 +240,14 @@ class DemoContentSeeder extends Seeder
                     'Peloton Bikes',
                     'Free Weights',
                     'Cardio Machines',
+                    'Yoga Studio',
                     'Personal Training',
                 ],
                 'opening_hours' => [
                     'daily' => '00:00-23:59',
                 ],
-                'phone' => '+1 555 010 2032',
-                'email' => 'fitness@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'fitness@smarttelhotel.com',
                 'featured' => false,
 
                 'cover' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200',
@@ -251,11 +259,11 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'Horizon Rooftop Pool',
-                'slug' => 'horizon-rooftop-pool',
+                'name' => 'Nile Rooftop Pool',
+                'slug' => 'nile-rooftop-pool',
                 'category' => 'pool',
-                'short_description' => 'Rooftop infinity pool overlooking the bay.',
-                'description' => 'Our signature infinity pool blends into the horizon, with a swim-up bar and private cabanas available for reservation.',
+                'short_description' => 'Rooftop infinity pool with breathtaking Nile River panoramas.',
+                'description' => 'Our rooftop infinity pool seamlessly merges with the Nile horizon. Enjoy a swim with 360° Cairo skyline and river views, with a swim-up bar, private cabanas, and full towel service.',
                 'building' => 'Rooftop',
                 'floor' => 'Roof',
                 'wing' => null,
@@ -265,12 +273,13 @@ class DemoContentSeeder extends Seeder
                     'Swim-up Bar',
                     'Private Cabanas',
                     'Towel Service',
+                    'Nile View Sunbeds',
                 ],
                 'opening_hours' => [
-                    'daily' => '07:00-19:00',
+                    'daily' => '07:00-20:00',
                 ],
-                'phone' => '+1 555 010 2033',
-                'email' => 'pool@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'pool@smarttelhotel.com',
                 'featured' => true,
 
                 'cover' => 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
@@ -282,11 +291,11 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'Hilton Adventures Kids Club',
-                'slug' => 'hilton-adventures-kids-club',
+                'name' => 'Smarttel Kids Club',
+                'slug' => 'smarttel-kids-club',
                 'category' => 'kids',
-                'short_description' => 'Supervised activities and play areas for ages 4-12.',
-                'description' => 'A safe, colorful space where children enjoy supervised games, crafts, and daily themed activities while parents relax.',
+                'short_description' => 'Supervised activities and play areas for ages 4–12.',
+                'description' => 'A vibrant, safe play world where children aged 4–12 enjoy supervised games, Egyptian heritage crafts, storytelling, and daily themed activities — while parents enjoy the hotel.',
                 'building' => 'Garden Pavilion',
                 'floor' => '1',
                 'wing' => null,
@@ -294,14 +303,15 @@ class DemoContentSeeder extends Seeder
                 'pos_y' => 67.2,
                 'amenities' => [
                     'Supervised Play',
-                    'Arts & Crafts',
+                    'Egyptian Crafts',
                     'Outdoor Play Area',
+                    'Movie Corner',
                 ],
                 'opening_hours' => [
                     'daily' => '09:00-18:00',
                 ],
-                'phone' => '+1 555 010 2034',
-                'email' => 'kids@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'kids@smarttelhotel.com',
                 'featured' => false,
 
                 'cover' => 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=1200',
@@ -317,7 +327,7 @@ class DemoContentSeeder extends Seeder
                 'slug' => 'executive-business-center',
                 'category' => 'business',
                 'short_description' => 'Meeting rooms and workstations for the traveling professional.',
-                'description' => 'Equipped with high-speed internet, printing services, and bookable meeting rooms for up to 12 people.',
+                'description' => 'Our Executive Business Center offers private workstations, high-speed fiber internet, printing services, and bookable meeting rooms for up to 12 people — serving both leisure and corporate Cairo visitors.',
                 'building' => 'Main Building',
                 'floor' => '3',
                 'wing' => 'East Wing',
@@ -327,12 +337,13 @@ class DemoContentSeeder extends Seeder
                     'High-Speed WiFi',
                     'Printing',
                     'Video Conferencing',
+                    'Private Workstations',
                 ],
                 'opening_hours' => [
-                    'mon_fri' => '07:00-22:00',
+                    'daily' => '07:00-22:00',
                 ],
-                'phone' => '+1 555 010 2035',
-                'email' => 'business@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'business@smarttelhotel.com',
                 'featured' => false,
 
                 'cover' => 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200',
@@ -344,57 +355,27 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'Horizon Beach Club',
-                'slug' => 'horizon-beach-club',
-                'category' => 'beach',
-                'short_description' => 'Private beach access with loungers and a beachfront bar.',
-                'description' => 'Exclusive beachfront access with complimentary loungers, umbrellas, and a full-service bar steps from the sand.',
-                'building' => 'Beachfront',
-                'floor' => 'Ground',
-                'wing' => null,
-                'pos_x' => 8.2,
-                'pos_y' => 88.4,
-                'amenities' => [
-                    'Private Loungers',
-                    'Beach Bar',
-                    'Water Sports Rental',
-                ],
-                'opening_hours' => [
-                    'daily' => '08:00-18:00',
-                ],
-                'phone' => '+1 555 010 2036',
-                'email' => 'beach@grandhorizon.example',
-                'featured' => true,
-
-                'cover' => 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200',
-                'gallery' => [
-                    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200',
-                    'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200',
-                    'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=1200',
-                ],
-            ],
-
-            [
                 'name' => 'Executive Lounge',
                 'slug' => 'executive-lounge',
                 'category' => 'other',
-                'short_description' => 'Complimentary breakfast and evening hors d\'oeuvres for eligible guests.',
-                'description' => 'A quiet retreat on the top floor offering complimentary breakfast, all-day refreshments, and evening hors d\'oeuvres for Executive Suite and Honors Diamond guests.',
+                'short_description' => 'Exclusive top-floor retreat with complimentary breakfast and evening snacks.',
+                'description' => 'A refined sanctuary on the top floor of Smarttel Hotel Cairo, offering complimentary breakfast, all-day refreshments, and evening mezze & canapés. Exclusively for Executive Suite guests and Hilton Honors Diamond members.',
                 'building' => 'Main Building',
-                'floor' => '12',
+                'floor' => '14',
                 'wing' => 'Tower',
                 'pos_x' => 82.0,
                 'pos_y' => 16.5,
                 'amenities' => [
                     'Complimentary Breakfast',
-                    'Evening Hors d\'oeuvres',
+                    'Evening Mezze & Canapés',
                     'Private Concierge',
+                    'Nile View Terrace',
                 ],
                 'opening_hours' => [
                     'daily' => '06:30-22:00',
                 ],
-                'phone' => '+1 555 010 2037',
-                'email' => 'lounge@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'lounge@smarttelhotel.com',
                 'featured' => true,
 
                 'cover' => 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=1200',
@@ -410,11 +391,11 @@ class DemoContentSeeder extends Seeder
             // ==========================================================
 
             [
-                'name' => 'Grand Horizon Ballroom',
-                'slug' => 'grand-horizon-ballroom',
+                'name' => 'Grand Nile Ballroom',
+                'slug' => 'grand-nile-ballroom',
                 'category' => 'meeting',
-                'short_description' => 'Elegant ballroom for weddings, conferences, galas, and large corporate events.',
-                'description' => 'The Grand Horizon Ballroom is our largest event venue, featuring flexible seating arrangements, professional AV equipment, dedicated event support, and elegant views of the hotel grounds.',
+                'short_description' => 'Elegant ballroom for weddings, galas, and large corporate events.',
+                'description' => 'The Grand Nile Ballroom at Smarttel Hotel Cairo seats up to 600 guests and features flexible seating configurations, state-of-the-art AV, a dedicated events team, and sweeping Nile River views — making it Cairo\'s premier event venue.',
                 'building' => 'Convention Wing',
                 'floor' => '1',
                 'wing' => 'North Wing',
@@ -433,8 +414,8 @@ class DemoContentSeeder extends Seeder
                 'opening_hours' => [
                     'daily' => '06:00-23:00',
                 ],
-                'phone' => '+1 555 010 2040',
-                'email' => 'events@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'events@smarttelhotel.com',
                 'featured' => true,
 
                 'cover' => 'https://images.unsplash.com/photo-1507504031003-b417219a0fde?w=1200',
@@ -447,11 +428,11 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'Horizon Boardroom',
-                'slug' => 'horizon-boardroom',
+                'name' => 'Nile Boardroom',
+                'slug' => 'nile-boardroom',
                 'category' => 'meeting',
-                'short_description' => 'Private executive boardroom designed for focused meetings and presentations.',
-                'description' => 'A sophisticated private boardroom for executive meetings, presentations, interviews, and confidential discussions. The room includes integrated AV technology and a large conference table.',
+                'short_description' => 'Private executive boardroom with Nile River views and full AV.',
+                'description' => 'A sophisticated private boardroom for executive meetings, board presentations, and confidential sessions. Features an integrated 4K display, high-speed fibre, video conferencing, and floor-to-ceiling Nile River panoramas.',
                 'building' => 'Convention Wing',
                 'floor' => '2',
                 'wing' => 'East Wing',
@@ -469,8 +450,8 @@ class DemoContentSeeder extends Seeder
                 'opening_hours' => [
                     'daily' => '07:00-22:00',
                 ],
-                'phone' => '+1 555 010 2041',
-                'email' => 'meetings@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'meetings@smarttelhotel.com',
                 'featured' => true,
 
                 'cover' => 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200',
@@ -482,11 +463,11 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'Palm Meeting Room',
-                'slug' => 'palm-meeting-room',
+                'name' => 'Pharaoh Meeting Room',
+                'slug' => 'pharaoh-meeting-room',
                 'category' => 'meeting',
                 'short_description' => 'Flexible meeting room for small teams, workshops, and private events.',
-                'description' => 'A bright and flexible meeting space suitable for team meetings, workshops, training sessions, interviews, and small private events. Tables can be arranged to suit different formats.',
+                'description' => 'A bright and flexible meeting space suitable for team meetings, workshops, training sessions, and small private events. Tables can be arranged in theatre, classroom, or boardroom format.',
                 'building' => 'Convention Wing',
                 'floor' => '1',
                 'wing' => 'South Wing',
@@ -503,8 +484,8 @@ class DemoContentSeeder extends Seeder
                 'opening_hours' => [
                     'daily' => '07:00-22:00',
                 ],
-                'phone' => '+1 555 010 2042',
-                'email' => 'meetings@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'meetings@smarttelhotel.com',
                 'featured' => false,
 
                 'cover' => 'https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=1200',
@@ -516,18 +497,18 @@ class DemoContentSeeder extends Seeder
             ],
 
             [
-                'name' => 'Bay Conference Suite',
-                'slug' => 'bay-conference-suite',
+                'name' => 'Nile Conference Suite',
+                'slug' => 'nile-conference-suite',
                 'category' => 'meeting',
-                'short_description' => 'Premium conference suite with breakout space and panoramic views.',
-                'description' => 'The Bay Conference Suite combines a main conference room with an adjoining breakout lounge, making it ideal for executive workshops, seminars, and full-day corporate meetings.',
+                'short_description' => 'Premium conference suite with breakout area and panoramic Nile views.',
+                'description' => 'The Nile Conference Suite at Smarttel Hotel Cairo combines a main conference hall for 120 delegates with an adjoining breakout lounge, making it ideal for executive workshops, seminars, and full-day corporate meetings with Nile River views.',
                 'building' => 'Convention Wing',
                 'floor' => '3',
                 'wing' => 'West Wing',
                 'pos_x' => 78.4,
                 'pos_y' => 29.6,
                 'amenities' => [
-                    'Panoramic Windows',
+                    'Panoramic Nile Windows',
                     '4K Displays',
                     'Video Conferencing',
                     'Breakout Lounge',
@@ -539,8 +520,8 @@ class DemoContentSeeder extends Seeder
                 'opening_hours' => [
                     'daily' => '06:00-23:00',
                 ],
-                'phone' => '+1 555 010 2043',
-                'email' => 'events@grandhorizon.example',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'events@smarttelhotel.com',
                 'featured' => true,
 
                 'cover' => 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200',
@@ -562,12 +543,18 @@ class DemoContentSeeder extends Seeder
                 $data['gallery']
             );
 
-            $facility = Facility::create([
-                ...$data,
-                'hotel_id' => $this->hotel->id,
-                'status' => 'published',
-                'sort_order' => $i,
-            ]);
+            $facility = Facility::updateOrCreate(
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'slug' => $data['slug'],
+                ],
+                [
+                    ...$data,
+                    'hotel_id' => $this->hotel->id,
+                    'status' => 'published',
+                    'sort_order' => $i,
+                ]
+            );
 
             // Cover
             $this->attachCover(
@@ -590,122 +577,139 @@ class DemoContentSeeder extends Seeder
 
     protected function seedRestaurants(): void
     {
-        $azure = Restaurant::create([
-            'hotel_id' => $this->hotel->id,
-            'name' => 'Azure Restaurant',
-            'slug' => 'azure-restaurant',
-            'description' => 'Fine dining with panoramic sea views, blending Mediterranean and contemporary cuisine.',
-            'cuisine' => 'Mediterranean',
-            'location' => 'Ground Floor, Sea View Wing',
-            'floor' => '1',
-            'opening_hours' => ['breakfast' => '06:30-10:30', 'lunch' => '12:00-14:30', 'dinner' => '18:30-22:30'],
-            'dress_code' => 'Smart Casual',
-            'phone' => '+1 555 010 2040',
-            'status' => 'published',
-            'featured' => true,
-            'sort_order' => 0,
-        ]);
-        $this->attachCover($azure, 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800', 'Azure Restaurant');
+        $nileGrill = Restaurant::updateOrCreate(
+            ['hotel_id' => $this->hotel->id, 'slug' => 'nile-grill'],
+            [
+                'hotel_id' => $this->hotel->id,
+                'name' => 'Nile Grill',
+                'slug' => 'nile-grill',
+                'description' => 'Smarttel Hotel Cairo\'s legendary Nile-view steakhouse, famed for prime cuts, fresh seafood, and panoramic River Nile vistas.',
+                'cuisine' => 'Grills & Seafood',
+                'location' => 'Ground Floor, Nile Wing',
+                'floor' => '1',
+                'opening_hours' => ['breakfast' => '07:00-10:30', 'lunch' => '12:30-15:00', 'dinner' => '19:00-23:00'],
+                'dress_code' => 'Smart Casual',
+                'phone' => '+20 2 2578 0444',
+                'status' => 'published',
+                'featured' => true,
+                'sort_order' => 0,
+            ]
+        );
+        $this->attachCover($nileGrill, 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800', 'Nile Grill');
 
-        $skyLounge = Restaurant::create([
-            'hotel_id' => $this->hotel->id,
-            'name' => 'Sky Lounge',
-            'slug' => 'sky-lounge',
-            'description' => 'Rooftop cocktail bar and lounge with live DJ sets on weekends.',
-            'cuisine' => 'Small Plates & Cocktails',
-            'location' => 'Rooftop',
-            'floor' => 'Roof',
-            'opening_hours' => ['daily' => '17:00-01:00'],
-            'dress_code' => 'Smart Casual',
-            'phone' => '+1 555 010 2041',
-            'status' => 'published',
-            'featured' => false,
-            'sort_order' => 1,
-        ]);
-        $this->attachCover($skyLounge, 'https://images.unsplash.com/photo-1541532713592-79a0317b6b77?w=800', 'Sky Lounge');
+        $cairoCafe = Restaurant::updateOrCreate(
+            ['hotel_id' => $this->hotel->id, 'slug' => 'cairo-cafe-terrace'],
+            [
+                'hotel_id' => $this->hotel->id,
+                'name' => 'Cairo Café & Terrace',
+                'slug' => 'cairo-cafe-terrace',
+                'description' => 'A rooftop café and lounge offering panoramic Nile and Cairo skyline views, signature Egyptian shisha, specialty coffees, and light Mediterranean mezze.',
+                'cuisine' => 'Café & Mezze',
+                'location' => 'Rooftop Terrace',
+                'floor' => 'Roof',
+                'opening_hours' => ['daily' => '10:00-01:00'],
+                'dress_code' => 'Casual',
+                'phone' => '+20 2 2578 0444',
+                'status' => 'published',
+                'featured' => false,
+                'sort_order' => 1,
+            ]
+        );
+        $this->attachCover($cairoCafe, 'https://images.unsplash.com/photo-1541532713592-79a0317b6b77?w=800', 'Cairo Café & Terrace');
 
-        $herbNKitchen = Restaurant::create([
-            'hotel_id' => $this->hotel->id,
-            'name' => 'Herb N\' Kitchen',
-            'slug' => 'herb-n-kitchen',
-            'description' => 'Hilton\'s all-day dining concept, serving globally inspired dishes made with fresh, local ingredients.',
-            'cuisine' => 'International',
-            'location' => 'Lobby Level',
-            'floor' => 'G',
-            'opening_hours' => ['daily' => '06:00-23:00'],
-            'dress_code' => 'Casual',
-            'phone' => '+1 555 010 2042',
-            'status' => 'published',
-            'featured' => true,
-            'sort_order' => 2,
-        ]);
-        $this->attachCover($herbNKitchen, 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800', 'Herb N\' Kitchen');
+        $sarayaEgyptian = Restaurant::updateOrCreate(
+            ['hotel_id' => $this->hotel->id, 'slug' => 'saraya-egyptian-kitchen'],
+            [
+                'hotel_id' => $this->hotel->id,
+                'name' => 'Saraya Egyptian Kitchen',
+                'slug' => 'saraya-egyptian-kitchen',
+                'description' => 'An all-day dining showcase of authentic Egyptian cuisine, from Ful Medames and Koshari to slow-roasted lamb and freshly baked aish baladi, served in a richly decorated dining hall.',
+                'cuisine' => 'Egyptian & International',
+                'location' => 'Lobby Level',
+                'floor' => 'G',
+                'opening_hours' => ['daily' => '06:00-23:30'],
+                'dress_code' => 'Casual',
+                'phone' => '+20 2 2578 0444',
+                'status' => 'published',
+                'featured' => true,
+                'sort_order' => 2,
+            ]
+        );
+        $this->attachCover($sarayaEgyptian, 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800', 'Saraya Egyptian Kitchen');
 
-        $this->seedMenu($azure, [
+        $this->seedMenu($nileGrill, [
             'Breakfast' => [
-                ['Hilton Grand Horizon Breakfast', 'Eggs any style, pastries, seasonal fruit, fresh juice.', 22.00, ['vegetarian']],
-                ['Avocado Toast', 'Sourdough, smashed avocado, poached egg, chili flakes.', 16.00, ['vegetarian']],
+                ['Smarttel Hotel Full Breakfast', 'Eggs any style, ful medames, white cheese, seasonal fruit, fresh juice.', 250.00, ['vegetarian']],
+                ['Egyptian Cheese & Tomato Toast', 'Freshly baked aish, white cheese, tomato, olive oil.', 120.00, ['vegetarian']],
             ],
             'Main Courses' => [
-                ['Grilled Sea Bass', 'Lemon herb butter, roasted vegetables.', 38.00, ['gluten-free']],
-                ['Lamb Tagine', 'Slow-cooked lamb, apricots, couscous.', 34.00, []],
+                ['Nile Grilled Sea Bass', 'Lemon herb butter, roasted vegetables, saffron rice.', 480.00, ['gluten-free']],
+                ['Slow-Roasted Egyptian Lamb', 'Slow-cooked lamb shoulder, apricots, couscous, za\'atar jus.', 550.00, []],
+                ['Prime Ribeye Steak', 'Australian 300g ribeye, truffle fries, garlic butter.', 750.00, []],
             ],
             'Desserts' => [
-                ['Baklava Trio', 'Pistachio, walnut, and almond baklava.', 12.00, ['vegetarian']],
+                ['Om Ali', 'Egypt\'s beloved bread pudding with cream, nuts, and raisins.', 95.00, ['vegetarian']],
+                ['Konafa & Cream', 'Crispy shredded pastry, kashta cream, rose water syrup.', 80.00, ['vegetarian']],
             ],
         ]);
 
-        $this->seedMenu($skyLounge, [
+        $this->seedMenu($cairoCafe, [
             'Drinks' => [
-                ['Horizon Sunset', 'Signature gin cocktail with citrus and elderflower.', 15.00, []],
-                ['Mediterranean Mule', 'Vodka, ginger beer, fresh mint.', 14.00, []],
+                ['Egyptian Herbal Tea', 'Premium karkade, mint, or chamomile — served hot or iced.', 55.00, ['vegan']],
+                ['Specialty Arabic Coffee', 'Cardamom-spiced Arabica, served with dates.', 65.00, ['vegan']],
+                ['Nile Sunset Cocktail', 'Signature non-alcoholic hibiscus citrus with mint.', 85.00, []],
             ],
             'Starters' => [
-                ['Mezze Platter', 'Hummus, baba ganoush, olives, flatbread.', 18.00, ['vegetarian']],
+                ['Egyptian Mezze Board', 'Hummus, baba ganoush, ful, white cheese, olives, aish baladi.', 180.00, ['vegetarian']],
+                ['Hawawshi Roll', 'Spiced minced meat in crispy bread with tomato salsa.', 120.00, []],
             ],
         ]);
 
-        $this->seedMenu($herbNKitchen, [
+        $this->seedMenu($sarayaEgyptian, [
             'All Day' => [
-                ['Herb N\' Burger', 'Angus beef, aged cheddar, house sauce, fries.', 19.00, []],
-                ['Garden Bowl', 'Quinoa, roasted vegetables, tahini dressing.', 17.00, ['vegan', 'gluten-free']],
-                ['Margherita Flatbread', 'San Marzano tomato, buffalo mozzarella, basil.', 16.00, ['vegetarian']],
+                ['Koshari', 'Egypt\'s national dish: lentils, rice, pasta, fried onions, tomato sauce.', 95.00, ['vegan', 'vegetarian']],
+                ['Ful Medames', 'Slow-cooked fava beans with cumin, garlic, lemon, olive oil.', 75.00, ['vegan']],
+                ['Grilled Kofta Platter', 'Seasoned minced lamb kofta, Egyptian rice, salad, tahini.', 195.00, []],
+                ['Macarona Béchamel', 'Egyptian-style pasta gratin with spiced meat and béchamel.', 150.00, []],
             ],
         ]);
     }
 
     protected function seedMenu(Restaurant $restaurant, array $categories): void
     {
-        $menu = Menu::create(['restaurant_id' => $restaurant->id, 'name' => 'Main Menu', 'is_active' => true]);
+        $menu = Menu::updateOrCreate(
+            ['restaurant_id' => $restaurant->id, 'name' => 'Main Menu'],
+            ['is_active' => true]
+        );
 
         foreach ($categories as $categoryName => $items) {
-            $category = MenuCategory::create(['menu_id' => $menu->id, 'name' => $categoryName, 'sort_order' => 0]);
+            $category = MenuCategory::updateOrCreate(
+                ['menu_id' => $menu->id, 'name' => $categoryName],
+                ['sort_order' => 0]
+            );
 
             foreach ($items as $i => [$name, $description, $price, $dietary]) {
-                MenuItem::create([
-                    'menu_category_id' => $category->id,
-                    'name' => $name,
-                    'description' => $description,
-                    'price' => $price,
-                    'dietary_info' => $dietary,
-                    'is_available' => true,
-                    'sort_order' => $i,
-                ]);
+                MenuItem::updateOrCreate(
+                    ['menu_category_id' => $category->id, 'name' => $name],
+                    [
+                        'description' => $description,
+                        'price' => $price,
+                        'dietary_info' => $dietary,
+                        'is_available' => true,
+                        'sort_order' => $i,
+                    ]
+                );
             }
         }
     }
 
     protected function seedServices(): void
     {
-        // Each service now carries real timing info (`availability`, the
-        // hours/days it can be reached or fulfilled) and a `contact` value
-        // — the short in-house extension a guest dials from the room phone,
-        // distinct from the hotel's full outside line.
         $services = [
             [
                 'name' => 'Room Service',
                 'slug' => 'room-service',
-                'desc' => '24-hour in-room dining from the Azure Restaurant and Herb N\' Kitchen menus.',
+                'desc' => '24-hour in-room dining from the Nile Grill and Saraya Egyptian Kitchen menus.',
                 'icon' => 'utensils',
                 'requestEnabled' => true,
                 'price' => null,
@@ -718,7 +722,7 @@ class DemoContentSeeder extends Seeder
                 'desc' => 'Same-day laundry and dry cleaning when requested before 9:00 AM.',
                 'icon' => 'shirt',
                 'requestEnabled' => true,
-                'price' => 12.00,
+                'price' => 120.00,
                 'availability' => ['daily' => '07:00-19:00'],
                 'contact' => 'Ext. 610',
             ],
@@ -735,7 +739,7 @@ class DemoContentSeeder extends Seeder
             [
                 'name' => 'Concierge',
                 'slug' => 'concierge',
-                'desc' => 'Reservations, recommendations, and local experiences arranged for you.',
+                'desc' => 'Cairo tours, Nile dinner cruises, reservations, and local experiences arranged for you.',
                 'icon' => 'bell',
                 'requestEnabled' => false,
                 'price' => null,
@@ -745,10 +749,10 @@ class DemoContentSeeder extends Seeder
             [
                 'name' => 'Airport Transfer',
                 'slug' => 'airport-transfer',
-                'desc' => 'Private car service to and from the airport, booked at least 2 hours ahead.',
+                'desc' => 'Private car service to and from Cairo International Airport, booked at least 2 hours ahead.',
                 'icon' => 'car',
                 'requestEnabled' => true,
-                'price' => 45.00,
+                'price' => 450.00,
                 'availability' => ['daily' => '00:00-23:59'],
                 'contact' => 'Ext. 730',
             ],
@@ -758,7 +762,7 @@ class DemoContentSeeder extends Seeder
                 'desc' => 'Valet parking with unlimited in-and-out privileges for the length of stay.',
                 'icon' => 'car-front',
                 'requestEnabled' => false,
-                'price' => 35.00,
+                'price' => 200.00,
                 'availability' => ['daily' => '00:00-23:59'],
                 'contact' => 'Ext. 100',
             ],
@@ -785,44 +789,53 @@ class DemoContentSeeder extends Seeder
         ];
 
         foreach ($services as $i => $data) {
-            Service::create([
-                'hotel_id' => $this->hotel->id,
-                'name' => $data['name'],
-                'slug' => $data['slug'],
-                'description' => $data['desc'],
-                'icon' => $data['icon'],
-                'availability' => $data['availability'],
-                'contact' => $data['contact'],
-                'request_enabled' => $data['requestEnabled'],
-                'price' => $data['price'],
-                'status' => 'published',
-                'sort_order' => $i,
-            ]);
+            Service::updateOrCreate(
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'slug' => $data['slug'],
+                ],
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'name' => $data['name'],
+                    'slug' => $data['slug'],
+                    'description' => $data['desc'],
+                    'icon' => $data['icon'],
+                    'availability' => $data['availability'],
+                    'contact' => $data['contact'],
+                    'request_enabled' => $data['requestEnabled'],
+                    'price' => $data['price'],
+                    'status' => 'published',
+                    'sort_order' => $i,
+                ]
+            );
         }
     }
 
     protected function seedEvents(): void
     {
         $events = [
-            ['Live Music Night', 'live-music-night', 'Acoustic sets on the Sky Lounge terrace.', 'Sky Lounge', now()->addDays(2), 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800'],
-            ['Mediterranean Night', 'mediterranean-night', 'A themed buffet dinner celebrating coastal flavors.', 'Azure Restaurant', now()->addDays(5), 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800'],
-            ['Rooftop Pool Party', 'rooftop-pool-party', 'DJ sets and cocktails at the Horizon Rooftop Pool.', 'Horizon Rooftop Pool', now()->addDays(9), 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'],
-            ['Sunset Yoga', 'sunset-yoga', 'Guided yoga session as the sun sets over the bay.', 'Horizon Beach Club', now()->addDays(1), 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800'],
-            ['Hilton Honors Member Mixer', 'hilton-honors-member-mixer', 'Cocktails and canapés to thank our Honors members.', 'Executive Lounge', now()->addDays(7), 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800'],
+            ['Egyptian Night Buffet', 'egyptian-night-buffet', 'A grand celebration of authentic Egyptian cuisine with live oud music.', 'Saraya Egyptian Kitchen', now()->addDays(3), 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800'],
+            ['Nile Sunset Dinner Cruise', 'nile-sunset-cruise', 'Private felucca dinner cruise along the Nile at golden hour.', 'Nile Grill Pier', now()->addDays(6), 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=800'],
+            ['Nile Rooftop Pool Party', 'nile-rooftop-pool-party', 'DJ sets and refreshments at the Nile Rooftop Pool.', 'Nile Rooftop Pool', now()->addDays(9), 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'],
+            ['Morning Yoga & Nile Views', 'morning-yoga-nile', 'Guided rooftop yoga session at sunrise over the Nile.', 'Nile Rooftop Pool', now()->addDays(1), 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800'],
+            ['Hilton Honors Cairo Mixer', 'hilton-honors-cairo-mixer', 'Cocktails and Egyptian canapés for our Honors members.', 'Executive Lounge', now()->addDays(8), 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800'],
         ];
 
         foreach ($events as [$title, $slug, $desc, $location, $date, $image]) {
-            $event = Event::create([
-                'hotel_id' => $this->hotel->id,
-                'title' => $title,
-                'slug' => $slug,
-                'description' => $desc,
-                'location' => $location,
-                'start_date' => $date,
-                'start_time' => '19:00:00',
-                'booking_required' => false,
-                'status' => 'published',
-            ]);
+            $event = Event::updateOrCreate(
+                ['hotel_id' => $this->hotel->id, 'slug' => $slug],
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'title' => $title,
+                    'slug' => $slug,
+                    'description' => $desc,
+                    'location' => $location,
+                    'start_date' => $date,
+                    'start_time' => '19:00:00',
+                    'booking_required' => false,
+                    'status' => 'published',
+                ]
+            );
             $this->attachCover($event, $image, $title);
         }
     }
@@ -830,26 +843,29 @@ class DemoContentSeeder extends Seeder
     protected function seedOffers(): void
     {
         $offers = [
-            ['Spa Package', 'spa-package', '90-minute massage plus full Eforea Spa thermal suite access.', 149.00, 15, true, 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800'],
-            ['Dinner for Two', 'dinner-for-two', 'Three-course dinner at Azure Restaurant with a bottle of wine.', 120.00, 10, false, 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800'],
-            ['Weekend Escape', 'weekend-escape', 'Two-night stay in a King Guest Room with breakfast and late checkout.', 480.00, 20, true, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'],
-            ['Family Package', 'family-package', 'Double Queen Room, Kids Club access, and daily breakfast for four.', 620.00, 12, false, 'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=800'],
-            ['Honors Member Rate', 'honors-member-rate', 'Exclusive discounted rate for Hilton Honors members, booked direct.', 210.00, 18, true, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800'],
+            ['Nile Spa Package', 'nile-spa-package', '90-minute Egyptian ritual massage plus full Nile Spa thermal suite access.', 1490.00, 15, true, 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800'],
+            ['Nile Dinner for Two', 'nile-dinner-for-two', 'Three-course dinner at Nile Grill with Nile River panoramic seating.', 1200.00, 10, false, 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800'],
+            ['Cairo Weekend Escape', 'cairo-weekend-escape', 'Two-night stay in a Deluxe Nile View Room with daily breakfast and late checkout.', 4800.00, 20, true, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'],
+            ['Family Cairo Package', 'family-cairo-package', 'Superior City View Room, Smarttel Kids Club, and daily breakfast for four.', 6200.00, 12, false, 'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=800'],
+            ['Pharaohs Discovery Rate', 'pharaohs-discovery-rate', 'Exclusive rate including guided tours to the Egyptian Museum and Old Cairo.', 2100.00, 18, true, 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800'],
         ];
 
         foreach ($offers as [$title, $slug, $desc, $price, $discount, $featured, $image]) {
-            $offer = Offer::create([
-                'hotel_id' => $this->hotel->id,
-                'title' => $title,
-                'slug' => $slug,
-                'description' => $desc,
-                'price' => $price,
-                'discount' => $discount,
-                'featured' => $featured,
-                'valid_from' => now(),
-                'valid_until' => now()->addMonths(2),
-                'status' => 'published',
-            ]);
+            $offer = Offer::updateOrCreate(
+                ['hotel_id' => $this->hotel->id, 'slug' => $slug],
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'title' => $title,
+                    'slug' => $slug,
+                    'description' => $desc,
+                    'price' => $price,
+                    'discount' => $discount,
+                    'featured' => $featured,
+                    'valid_from' => now(),
+                    'valid_until' => now()->addMonths(2),
+                    'status' => 'published',
+                ]
+            );
             $this->attachCover($offer, $image, $title);
         }
     }
@@ -857,26 +873,29 @@ class DemoContentSeeder extends Seeder
     protected function seedExperiences(): void
     {
         $experiences = [
-            ['Sunrise Yoga', 'sunrise-yoga', 'wellness', 'Morning yoga overlooking the sea.', '60 minutes', 25.00, true, 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800'],
-            ['Chef\'s Table Cooking Class', 'cooking-class', 'culinary', 'Learn Mediterranean recipes with our executive chef.', '2 hours', 65.00, true, 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800'],
-            ['Private Sunset Dinner', 'sunset-dinner', 'culinary', 'A private beachfront dinner as the sun sets.', '2 hours', 180.00, true, 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800'],
-            ['Kids Adventure Day', 'kids-adventure-day', 'family', 'A full day of themed games and crafts for children.', 'Full day', 0.00, false, 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800'],
-            ['Bay Sunset Cruise', 'bay-sunset-cruise', 'adventure', 'A two-hour catamaran cruise along the bay at golden hour.', '2 hours', 95.00, true, 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=800'],
+            ['Nile Sunrise Yoga', 'nile-sunrise-yoga', 'wellness', 'Morning yoga on the rooftop as the sun rises over the Nile.', '60 minutes', 250.00, true, 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800'],
+            ['Egyptian Cooking Masterclass', 'egyptian-cooking-masterclass', 'culinary', 'Learn to cook authentic Egyptian dishes with our executive chef — Koshari, Hawawshi, Om Ali.', '2 hours', 650.00, true, 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800'],
+            ['Private Nile Felucca Dinner', 'nile-felucca-dinner', 'culinary', 'A private dinner aboard a traditional felucca as the sun sets on the Nile.', '2 hours', 1800.00, true, 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=800'],
+            ['Cairo Pharaohs Tour', 'cairo-pharaohs-tour', 'adventure', 'Guided full-day tour of the Egyptian Museum, Old Cairo, and the Citadel of Saladin.', 'Full day', 950.00, true, 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800'],
+            ['Kids Egyptian Adventure Day', 'kids-egyptian-adventure', 'family', 'A full day of Egyptian-themed games, crafts, and storytelling for children.', 'Full day', 0.00, false, 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800'],
         ];
 
         foreach ($experiences as $i => [$title, $slug, $category, $desc, $duration, $price, $featured, $image]) {
-            $experience = Experience::create([
-                'hotel_id' => $this->hotel->id,
-                'title' => $title,
-                'slug' => $slug,
-                'category' => $category,
-                'description' => $desc,
-                'duration' => $duration,
-                'price' => $price,
-                'featured' => $featured,
-                'status' => 'published',
-                'sort_order' => $i,
-            ]);
+            $experience = Experience::updateOrCreate(
+                ['hotel_id' => $this->hotel->id, 'slug' => $slug],
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'title' => $title,
+                    'slug' => $slug,
+                    'category' => $category,
+                    'description' => $desc,
+                    'duration' => $duration,
+                    'price' => $price,
+                    'featured' => $featured,
+                    'status' => 'published',
+                    'sort_order' => $i,
+                ]
+            );
             $this->attachCover($experience, $image, $title);
         }
     }
@@ -891,7 +910,7 @@ class DemoContentSeeder extends Seeder
                 'kind' => InfoEntry::KIND_TIMING,
                 'group' => 'hotel',
                 'label' => 'Check-in',
-                'value' => '15:00',
+                'value' => '14:00',
                 'sort_order' => 1,
             ],
             [
@@ -1028,11 +1047,20 @@ class DemoContentSeeder extends Seeder
         ];
 
         foreach ($entries as $entry) {
-            InfoEntry::create([
-                'hotel_id' => $this->hotel->id,
-                ...$entry,
-            ]);
+            InfoEntry::updateOrCreate(
+                [
+                    'hotel_id' => $this->hotel->id,
+                    'kind' => $entry['kind'],
+                    'group' => $entry['group'],
+                    'label' => $entry['label'],
+                ],
+                [
+                    'hotel_id' => $this->hotel->id,
+                    ...$entry,
+                ]
+            );
         }
+
     }
 
     protected function seedMedia(

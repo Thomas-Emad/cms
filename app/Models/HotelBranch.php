@@ -56,15 +56,31 @@ class HotelBranch extends Model
     }
 
     /**
-     * Return all photos for this branch (cover photo + gallery photos).
+     * Get cover image URL, preferring uploaded cover media before falling back to cover_image_url attribute.
+     */
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        return $this->cover?->url ?: ($this->attributes['cover_image_url'] ?? null);
+    }
+
+    /**
+     * Return all photos for this branch (cover photo + uploaded gallery media + gallery_urls).
      *
      * @return string[]
      */
     public function getAllPhotosAttribute(): array
     {
         $photos = [];
-        if ($this->cover_image_url) {
-            $photos[] = $this->cover_image_url;
+        $cover = $this->cover_image_url;
+        if ($cover) {
+            $photos[] = $cover;
+        }
+
+        $galleryMedia = $this->relationLoaded('gallery') ? $this->gallery : $this->gallery()->get();
+        foreach ($galleryMedia as $media) {
+            if ($media->url && ! in_array($media->url, $photos, true)) {
+                $photos[] = $media->url;
+            }
         }
 
         if (is_array($this->gallery_urls)) {

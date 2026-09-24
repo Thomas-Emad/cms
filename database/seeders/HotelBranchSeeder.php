@@ -11,157 +11,287 @@ class HotelBranchSeeder extends Seeder
     public function run(): void
     {
         $hotel = Hotel::first();
+
         if (! $hotel) {
             return;
         }
 
         $branches = [
             [
-                'slug' => 'hilton-dubai-palm-jumeirah',
-                'name' => 'Hilton Dubai Palm Jumeirah',
-                'city' => 'Palm Jumeirah, Dubai',
-                'address' => 'Palm West Beach, The Palm Jumeirah, Dubai, United Arab Emirates',
-                'phone' => '+971 4 230 0000',
-                'email' => 'palmjumeirah.info@hilton.com',
-                'short_description' => 'Flagship 5-star beachfront resort situated directly on vibrant Palm West Beach.',
-                'description' => 'Located on the iconic Palm West Beach, Hilton Dubai Palm Jumeirah features 605 luxury rooms and suites, 10 celebrated restaurants and bars including Barfly by Buddha-Bar, a 65-meter infinity pool, eforea Spa, and panoramic views of Dubai Marina and the Arabian Gulf.',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200',
+                'slug' => 'smarttel-cairo-garden-city',
+                'name' => 'Smarttel Hotel Cairo',
+                'city' => 'Cairo, Egypt',
+                'address' => 'Nile Corniche, Garden City, Cairo, Egypt',
+                'phone' => '+20 2 2578 0444',
+                'email' => 'cairo@smarttelhotel.com',
+
+                'short_description' => 'A luxurious Nile-front hotel in the heart of Cairo with elegant rooms, premium dining, and panoramic river views.',
+
+                'description' => 'Smarttel Hotel Cairo is a premium five-star destination overlooking the River Nile in the heart of Cairo. The hotel combines contemporary Egyptian hospitality with elegant interiors, spacious rooms and suites, panoramic Nile views, fine dining restaurants, a rooftop pool, a full-service spa, and modern business facilities. Its central location provides convenient access to the Egyptian Museum, Tahrir Square, Cairo Tower, and the city center.',
+
+                'cover_image_url' => asset('images/hotel/ramses-hilton/exterior-night-shot.png'),
+
                 'gallery_urls' => [
-                    'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200',
-                    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200',
-                    'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
-                    'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200',
+                    asset('images/hotel/ramses-hilton/exterior-night-shot.png'),
+                    asset('images/hotel/ramses-hilton/duplex-suite-living-area-.png'),
+                    asset('images/hotel/ramses-hilton/executive-king-room-nile-view-.png'),
+                    asset('images/hotel/ramses-hilton/ramses-hilton-terrace-cafe-day.png'),
+                    asset('images/hotel/ramses-hilton/cairh-executive-renovated-floor-kids-area-no.11.png'),
+                    asset('images/hotel/ramses-hilton/cairh-fitness-center-.png'),
+                    asset('images/hotel/ramses-hilton/ramses-hilton-king-nile-deluxe.png'),
                 ],
-                'latitude' => 25.1124,
-                'longitude' => 55.1389,
-                'features' => ['Private Beach', '65m Infinity Pool', 'eforea Spa', '10 Dining Venues', 'Executive Lounge', 'Valet Parking'],
+
+                'latitude' => 30.0444,
+                'longitude' => 31.2357,
+
+                'features' => [
+                    'Nile River View',
+                    'Rooftop Pool',
+                    'Full-Service Spa',
+                    'Fine Dining Restaurants',
+                    'Fitness Center',
+                    'Business Center',
+                    'Meeting Rooms',
+                    'Valet Parking',
+                    '24/7 Front Desk',
+                    'Room Service',
+                ],
+
                 'is_main' => true,
                 'sort_order' => 1,
+
                 'ar' => [
-                    'name' => 'فندق ومنتجع هيلتون دبي نخلة جميرا',
-                    'city' => 'نخلة جميرا، دبي',
-                    'address' => 'بالم ويست بيتش، نخلة جميرا، دبي، الإمارات العربية المتحدة',
-                    'short_description' => 'المنتجع الرئيسي الفاخر 5 نجوم الواقع مباشرة على شاطئ بالم ويست بيتش.',
-                    'description' => 'يقع هيلتون دبي نخلة جميرا على شاطئ بالم ويست بيتش الأيقوني، ويضم 605 غرفة وجناحاً فاخراً، و10 مطاعم واستراحات عالمية شهيرة مثل بارفلاي من بوذا بار، ومسبحاً لا متناهياً بطول 65 متراً، وسبا إيفوريا، وإطلالات بانورامية على مرسى دبي والخليج العربي.',
+                    'name' => 'فندق سمارتيل القاهرة',
+                    'city' => 'القاهرة، مصر',
+                    'address' => 'كورنيش النيل، جاردن سيتي، القاهرة، مصر',
+
+                    'short_description' => 'فندق فاخر على كورنيش النيل في قلب القاهرة، يوفر غرفاً أنيقة ومطاعم متميزة وإطلالات بانورامية على النيل.',
+
+                    'description' => 'يقدم فندق سمارتيل القاهرة تجربة إقامة فاخرة على ضفاف نهر النيل في قلب القاهرة. يجمع الفندق بين الضيافة المصرية العصرية والتصميم الأنيق، ويوفر غرفاً وأجنحة واسعة، وإطلالات مميزة على النيل، ومطاعم راقية، ومسبحاً على السطح، وسبا متكاملاً، ومرافق حديثة لرجال الأعمال. ويتميز بموقع مركزي بالقرب من المتحف المصري وميدان التحرير وبرج القاهرة ووسط المدينة.',
                 ],
             ],
+
             [
-                'slug' => 'hilton-dubai-jumeirah-the-walk',
-                'name' => 'Hilton Dubai Jumeirah (The Walk, JBR)',
-                'city' => 'JBR & Dubai Marina',
-                'address' => 'The Walk, Jumeirah Beach Residence, Dubai Marina, Dubai',
-                'phone' => '+971 4 318 2999',
-                'email' => 'dubaijumeirah.info@hilton.com',
-                'short_description' => 'Vibrant beachfront hotel in the heart of JBR The Walk shopping & dining strip.',
-                'description' => 'Set on the famous promenade of The Walk at JBR, this resort offers private beach access, lush gardens, watersports, award-winning Italian dining at BiCE Ristorante, and pedestrian access to Dubai Marina.',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200',
+                'slug' => 'smarttel-alexandria-corniche',
+                'name' => 'Smarttel Hotel Alexandria',
+                'city' => 'Alexandria, Egypt',
+                'address' => 'Alexandria Corniche, Sidi Bishr, Alexandria, Egypt',
+                'phone' => '+20 3 547 7799',
+                'email' => 'alexandria@smarttelhotel.com',
+
+                'short_description' => 'A stylish Mediterranean beachfront hotel offering sea views, resort amenities, and easy access to Alexandria attractions.',
+
+                'description' => 'Smarttel Hotel Alexandria is a modern Mediterranean beachfront property designed for leisure and business travelers. Guests can enjoy comfortable rooms with sea views, an outdoor swimming pool, a private beach experience, a fitness center, relaxing spa facilities, and a selection of restaurants and cafés. The hotel is ideally positioned for exploring Alexandria Corniche, the Bibliotheca Alexandrina, historic landmarks, and the city center.',
+
+                'cover_image_url' => asset('images/hotel/alexandria-corniche/Hilton-Alexandria-Corniche-Exterior-View.png'),
+
                 'gallery_urls' => [
-                    'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
-                    'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200',
-                    'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200',
-                    'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200',
+                    asset('images/hotel/alexandria-corniche/Hilton-Alexandria-Corniche-Exterior-View.png'),
+                    asset('images/hotel/alexandria-corniche/img-2730.png'),
+                    asset('images/hotel/alexandria-corniche/img-2469.png'),
+                    asset('images/hotel/alexandria-corniche/Deluxe-Room-Twin-SeaView.png'),
+                    asset('images/hotel/alexandria-corniche/alyac-santorini-greek-restaurant.png'),
+                    asset('images/hotel/alexandria-corniche/img-3282.png'),
+                    asset('images/hotel/alexandria-corniche/daytime.png'),
                 ],
-                'latitude' => 25.0784,
-                'longitude' => 55.1328,
-                'features' => ['Direct JBR Walk Access', 'BiCE Italian Dining', 'Private Beach Club', 'Outdoor Shaded Pool', 'Watersports'],
+
+                'latitude' => 31.2001,
+                'longitude' => 29.9187,
+
+                'features' => [
+                    'Mediterranean Sea View',
+                    'Private Beach',
+                    'Outdoor Pool',
+                    'Fitness Center',
+                    'Spa',
+                    'Seafood Restaurant',
+                    'Café',
+                    'Meeting Rooms',
+                    'Kids Area',
+                    '24/7 Front Desk',
+                ],
+
                 'is_main' => false,
                 'sort_order' => 2,
+
                 'ar' => [
-                    'name' => 'هيلتون دبي جميرا (ذا ووك - جي بي آر)',
-                    'city' => 'جي بي آر ومرسى دبي',
-                    'address' => 'ممشى ذا ووك، مساكن شاطئ جميرا، مرسى دبي، دبي',
-                    'short_description' => 'فندق شاطئي حيوي في قلب ممشى ذا ووك الشهير للتسوق والمطاعم.',
-                    'description' => 'يقع هذا المنتجع على ممشى ذا ووك في جي بي آر، ويوفر إمكانية الوصول إلى شاطئ خاص وحدائق غناء ورياضات مائية ومطعم بيتشي الإيطالي الحائز على جوائز، وسهولة الوصول سيراً إلى دبي مارينا.',
+                    'name' => 'فندق سمارتيل الإسكندرية',
+                    'city' => 'الإسكندرية، مصر',
+                    'address' => 'كورنيش الإسكندرية، سيدي بشر، الإسكندرية، مصر',
+
+                    'short_description' => 'فندق عصري على البحر المتوسط يوفر إطلالات بحرية ومرافق منتجعية وموقعاً مميزاً بالقرب من معالم الإسكندرية.',
+
+                    'description' => 'يقدم فندق سمارتيل الإسكندرية تجربة إقامة عصرية على البحر المتوسط، مصممة للمسافرين بغرض الترفيه والأعمال. يوفر الفندق غرفاً مريحة بإطلالات بحرية، ومسبحاً خارجياً، وتجربة شاطئية خاصة، ومركزاً للياقة البدنية، ومرافق سبا للاسترخاء، بالإضافة إلى مجموعة من المطاعم والمقاهي. ويتميز بموقع مناسب لاستكشاف كورنيش الإسكندرية ومكتبة الإسكندرية والمعالم التاريخية ووسط المدينة.',
                 ],
             ],
+
             [
-                'slug' => 'waldorf-astoria-dubai-palm-jumeirah',
-                'name' => 'Waldorf Astoria Dubai Palm Jumeirah',
-                'city' => 'Palm Jumeirah East Crescent',
-                'address' => 'Crescent Road, The Palm Jumeirah, Dubai',
-                'phone' => '+971 4 818 2222',
-                'email' => 'waldorfastoria.palmjumeirah@hilton.com',
-                'short_description' => 'Palatial luxury haven with 200 meters of private soft white sand beach.',
-                'description' => 'The crown jewel of Hilton luxury, Waldorf Astoria Dubai Palm Jumeirah features palatial architecture, bespoke Personal Concierge service, Michelin-starred culinary artistry, two temperature-controlled swimming pools, and extensive spa sanctuary.',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200',
+                'slug' => 'smarttel-sharm-el-sheikh',
+                'name' => 'Smarttel Resort Sharm El Sheikh',
+                'city' => 'Sharm El Sheikh, Egypt',
+                'address' => 'Naama Bay, Sharm El Sheikh, South Sinai, Egypt',
+                'phone' => '+20 69 360 0136',
+                'email' => 'sharm@smarttelhotel.com',
+
+                'short_description' => 'A premium Red Sea resort featuring private beach access, multiple pools, water activities, and family-friendly facilities.',
+
+                'description' => 'Smarttel Resort Sharm El Sheikh is a vibrant Red Sea resort offering an unforgettable coastal escape. Located near Naama Bay, the resort features comfortable rooms and suites, multiple swimming pools, private beach access, snorkeling and diving experiences, tennis facilities, kids activities, and a variety of restaurants and beach bars. It is an ideal destination for families, couples, and travelers looking for a relaxing resort experience.',
+
+                'cover_image_url' => asset('images/hotel/sharm-el-sheikh/Hero-Photo.png'),
+
                 'gallery_urls' => [
-                    'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1200',
-                    'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200',
-                    'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
+                    asset('images/hotel/sharm-el-sheikh/img-3870.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-3682.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-4576.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-4464.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-4659.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-4004.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-5016.png'),
+                    asset('images/hotel/sharm-el-sheikh/img-3889.png'),
                 ],
-                'latitude' => 25.1325,
-                'longitude' => 55.1528,
-                'features' => ['200m Private Beach', 'Personal Concierge', 'Waldorf Astoria Spa', '3-Star Michelin Chef Venues', 'Helipad'],
+
+                'latitude' => 27.9158,
+                'longitude' => 34.3300,
+
+                'features' => [
+                    'Private Red Sea Beach',
+                    'Multiple Swimming Pools',
+                    'Snorkeling',
+                    'Diving Center',
+                    'Water Sports',
+                    'Tennis Courts',
+                    'Kids Club',
+                    'Spa',
+                    'Beach Bar',
+                    'International Restaurants',
+                ],
+
                 'is_main' => false,
                 'sort_order' => 3,
+
                 'ar' => [
-                    'name' => 'والدورف أستوريا دبي نخلة جميرا',
-                    'city' => 'الهلال الشرقي، نخلة جميرا',
-                    'address' => 'طريق الهلال، نخلة جميرا، دبي',
-                    'short_description' => 'ملاذ فاخر بطراز قصر ملكي مع شاطئ رملي أبيض خاص بطول 200 متر.',
-                    'description' => 'درة تاج الفخامة في مجموعة هيلتون، يتميز والدورف أستوريا بتصميمه المعماري الفخم، وخدمة المساعد الشخصي، وتجارب الطهي الراقية، ومسبحين بدرجات حرارة مضبوطة، وسبا علاجي استثنائي.',
+                    'name' => 'منتجع سمارتيل شرم الشيخ',
+                    'city' => 'شرم الشيخ، مصر',
+                    'address' => 'خليج نعمة، شرم الشيخ، جنوب سيناء، مصر',
+
+                    'short_description' => 'منتجع فاخر على البحر الأحمر يوفر شاطئاً خاصاً ومسابح متعددة وأنشطة مائية ومرافق مناسبة للعائلات.',
+
+                    'description' => 'يوفر منتجع سمارتيل شرم الشيخ تجربة ساحلية مميزة على البحر الأحمر بالقرب من خليج نعمة. يضم المنتجع غرفاً وأجنحة مريحة، ومسابح متعددة، وشاطئاً خاصاً، وتجارب للغطس والسنوركلينج، وملاعب للتنس، وأنشطة للأطفال، بالإضافة إلى مجموعة متنوعة من المطاعم والبارات الشاطئية. ويعد المنتجع خياراً مناسباً للعائلات والأزواج ومحبي الاسترخاء والأنشطة البحرية.',
                 ],
             ],
+
             [
-                'slug' => 'conrad-dubai-financial-district',
-                'name' => 'Conrad Dubai (Sheikh Zayed Road)',
-                'city' => 'Sheikh Zayed Road, Financial Center',
-                'address' => 'Sheikh Zayed Road, Trade Centre 1, Dubai',
-                'phone' => '+971 4 444 7444',
-                'email' => 'conrad.dubai@hilton.com',
-                'short_description' => 'Ultra-chic modern sanctuary in the central financial & business epicentre.',
-                'description' => 'Rising majestically in Dubai financial district, Conrad Dubai blends urban sophistication with a 5,500 sqm tropical pool deck oasis, signature Purobeach lounge, luxury spa, and direct metro link to Dubai World Trade Centre.',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
+                'slug' => 'smarttel-hurghada-red-sea',
+                'name' => 'Smarttel Resort Hurghada',
+                'city' => 'Hurghada, Egypt',
+                'address' => 'Red Sea Coast, Hurghada, Red Sea Governorate, Egypt',
+                'phone' => '+20 65 344 5999',
+                'email' => 'hurghada@smarttelhotel.com',
+
+                'short_description' => 'A beachfront Red Sea resort with private beach access, pools, diving, watersports, and family activities.',
+
+                'description' => 'Smarttel Resort Hurghada offers a complete Red Sea holiday experience with direct access to the beach and a wide range of leisure facilities. Guests can enjoy spacious rooms and suites, swimming pools, a private sandy beach, diving and snorkeling activities, water sports, kids facilities, restaurants, and relaxing outdoor spaces. The resort is designed for both family holidays and extended leisure stays.',
+
+                'cover_image_url' => asset('images/hotel/hurghada-red-sea/Hero-Picture.png'),
+
                 'gallery_urls' => [
-                    'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200',
-                    'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200',
-                    'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200',
+                    asset('images/hotel/hurghada-red-sea/hrghi-1889.png'),
+                    asset('images/hotel/hurghada-red-sea/hrghi-k1tv-bedroom.png'),
+                    asset('images/hotel/hurghada-red-sea/hrghi-2434.png'),
+                    asset('images/hotel/hurghada-red-sea/hrghi-2511.png'),
+                    asset('images/hotel/hurghada-red-sea/hrghi-2585.png'),
+                    asset('images/hotel/hurghada-red-sea/hrghi-1487.png'),
+                    asset('images/hotel/hurghada-red-sea/hrghi-1362.png'),
                 ],
-                'latitude' => 25.2265,
-                'longitude' => 55.2831,
-                'features' => ['5,500 sqm Urban Pool Deck', 'Direct Metro Link', 'Conrad Spa', 'Purobeach Urban Oasis', 'Ballroom'],
+
+                'latitude' => 27.2579,
+                'longitude' => 33.8116,
+
+                'features' => [
+                    'Red Sea Beachfront',
+                    'Private Beach',
+                    'Swimming Pools',
+                    'Diving Center',
+                    'Snorkeling',
+                    'Water Sports',
+                    'Kids Club',
+                    'Beach Restaurant',
+                    'Spa',
+                    'All-Inclusive Option',
+                ],
+
                 'is_main' => false,
                 'sort_order' => 4,
+
                 'ar' => [
-                    'name' => 'كونراد دبي (شارع الشيخ زايد)',
-                    'city' => 'شارع الشيخ زايد، مركز التجارة العالمي',
-                    'address' => 'شارع الشيخ زايد، مركز التجارة الأول، دبي',
-                    'short_description' => 'ملاذ حضري فائق الرقي في قلب المركز المالي والتجاري لدبي.',
-                    'description' => 'يرتفع كونراد دبي في قلب الحي المالي ليجمع بين الطابع العصري وواحة المسبح الاستوائية على مساحة 5,500 متر مربع، وسبا فاخر، مع اتصال مباشر بمحطة المترو ومركز دبي التجاري العالمي.',
+                    'name' => 'منتجع سمارتيل الغردقة',
+                    'city' => 'الغردقة، مصر',
+                    'address' => 'ساحل البحر الأحمر، الغردقة، محافظة البحر الأحمر، مصر',
+
+                    'short_description' => 'منتجع شاطئي على البحر الأحمر يوفر شاطئاً خاصاً ومسابح وأنشطة للغوص والرياضات المائية ومرافق للعائلات.',
+
+                    'description' => 'يقدم منتجع سمارتيل الغردقة تجربة متكاملة للعطلات على البحر الأحمر مع وصول مباشر إلى الشاطئ ومجموعة واسعة من المرافق الترفيهية. يمكن للضيوف الاستمتاع بغرف وأجنحة واسعة، ومسابح، وشاطئ رملي خاص، وأنشطة الغوص والسنوركلينج، والرياضات المائية، ومرافق للأطفال، بالإضافة إلى المطاعم والمساحات الخارجية المخصصة للاسترخاء. صُمم المنتجع ليناسب العائلات والإقامات الترفيهية الطويلة.',
                 ],
             ],
+
             [
-                'slug' => 'hilton-abu-dhabi-yas-island',
-                'name' => 'Hilton Abu Dhabi Yas Island',
-                'city' => 'Yas Island, Abu Dhabi',
-                'address' => 'Yas Bay Waterfront, Yas Island, Abu Dhabi, United Arab Emirates',
-                'phone' => '+971 2 208 6888',
-                'email' => 'abudhabi.yasisland@hilton.com',
-                'short_description' => 'Vibrant waterfront resort located on Yas Bay with access to world-class theme parks.',
-                'description' => 'Nestled on the dynamic Yas Bay Waterfront, Hilton Abu Dhabi Yas Island provides an exceptional retreat with outdoor infinity pools, access to Ferrari World, Warner Bros. World, and Yas Waterworld, with magnificent views of the Arabian Gulf.',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
+                'slug' => 'smarttel-luxor-nile-valley',
+                'name' => 'Smarttel Hotel Luxor',
+                'city' => 'Luxor, Egypt',
+                'address' => 'Khalid Ibn El Walid Street, Luxor, Egypt',
+                'phone' => '+20 95 238 0422',
+                'email' => 'luxor@smarttelhotel.com',
+
+                'short_description' => 'A Nile-side hotel combining comfortable accommodation, Egyptian heritage, and easy access to Luxor\'s historic landmarks.',
+
+                'description' => 'Smarttel Hotel Luxor offers a relaxing Nile-side stay in one of Egypt\'s most historic destinations. The hotel features comfortable rooms, Nile and city views, an outdoor swimming pool, restaurants serving local and international cuisine, wellness facilities, and concierge services. Guests can easily explore the Valley of the Kings, Karnak Temple, Luxor Temple, museums, and traditional Nile experiences.',
+
+                'cover_image_url' => asset('images/hotel/luxor-nile-valley/Hero-Photo.png'),
+
                 'gallery_urls' => [
-                    'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200',
-                    'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200',
+                    asset('images/hotel/luxor-nile-valley/luxhitw-spa-suite.png'),
+                    asset('images/hotel/luxor-nile-valley/luxhitw-jannah-restaurant.png'),
+                    asset('images/hotel/luxor-nile-valley/luxhitw-olives-restaurant.png'),
+                    asset('images/hotel/luxor-nile-valley/luxhitw-fitness-centre.png'),
+                    asset('images/hotel/luxor-nile-valley/luxhitw-ballroom.png'),
+                    asset('images/hotel/luxor-nile-valley/luxhitw-hilton-meeting-room.png'),
+                    asset('images/hotel/luxor-nile-valley/luxhitw-lobby.png'),
                 ],
-                'latitude' => 24.4672,
-                'longitude' => 54.6035,
-                'features' => ['Yas Bay Waterfront', 'Theme Park Access', 'Beach Club', 'Waterfront Infinity Pool', 'eforea Spa'],
+
+                'latitude' => 25.6872,
+                'longitude' => 32.6396,
+
+                'features' => [
+                    'Nile Views',
+                    'Outdoor Pool',
+                    'Egyptian Restaurant',
+                    'International Restaurant',
+                    'Wellness Facilities',
+                    'Tour Desk',
+                    'Valley of the Kings Tours',
+                    'Karnak Temple Tours',
+                    'Felucca Experiences',
+                    'Airport Transfer',
+                ],
+
                 'is_main' => false,
                 'sort_order' => 5,
+
                 'ar' => [
-                    'name' => 'هيلتون أبوظبي جزيرة ياس',
-                    'city' => 'جزيرة ياس، أبوظبي',
-                    'address' => 'واجهة ياس باي البحرية، جزيرة ياس، أبوظبي، الإمارات العربية المتحدة',
-                    'short_description' => 'منتجع مائي مميز على واجهة ياس باي مع دخول لأشهر مدن الألعاب العالمية.',
-                    'description' => 'يقع فندق هيلتون أبوظبي على واجهة ياس باي البحرية، مقدماً إقامة استثنائية مع مسابح لا متناهية وتذاكر لمدن الألعاب الترفيهية عالمية المستوى في جزيرة ياس وإطلالات رائعة.',
+                    'name' => 'فندق سمارتيل الأقصر',
+                    'city' => 'الأقصر، مصر',
+                    'address' => 'شارع خالد بن الوليد، الأقصر، مصر',
+
+                    'short_description' => 'فندق على النيل يجمع بين الإقامة المريحة والتراث المصري والموقع المميز بالقرب من أهم معالم الأقصر.',
+
+                    'description' => 'يوفر فندق سمارتيل الأقصر إقامة مريحة على ضفاف النيل في واحدة من أكثر الوجهات التاريخية شهرة في مصر. يضم الفندق غرفاً مريحة وإطلالات على النيل والمدينة ومسبحاً خارجياً ومطاعم تقدم المأكولات المصرية والعالمية ومرافق للاسترخاء وخدمات الكونسيرج. ويمكن للضيوف بسهولة استكشاف وادي الملوك ومعبد الكرنك ومعبد الأقصر والمتاحف وتجارب النيل التقليدية.',
                 ],
             ],
         ];
 
         foreach ($branches as $data) {
             $ar = $data['ar'];
+
             unset($data['ar']);
 
             $branch = HotelBranch::updateOrCreate(
@@ -173,6 +303,7 @@ class HotelBranchSeeder extends Seeder
             );
 
             $branch->setTranslations('ar', $ar);
+            $branch->save();
         }
     }
 }

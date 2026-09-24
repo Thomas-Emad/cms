@@ -17,6 +17,7 @@ class HeroSectionDefinition implements SectionDefinition
         return [
             'title' => ['required', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:500'],
+            'eyebrow' => ['nullable', 'string', 'max:255'],
             // Reference, not embedded content - re-validated against the
             // page's own hotel_id at resolve time (see PageRenderService).
             'media_id' => ['nullable', 'integer', 'exists:media,id'],

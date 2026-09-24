@@ -16,29 +16,37 @@ class HotelSeeder extends Seeder
         $hotel = Hotel::updateOrCreate(
             ['slug' => 'hilton-grand-horizon'],
             [
-                'name' => 'Hilton Dubai Palm Jumeirah',
+                'name' => 'Smarttel Hotel',
                 'status' => 'active',
-                'contact_email' => 'info.palmjumeirah@hilton.com',
-                'contact_phone' => '+971 4 230 0000',
-                'address' => 'Palm West Beach, The Palm Jumeirah, Dubai, United Arab Emirates',
-                'timezone' => 'Asia/Dubai',
-                'currency' => 'AED',
+                'contact_email' => 'info@smarttelhotel.com',
+                'contact_phone' => '+20 2 2578 0444',
+                'address' => '1113 Corniche El Nil, Garden City, Cairo, Egypt',
+                'timezone' => 'Africa/Cairo',
+                'currency' => 'EGP',
             ]
         );
 
         HotelSettings::updateOrCreate(
             ['hotel_id' => $hotel->id],
             [
-                'checkin_time' => '15:00:00',
+                'checkin_time' => '14:00:00',
                 'checkout_time' => '12:00:00',
                 'default_locale' => 'en',
+                'metadata' => [
+                    'weather' => [
+                        'city' => 'Cairo',
+                        'latitude' => 30.0444,
+                        'longitude' => 31.2357,
+                        'timezone' => 'Africa/Cairo',
+                    ],
+                ],
             ]
         );
 
         Theme::updateOrCreate(
             ['hotel_id' => $hotel->id],
             [
-                'name' => 'Hilton Dubai Palm Luxury Theme',
+                'name' => 'Smarttel Luxury Theme',
                 'is_active' => true,
                 'primary_color' => '#059669',
                 'secondary_color' => '#10B981',
@@ -67,7 +75,7 @@ class HotelSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'name' => 'Hilton Palm Jumeirah Admin',
+                'name' => 'Smarttel Hotel Admin',
                 'password' => Hash::make('password'),
                 'hotel_id' => $hotel->id,
                 'role' => 'hotel_admin',

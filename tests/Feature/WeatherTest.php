@@ -209,26 +209,26 @@ class WeatherTest extends TestCase
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
             ->component('Guest/Weather/Index')
-            ->has('weather.branches', 3)
-            ->where('weather.current_branch_id', 'horizon-bay')
-            ->where('weather.location.branch_name', 'Horizon Bay (Beach Resort)')
+            ->has('weather.branches', 5)
+            ->where('weather.current_branch_id', 'cairo-main')
+            ->where('weather.location.branch_name', 'Smarttel Cairo (Garden City)')
         );
 
-        // Switch to Downtown branch
-        $responseDowntown = $this->get('/weather?branch=downtown-city');
-        $responseDowntown->assertStatus(200);
-        $responseDowntown->assertInertia(fn ($page) => $page
-            ->where('weather.current_branch_id', 'downtown-city')
-            ->where('weather.location.branch_name', 'Downtown Skyline Branch')
-            ->where('weather.location.latitude', 25.1972)
-            ->where('weather.location.longitude', 25.2744 ? 55.2744 : 55.2744)
+        // Switch to Alexandria branch
+        $responseAlexandria = $this->get('/weather?branch=alexandria');
+        $responseAlexandria->assertStatus(200);
+        $responseAlexandria->assertInertia(fn ($page) => $page
+            ->where('weather.current_branch_id', 'alexandria')
+            ->where('weather.location.branch_name', 'Smarttel Alexandria (Mediterranean)')
+            ->where('weather.location.latitude', 31.2001)
+            ->where('weather.location.longitude', 29.9187)
         );
 
         // Unknown branch falls back to default branch
         $responseFallback = $this->get('/weather?branch=unknown-branch-slug');
         $responseFallback->assertStatus(200);
         $responseFallback->assertInertia(fn ($page) => $page
-            ->where('weather.current_branch_id', 'horizon-bay')
+            ->where('weather.current_branch_id', 'cairo-main')
         );
     }
 
