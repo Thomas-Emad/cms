@@ -13,7 +13,7 @@ class FacilityController extends Controller
 {
     public function index(Request $request): Response
     {
-        return $this->listing($request->string('category')->value() ?: null, 'Facilities');
+        return $this->listing($request->string('category')->value() ?: null, __('facilities.title'));
     }
 
     /**
@@ -23,7 +23,7 @@ class FacilityController extends Controller
      */
     public function meetingRooms(): Response
     {
-        return $this->listing('meeting', 'Meeting Rooms');
+        return $this->listing('meeting', __('facilities.meeting_rooms_title'));
     }
 
     private function listing(?string $category, string $title): Response
@@ -37,7 +37,7 @@ class FacilityController extends Controller
                 ->with('cover')
                 ->ordered()
                 ->get()
-                ->map(fn (Facility $f) => [
+                ->map(fn(Facility $f) => [
                     ...$f->only(['id', 'name', 'slug', 'short_description', 'category']),
                     'cover_image_url' => $f->cover_image_url,
                 ]),
@@ -56,7 +56,7 @@ class FacilityController extends Controller
                 'gallery_urls' => $facility->gallery->pluck('url'),
             ],
             'slides' => collect([$facility->cover])->filter()->concat($facility->gallery)
-                ->map(fn (Media $m) => $m->toPayload())->values(),
+                ->map(fn(Media $m) => $m->toPayload())->values(),
         ]);
     }
 }

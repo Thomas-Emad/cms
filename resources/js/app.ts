@@ -1,5 +1,5 @@
 // resources/js/app.ts
-import { createApp, h, Transition } from 'vue';
+import { createApp, DefineComponent, h, Transition } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue, route } from 'ziggy-js';
@@ -12,6 +12,7 @@ import '../css/app.css';
 // not Options API), so it needs to exist on `window` explicitly - the
 // ZiggyVue Vue plugin alone only wires up `this.route()`/`this.$route`.
 window.route = route;
+const pages = import.meta.glob('./Pages/**/*.vue');
 
 function syncDocumentLocale(page: any) {
     const locale = (page?.props?.locale as string) || 'en';
@@ -19,11 +20,15 @@ function syncDocumentLocale(page: any) {
     document.documentElement.lang = locale;
     document.documentElement.dir = dir;
 }
-
 createInertiaApp({
     title: (title) => `${title} - Grand Horizon`,
+
     resolve: (name) =>
-        resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+        resolvePageComponent(
+            `./Pages/${name}.vue`,
+            pages,
+        ) as Promise<DefineComponent>,
+
     setup({ el, App, props, plugin }) {
         syncDocumentLocale(props.initialPage);
 
@@ -32,11 +37,19 @@ createInertiaApp({
         });
 
         const app = createApp({
-            // Subtle cross-page fade/settle (see .page-fade-* in app.css).
-            // Keyed on the Inertia component name so switching pages (not
-            // just prop updates within a page) triggers the transition.
             render: () =>
-                h(Transition, { name: 'page-fade', mode: 'out-in' }, () => h(App, { ...props, key: props.initialPage?.component })),
+                h(
+                    Transition,
+                    {
+                        name: 'page-fade',
+                        mode: 'out-in',
+                    },
+                    () =>
+                        h(App, {
+                            ...props,
+                            key: props.initialPage?.component,
+                        }),
+                ),
         });
 
         app.config.globalProperties.$t = t;

@@ -12,6 +12,7 @@ return [
     'more_facilities' => 'استكشف المزيد من المرافق',
     'add_facility' => '+ إضافة مرفق',
     'add_meeting_room' => '+ إضافة قاعة اجتماعات',
+    'meeting_rooms_title' => 'قاعات الاجتماعات',
     'edit_facility' => 'تعديل المرفق',
     'categories' => [
         'all' => 'الكل',

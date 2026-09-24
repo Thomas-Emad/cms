@@ -24,9 +24,11 @@ const items = computed(() =>
 </script>
 
 <template>
-    <Showcase v-if="isMeeting" :items="items" :heading="title" :empty-text="$t('facilities.meeting_rooms_empty')" :action-label="$t('rooms.view_room')" />
+    <Showcase v-if="isMeeting" :items="items" :heading="title" :empty-text="$t('facilities.meeting_rooms_empty')"
+        :action-label="$t('rooms.view_room')" />
     <div v-else class="mx-auto max-w-7xl px-6 lg:px-10 pt-24 lg:pt-28 pb-16 lg:pb-24">
-        <h1 class="reveal text-3xl lg:text-4xl mb-8 lg:mb-10" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)" v-reveal>
+        <h1 class="reveal text-3xl lg:text-4xl mb-8 lg:mb-10"
+            style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)" v-reveal>
             {{ title }}
         </h1>
 

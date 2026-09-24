@@ -53,7 +53,7 @@ class InfoEntryController extends Controller
         return Inertia::render('Admin/InfoEntries/Edit', [
             ...$kindConfig,
             'entries' => InfoEntry::query()->kind($kind)->ordered()->get()
-                ->map(fn (InfoEntry $e) => [
+                ->map(fn(InfoEntry $e) => [
                     ...$e->only(['id', 'group', 'label', 'value']),
                     'translations' => $e->getTranslationsGrouped(),
                     'label_ar' => $e->getTranslationData('ar')['label'] ?? '',

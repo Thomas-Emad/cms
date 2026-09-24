@@ -12,6 +12,7 @@ return [
     'more_facilities' => 'Explore more facilities',
     'add_facility' => '+ Add Facility',
     'add_meeting_room' => '+ Add Meeting Room',
+    'meeting_rooms_title' => 'Meeting Rooms',
     'edit_facility' => 'Edit Facility',
     'categories' => [
         'all' => 'All',
