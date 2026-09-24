@@ -75,6 +75,8 @@ export const ROUTE_LABELS: Record<string, string> = {
     '/rooms': 'nav.rooms',
     '/gallery': 'nav.gallery',
     '/meeting-rooms': 'nav.meeting_rooms',
+    '/weather': 'nav.weather',
+    '/branches': 'nav.branches',
     '/restaurants': 'nav.restaurants',
     '/services': 'nav.services',
     '/events': 'nav.events',

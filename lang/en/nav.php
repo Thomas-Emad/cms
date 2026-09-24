@@ -9,6 +9,8 @@ return [
     'content' => 'Content',
     'facilities' => 'Facilities',
     'meeting_rooms' => 'Meeting Rooms',
+    'weather' => 'Weather',
+    'branches' => 'Branches',
     'rooms' => 'Rooms & Suites',
     'timing' => 'Timing',
     'short_calls' => 'Short Calls',

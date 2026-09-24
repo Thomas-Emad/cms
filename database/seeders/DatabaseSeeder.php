@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             HotelMapSeeder::class,
             DemoArabicTranslationsSeeder::class,
+            HotelBranchSeeder::class,
         ]);
     }
 }

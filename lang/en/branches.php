@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Our Branches',
+    'subtitle' => 'Explore our signature locations, luxury resorts, and prime destinations',
+    'all_branches' => 'All Locations',
+    'select_branch' => 'Select a Branch',
+    'main_branch' => 'Main Branch',
+    'flagship' => 'Flagship Property',
+    'photos' => 'Photos',
+    'gallery' => 'Photo Gallery',
+    'address' => 'Address',
+    'location' => 'Location',
+    'contact' => 'Contact Information',
+    'phone' => 'Phone',
+    'email' => 'Email',
+    'features' => 'Highlights & Amenities',
+    'overview' => 'Overview',
+    'get_directions' => 'Get Directions',
+    'call_now' => 'Call Branch',
+    'email_us' => 'Email Branch',
+    'empty' => 'No branches available at the moment.',
+    'view_photo' => 'View Photo',
+    'view_all_photos' => 'View all :count photos',
+];

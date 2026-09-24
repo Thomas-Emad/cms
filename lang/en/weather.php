@@ -1,0 +1,63 @@
+<?php
+
+return [
+    'title' => 'Weather',
+    'subtitle' => 'Daily weather observations for the last 5 days',
+    'five_day_history' => 'Past 5 Days Weather',
+    'historical_notice' => 'Historical daily observations recorded over the last 5 days',
+    'latest_observation' => 'Most Recent Day',
+    'daily_history' => 'Daily History',
+    'temperature' => 'Temperature',
+    'high' => 'High',
+    'low' => 'Low',
+    'high_low' => 'High / Low',
+    'feels_like' => 'Feels like',
+    'precipitation' => 'Precipitation',
+    'wind' => 'Wind',
+    'condition' => 'Condition',
+    'location' => 'Location',
+    'branch' => 'Branch',
+    'branches' => 'Branches',
+    'select_branch' => 'Select Branch',
+    'all_branches' => 'Hotel Branches',
+    'current_branch' => 'Current Branch',
+
+    'units' => [
+        'temp' => '°C',
+        'precip' => 'mm',
+        'wind' => 'km/h',
+    ],
+
+    'conditions' => [
+        'clear_sky' => 'Clear sky',
+        'mainly_clear' => 'Mainly clear',
+        'partly_cloudy' => 'Partly cloudy',
+        'overcast' => 'Overcast',
+        'foggy' => 'Fog',
+        'drizzle' => 'Drizzle',
+        'rain' => 'Rain',
+        'snow' => 'Snow',
+        'rain_showers' => 'Rain showers',
+        'snow_showers' => 'Snow showers',
+        'thunderstorm' => 'Thunderstorm',
+    ],
+
+    'days' => [
+        'today' => 'Today',
+        'yesterday' => 'Yesterday',
+        'sunday' => 'Sunday',
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+    ],
+
+    'loading' => 'Loading weather data…',
+    'error_title' => 'Weather Unavailable',
+    'error_message' => 'Unable to load weather information at this moment. Please check back shortly.',
+    'no_data' => 'No weather data available for the last 5 days.',
+    'retry' => 'Try again',
+    'back_home' => 'Return Home',
+];

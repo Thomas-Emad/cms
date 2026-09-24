@@ -38,16 +38,14 @@ class GuestLayoutTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function a_hotel_with_no_saved_layout_gets_the_default_classic_config(): void
+    public function test_a_hotel_with_no_saved_layout_gets_the_default_classic_config(): void
     {
         $config = app(GuestLayoutStore::class)->forHotel($this->hotelA->id);
         $this->assertSame('classic', $config['template']);
         $this->assertSame(GuestLayoutConfig::defaults(), $config);
     }
 
-    /** @test */
-    public function saving_a_layout_is_isolated_per_hotel_and_does_not_touch_other_settings(): void
+    public function test_saving_a_layout_is_isolated_per_hotel_and_does_not_touch_other_settings(): void
     {
         HotelSettings::create(['hotel_id' => $this->hotelA->id, 'metadata' => ['some_other_setting' => 'keep-me']]);
 
@@ -60,8 +58,7 @@ class GuestLayoutTest extends TestCase
         $this->assertSame('classic', app(GuestLayoutStore::class)->forHotel($this->hotelB->id)['template']); // hotel B unaffected
     }
 
-    /** @test */
-    public function the_admin_can_save_a_valid_layout_and_guests_get_it_via_the_shared_inertia_prop(): void
+    public function test_the_admin_can_save_a_valid_layout_and_guests_get_it_via_the_shared_inertia_prop(): void
     {
         app(CurrentHotel::class)->set($this->hotelA);
         $config = array_merge(GuestLayoutConfig::defaults(), ['template' => 'tv', 'headline' => 'Welcome']);
@@ -69,11 +66,10 @@ class GuestLayoutTest extends TestCase
         $this->actingAs($this->adminA)->put('/admin/layout', $config)
             ->assertRedirect('/admin/layout')->assertSessionHas('layout_saved');
 
-        $this->get('/')->assertInertia(fn ($page) => $page->where('guestLayout.template', 'tv')->where('guestLayout.headline', 'Welcome'));
+        $this->get('/facilities')->assertInertia(fn ($page) => $page->where('guestLayout.template', 'tv')->where('guestLayout.headline', 'Welcome'));
     }
 
-    /** @test */
-    public function an_invalid_layout_is_refused_with_every_problem_listed_and_nothing_is_saved(): void
+    public function test_an_invalid_layout_is_refused_with_every_problem_listed_and_nothing_is_saved(): void
     {
         $this->actingAs($this->adminA)->put('/admin/layout', ['template' => 'not-real', 'items' => []])
             ->assertRedirect('/admin/layout')
@@ -82,14 +78,12 @@ class GuestLayoutTest extends TestCase
         $this->assertNull(HotelSettings::where('hotel_id', $this->hotelA->id)->value('metadata'));
     }
 
-    /** @test */
-    public function the_admin_area_never_gets_the_guest_layout_prop_even_when_signed_in(): void
+    public function test_the_admin_area_never_gets_the_guest_layout_prop_even_when_signed_in(): void
     {
         $this->actingAs($this->adminA)->get('/admin/map')->assertInertia(fn ($page) => $page->where('guestLayout', null));
     }
 
-    /** @test */
-    public function only_signed_in_staff_can_change_the_layout(): void
+    public function test_only_signed_in_staff_can_change_the_layout(): void
     {
         $this->get('/admin/layout')->assertRedirect();
         $this->put('/admin/layout', GuestLayoutConfig::defaults())->assertRedirect();

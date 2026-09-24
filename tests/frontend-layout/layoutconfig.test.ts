@@ -9,7 +9,7 @@ const phpValidate = (data: any) => JSON.parse(execFileSync('php', ['-r',
 describe('shellConfig (frontend) matches GuestLayoutConfig (server)', () => {
   it('DEFAULT_CONFIG is exactly what the server considers valid, with no errors', () => {
     expect(phpValidate(DEFAULT_CONFIG)).toEqual([])
-    expect(DEFAULT_CONFIG.template).toBe('classic'); expect(DEFAULT_CONFIG.items).toHaveLength(7)
+    expect(DEFAULT_CONFIG.template).toBe('classic'); expect(DEFAULT_CONFIG.items).toHaveLength(9)
   })
   it('resolveConfig(undefined / null / garbage) falls back to the full defaults, same as the server', () => {
     for (const bad of [undefined, null, 'x', 42, { template: 'hologram' }]) {

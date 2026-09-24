@@ -9,6 +9,8 @@ return [
     'content' => 'المحتوى',
     'facilities' => 'المرافق',
     'meeting_rooms' => 'قاعات الاجتماعات',
+    'weather' => 'الطقس',
+    'branches' => 'الفروع',
     'rooms' => 'الغرف والأجنحة',
     'timing' => 'أوقات العمل',
     'short_calls' => 'أرقام الاتصال السريع',

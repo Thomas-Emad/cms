@@ -12,6 +12,8 @@
     { "href": "/short-calls", "label": "Short Calls", "icon": "📞", "color": "#8a3b3b", "visible": true },
     { "href": "/rooms", "label": "Rooms & Suites", "icon": "🛏️", "color": "#4a3a7a", "visible": true },
     { "href": "/gallery", "label": "Gallery", "icon": "🖼️", "color": "#2f6f73", "visible": true },
-    { "href": "/meeting-rooms", "label": "Meeting Room", "icon": "👥", "color": "#4a4f57", "visible": true }
+    { "href": "/meeting-rooms", "label": "Meeting Room", "icon": "👥", "color": "#4a4f57", "visible": true },
+    { "href": "/weather", "label": "Weather", "icon": "☀️", "color": "#2563eb", "visible": true },
+    { "href": "/branches", "label": "Branches", "icon": "🏨", "color": "#0d9488", "visible": true }
   ]
 }

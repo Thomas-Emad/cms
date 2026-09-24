@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Guest\BranchController as GuestBranchController;
 use App\Http\Controllers\Guest\EventController as GuestEventController;
 use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController;
 use App\Http\Controllers\Guest\FacilityController as GuestFacilityController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Guest\PageController as GuestPageController;
 use App\Http\Controllers\Guest\RestaurantController as GuestRestaurantController;
 use App\Http\Controllers\Guest\RoomController as GuestRoomController;
 use App\Http\Controllers\Guest\ServiceController as GuestServiceController;
+use App\Http\Controllers\Guest\WeatherController as GuestWeatherController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +49,8 @@ Route::middleware(['web', 'resolve.hotel'])->group(function () {
 
     // Guest-screen dock destinations
     Route::get('/meeting-rooms', [GuestFacilityController::class, 'meetingRooms'])->name('guest.meeting-rooms');
+    Route::get('/weather', [GuestWeatherController::class, 'index'])->name('guest.weather');
+    Route::get('/branches', [GuestBranchController::class, 'index'])->name('guest.branches');
     Route::get('/rooms', [GuestRoomController::class, 'index'])->name('guest.rooms.index');
     Route::get('/rooms/{room:slug}', [GuestRoomController::class, 'show'])->name('guest.rooms.show');
     Route::get('/timing', [InfoPageController::class, 'timing'])->name('guest.timing');
