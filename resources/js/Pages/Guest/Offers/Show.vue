@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import GuestShell from '@/Layouts/GuestShell.vue';
 import type { Offer } from '@/types/content';
 import { useParallax, vRevealMount } from '@/lib/motion';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: GuestShell });
 
@@ -45,7 +46,7 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
                 {{ offer.description }}
             </p>
             <p v-if="offer.valid_until" class="reveal mt-4 text-xs uppercase tracking-wide text-slate-400" v-reveal="{ delay: 80 }">
-                {{ $t('offers.valid_until') }} {{ offer.valid_until }}
+                {{ $t('offers.valid_until') }} {{ formatDate(offer.valid_until) }}
             </p>
             <a
                 v-if="offer.booking_url"

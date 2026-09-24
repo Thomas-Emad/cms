@@ -5,6 +5,7 @@ import { useI18n } from '@/i18n';
 import type { HotelEvent } from '@/types/content';
 import type { Paginated } from '@/types/facility';
 import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge } from '@/Components/Admin';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
 
@@ -48,7 +49,7 @@ const destroy = (event: HotelEvent) => {
                 class="hover:bg-slate-50/70 transition-colors"
             >
                 <td class="px-4 py-3 font-medium text-slate-800">{{ event.title }}</td>
-                <td class="px-4 py-3 text-slate-500 text-xs">{{ event.start_date || '—' }}</td>
+                <td class="px-4 py-3 text-slate-500 text-xs">{{ formatDate(event.start_date) || '—' }}</td>
                 <td class="px-4 py-3">
                     <AdminBadge :variant="event.status === 'published' ? 'published' : 'draft'" dot>
                         {{ t(`admin.status.${event.status}`, undefined, event.status) }}

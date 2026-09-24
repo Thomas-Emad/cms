@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsDates;
 use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Hotel extends Model
 {
-    use HasFactory, HasMedia, HasTranslations;
+    use FormatsDates, HasFactory, HasMedia, HasTranslations;
 
     protected array $translatable = [
         'name', 'address',

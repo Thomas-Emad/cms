@@ -5,6 +5,7 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { useI18n } from '@/i18n';
 import type { Offer } from '@/types/content';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
 
@@ -21,8 +22,8 @@ const form = useForm({
   description: props.offer?.description ?? '',
   price: props.offer?.price ?? '',
   discount: props.offer?.discount ?? '',
-  valid_from: props.offer?.valid_from ?? '',
-  valid_until: props.offer?.valid_until ?? '',
+  valid_from: formatDate(props.offer?.valid_from, true),
+  valid_until: formatDate(props.offer?.valid_until, true),
   booking_url: props.offer?.booking_url ?? '',
   featured: props.offer?.featured ?? false,
   status: props.offer?.status ?? 'draft',

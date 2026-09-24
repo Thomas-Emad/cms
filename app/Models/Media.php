@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
+    use FormatsDates;
+
     protected $table = 'media';
 
     protected $fillable = [

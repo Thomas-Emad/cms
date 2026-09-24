@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PageVersion extends Model
 {
+    use FormatsDates;
+
     protected $fillable = [
         'page_id', 'sections', 'state', 'published_at', 'published_by',
     ];

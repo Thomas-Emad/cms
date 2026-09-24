@@ -4,6 +4,7 @@ import { router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import { useI18n } from '@/i18n';
 import { AdminTable, CreateButton, EditButton, ShowButton, AdminInput, AdminBadge } from '@/Components/Admin';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
 
@@ -37,10 +38,6 @@ watch(search, (value) => {
     router.get('/admin/pages', { q: value || undefined }, { preserveState: true, replace: true });
   }, 300);
 });
-
-function formatDate(value: string): string {
-  return new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-}
 </script>
 
 <template>

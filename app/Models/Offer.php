@@ -23,8 +23,8 @@ class Offer extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
-        'valid_from' => 'date',
-        'valid_until' => 'date',
+        'valid_from' => 'date:Y-m-d',
+        'valid_until' => 'date:Y-m-d',
         'featured' => 'boolean',
     ];
 

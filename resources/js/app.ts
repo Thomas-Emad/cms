@@ -6,6 +6,7 @@ import { ZiggyVue, route } from 'ziggy-js';
 import { vReveal, vRevealMount } from '@/lib/motion';
 import { router } from '@inertiajs/vue3';
 import { t } from '@/i18n';
+import { formatDate } from '@/lib/formatters';
 import '../css/app.css';
 
 // Login.vue and others call route(...) as a bare global (script setup,
@@ -53,6 +54,7 @@ createInertiaApp({
         });
 
         app.config.globalProperties.$t = t;
+        app.config.globalProperties.$formatDate = formatDate;
 
         app
             .use(plugin)

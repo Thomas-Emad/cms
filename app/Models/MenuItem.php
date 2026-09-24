@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsDates;
 use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MenuItem extends Model
 {
-    use HasMedia, HasTranslations;
+    use FormatsDates, HasMedia, HasTranslations;
 
     protected array $translatable = ['name', 'description'];
 

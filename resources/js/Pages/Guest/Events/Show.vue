@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import GuestShell from '@/Layouts/GuestShell.vue';
 import type { HotelEvent } from '@/types/content';
 import { useParallax, vRevealMount } from '@/lib/motion';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: GuestShell });
 
@@ -29,7 +30,7 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
             <div class="relative z-10 w-full px-6 lg:px-10 pb-14">
                 <div class="mx-auto max-w-7xl">
                     <p class="reveal text-white/70 text-xs uppercase tracking-[0.2em] mb-2" v-reveal-mount="{ delay: 300 }">
-                        {{ event.start_date }}<span v-if="event.start_time"> · {{ event.start_time }}</span>
+                        {{ formatDate(event.start_date) }}<span v-if="event.start_time"> · {{ event.start_time }}</span>
                     </p>
                     <div class="reveal-mask" v-reveal-mount="{ delay: 460 }">
                         <h1 class="reveal-mask-inner text-white text-5xl lg:text-6xl" style="font-family: var(--font-display)">

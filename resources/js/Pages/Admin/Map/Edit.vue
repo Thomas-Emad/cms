@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
 
@@ -42,7 +43,7 @@ function loadDemo() {
           <b>{{ summary.nodes }}</b> {{ $t('admin.map.walkway_points', 'walkway points') }} ·
           <b>{{ summary.locations }}</b> {{ $t('admin.map.places', 'places') }}
         </span>
-        <span v-if="summary.updated_at" class="text-xs text-slate-400">{{ $t('admin.map.updated', 'updated') }} {{ summary.updated_at }}</span>
+        <span v-if="summary.updated_at" class="text-xs text-slate-400">{{ $t('admin.map.updated', 'updated') }} {{ formatDate(summary.updated_at) }}</span>
         <a href="/map" target="_blank" class="text-sm text-sky-700 underline">{{ $t('admin.map.open_guest_map', 'Open guest map') }}</a>
       </template>
       <span v-else class="text-sm text-slate-500">{{ $t('admin.map.empty', 'No map yet — guests see a "map isn\'t ready" message.') }}</span>

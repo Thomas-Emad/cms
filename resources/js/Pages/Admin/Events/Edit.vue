@@ -5,6 +5,7 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { useI18n } from '@/i18n';
 import type { HotelEvent } from '@/types/content';
+import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
 
@@ -19,8 +20,8 @@ const form = useForm({
   title: props.event?.title ?? '',
   slug: props.event?.slug ?? '',
   description: props.event?.description ?? '',
-  start_date: props.event?.start_date ?? '',
-  end_date: props.event?.end_date ?? '',
+  start_date: formatDate(props.event?.start_date, true),
+  end_date: formatDate(props.event?.end_date, true),
   start_time: props.event?.start_time ?? '',
   location: props.event?.location ?? '',
   capacity: props.event?.capacity ?? '',

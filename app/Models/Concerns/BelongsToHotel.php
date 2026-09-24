@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 trait BelongsToHotel
 {
+    use FormatsDates;
+
     public static function bootBelongsToHotel(): void
     {
         static::addGlobalScope('hotel', function (Builder $builder) {

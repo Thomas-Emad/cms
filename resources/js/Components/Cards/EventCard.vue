@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import type { HotelEvent } from '@/types/content';
+import { formatDate } from '@/lib/formatters';
 
 defineProps<{
     event: Pick<HotelEvent, 'title' | 'slug' | 'start_date' | 'start_time' | 'location' | 'cover_image_url'>;
@@ -22,7 +23,7 @@ defineProps<{
         </div>
         <div class="min-w-0">
             <p class="text-xs uppercase tracking-wide text-slate-400">
-                {{ event.start_date }}<span v-if="event.start_time"> · {{ event.start_time }}</span>
+                {{ formatDate(event.start_date) }}<span v-if="event.start_time"> · {{ event.start_time }}</span>
             </p>
             <h3 class="mt-0.5 text-lg" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)">
                 {{ event.title }}
