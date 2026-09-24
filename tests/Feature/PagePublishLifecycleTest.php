@@ -21,7 +21,7 @@ class PagePublishLifecycleTest extends TestCase
         parent::setUp();
 
         $this->hotel = Hotel::create([
-            'name' => 'Test Hotel', 'slug' => 'test-hotel-' . uniqid(), 'status' => 'active',
+            'name' => 'Test Hotel', 'slug' => 'test-hotel-'.uniqid(), 'status' => 'active',
         ]);
     }
 

@@ -126,7 +126,7 @@ const isEditorCanvas = props.mode === 'edit';
                     v-reveal-mount="isEditorCanvas ? undefined : { delay: 820 }"
                 >
                     {{ props.props.button_text }}
-                    <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                    <span class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
                 </a>
             </div>
         </div>

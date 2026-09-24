@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToHotel;
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Service extends Model
 {
-    use BelongsToHotel;
+    use BelongsToHotel, HasTranslations;
+
+    protected array $translatable = [
+        'name', 'description', 'availability',
+    ];
 
     protected $fillable = [
         'hotel_id', 'name', 'slug', 'description', 'icon', 'availability',

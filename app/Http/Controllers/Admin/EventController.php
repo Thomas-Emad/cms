@@ -35,7 +35,7 @@ class EventController extends Controller
     {
         Event::create($request->validated());
 
-        return redirect()->route('admin.events.index')->with('success', 'Event created.');
+        return redirect()->route('admin.events.index')->with('success', __('admin.messages.event_created'));
     }
 
     public function edit(Event $event): Response
@@ -49,7 +49,7 @@ class EventController extends Controller
     {
         $event->update($request->validated());
 
-        return redirect()->route('admin.events.index')->with('success', 'Event updated.');
+        return redirect()->route('admin.events.index')->with('success', __('admin.messages.event_updated'));
     }
 
     public function destroy(Event $event): RedirectResponse
@@ -58,6 +58,6 @@ class EventController extends Controller
 
         $event->delete();
 
-        return redirect()->route('admin.events.index')->with('success', 'Event deleted.');
+        return redirect()->route('admin.events.index')->with('success', __('admin.messages.event_deleted'));
     }
 }

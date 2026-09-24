@@ -6,7 +6,7 @@ const emit = defineEmits<{ (e: 'select', id: string): void }>();
 </script>
 
 <template>
-    <div class="no-scrollbar flex gap-3 overflow-x-auto py-1 pr-2" role="tablist" aria-label="Categories" data-testid="chips">
+    <div class="no-scrollbar flex gap-3 overflow-x-auto py-1 pe-2" role="tablist" aria-label="Categories" data-testid="chips">
         <button
             v-for="g in groups"
             :key="g.id"
@@ -18,7 +18,7 @@ const emit = defineEmits<{ (e: 'select', id: string): void }>();
             :style="{ transitionTimingFunction: 'var(--ease-spring)' }"
             @click="emit('select', g.id)"
         >
-            {{ g.label }}
+            {{ $t('map.groups.' + g.id) || g.label }}
         </button>
     </div>
 </template>

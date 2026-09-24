@@ -50,16 +50,16 @@ function formatDate(value: string): string {
   <div>
     <div class="flex items-start justify-between mb-6">
       <div>
-        <h1 class="text-xl font-semibold text-slate-800">Pages</h1>
+        <h1 class="text-xl font-semibold text-slate-800">{{ $t('admin.pages.title', 'Pages') }}</h1>
         <p class="mt-1 text-sm text-slate-500">
-          Build and manage the pages that make up your hotel's guest website.
+          {{ $t('admin.pages.subtitle', "Build and manage the pages that make up your hotel's guest website.") }}
         </p>
       </div>
       <Link
         href="/admin/pages/create"
         class="shrink-0 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900"
       >
-        + Create Page
+        {{ $t('admin.pages.create', '+ Create Page') }}
       </Link>
     </div>
 
@@ -67,7 +67,7 @@ function formatDate(value: string): string {
       <input
         v-model="search"
         type="text"
-        placeholder="Search pages by name or slug…"
+        :placeholder="$t('admin.pages.search_placeholder', 'Search pages by name or slug…')"
         class="w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm"
       />
     </div>
@@ -76,15 +76,15 @@ function formatDate(value: string): string {
       v-if="!pages.data.length && !filters.q"
       class="rounded-lg border border-dashed border-slate-300 bg-white p-16 text-center"
     >
-      <p class="text-slate-600 font-medium">No pages yet</p>
+      <p class="text-slate-600 font-medium">{{ $t('admin.pages.empty_title', 'No pages yet') }}</p>
       <p class="mt-1 text-sm text-slate-400">
-        Create your first page to start building your hotel website.
+        {{ $t('admin.pages.empty_desc', 'Create your first page to start building your hotel website.') }}
       </p>
       <Link
         href="/admin/pages/create"
         class="mt-4 inline-block rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900"
       >
-        + Create Page
+        {{ $t('admin.pages.create', '+ Create Page') }}
       </Link>
     </div>
 
@@ -92,17 +92,17 @@ function formatDate(value: string): string {
       v-else-if="!pages.data.length && filters.q"
       class="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center text-sm text-slate-400"
     >
-      No pages match "{{ filters.q }}".
+      {{ $t('admin.pages.no_match', 'No pages match') }} "{{ filters.q }}".
     </div>
 
     <div v-else class="overflow-hidden rounded-lg border border-slate-200 bg-white">
       <table class="w-full text-sm">
-        <thead class="bg-slate-50 text-left text-xs uppercase text-slate-400">
+        <thead class="bg-slate-50 text-start text-xs uppercase text-slate-400">
           <tr>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Slug</th>
-            <th class="px-4 py-2">Status</th>
-            <th class="px-4 py-2">Updated</th>
+            <th class="px-4 py-2 text-start">{{ $t('common.name') }}</th>
+            <th class="px-4 py-2 text-start">{{ $t('admin.pages.slug', 'Slug') }}</th>
+            <th class="px-4 py-2 text-start">{{ $t('common.status') }}</th>
+            <th class="px-4 py-2 text-start">{{ $t('admin.pages.updated', 'Updated') }}</th>
             <th class="px-4 py-2"></th>
           </tr>
         </thead>
@@ -112,10 +112,10 @@ function formatDate(value: string): string {
               {{ pageRow.name }}
               <span
                 v-if="pageRow.is_home"
-                class="ml-2 rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-600"
-                title="This is the homepage"
+                class="ms-2 rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-600"
+                :title="$t('admin.pages.is_home_tooltip', 'This is the homepage')"
               >
-                Home
+                {{ $t('common.home') }}
               </span>
             </td>
             <td class="px-4 py-3 text-slate-500 font-mono text-xs">
@@ -123,24 +123,24 @@ function formatDate(value: string): string {
             </td>
             <td class="px-4 py-3">
               <span class="rounded-full px-2 py-0.5 text-xs" :class="statusBadgeClass(pageRow.status)">
-                {{ pageRow.status }}
+                {{ $t(`admin.status.${pageRow.status}`, pageRow.status) }}
               </span>
             </td>
             <td class="px-4 py-3 text-slate-400">{{ formatDate(pageRow.updated_at) }}</td>
-            <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+            <td class="px-4 py-3 text-end space-x-3 rtl:space-x-reverse whitespace-nowrap">
               <Link
                 :href="`/admin/pages/${pageRow.id}/builder`"
                 class="font-medium hover:underline"
                 style="color: var(--color-primary, #1F4B5A)"
               >
-                Open Builder
+                {{ $t('admin.pages.open_builder', 'Open Builder') }}
               </Link>
               <Link
                 v-if="pageRow.status !== 'draft'"
                 :href="`/admin/pages/${pageRow.id}/preview`"
                 class="text-slate-500 hover:text-slate-800"
               >
-                Preview
+                {{ $t('admin.pages.preview', 'Preview') }}
               </Link>
             </td>
           </tr>

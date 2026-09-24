@@ -41,7 +41,7 @@ class RoomController extends Controller
 
         // Straight to the edit screen: photos can only be attached once the room exists.
         return redirect()->route('admin.rooms.edit', $room)
-            ->with('success', 'Room created. You can now add photos.');
+            ->with('success', __('admin.messages.room_created'));
     }
 
     public function edit(Room $room): Response
@@ -60,7 +60,7 @@ class RoomController extends Controller
         $this->authorize('update', $room);
         $room->update($request->validated());
 
-        return redirect()->route('admin.rooms.edit', $room)->with('success', 'Room saved.');
+        return redirect()->route('admin.rooms.edit', $room)->with('success', __('admin.messages.room_saved'));
     }
 
     public function destroy(Room $room): RedirectResponse
@@ -68,6 +68,6 @@ class RoomController extends Controller
         $this->authorize('delete', $room);
         $room->delete();
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Room deleted.');
+        return redirect()->route('admin.rooms.index')->with('success', __('admin.messages.room_deleted'));
     }
 }

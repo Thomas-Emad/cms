@@ -5,8 +5,11 @@ namespace Tests\Feature;
 use App\Models\Facility;
 use App\Models\Hotel;
 use App\Models\HotelMap;
+use App\Models\Page;
+use App\Models\PageVersion;
 use App\Models\User;
 use App\Services\Map\MapDataValidator;
+use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -21,18 +24,21 @@ class HotelMapTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
+
     protected User $adminA;
+
     protected array $demo;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
         $this->adminA = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin A', 'email' => 'a-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin A', 'email' => 'a-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
         $this->demo = json_decode(file_get_contents(base_path('database/data/demo-hotel-map.json')), true);
     }
@@ -40,7 +46,7 @@ class HotelMapTest extends TestCase
     /** @test */
     public function the_demo_map_file_passes_validation_with_no_warnings(): void
     {
-        $r = (new MapDataValidator())->validate($this->demo);
+        $r = (new MapDataValidator)->validate($this->demo);
         $this->assertSame([], $r['errors']);
         $this->assertSame([], $r['warnings']);
     }
@@ -87,14 +93,14 @@ class HotelMapTest extends TestCase
         HotelMap::create(['hotel_id' => $this->hotelB->id, 'data' => $this->demo]);
 
         // With hotel A current, hotel B's map is invisible (tenant global scope).
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         $this->assertNull(HotelMap::query()->first());
     }
 
     /** @test */
     public function the_guest_map_page_gets_null_when_no_map_exists_and_the_map_when_it_does(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
 
         $this->get('/map')->assertInertia(fn ($page) => $page->component('Guest/Map')->where('map', null));
 
@@ -105,7 +111,7 @@ class HotelMapTest extends TestCase
     /** @test */
     public function locations_with_a_ref_get_content_from_published_facilities_only(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Serenity Spa', 'slug' => 'serenity-spa', 'short_description' => 'Real spa text', 'status' => 'published']);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Fitness Center', 'slug' => 'fitness-center', 'short_description' => 'Draft text', 'status' => 'draft']);
         HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $this->demo]);
@@ -130,7 +136,7 @@ class HotelMapTest extends TestCase
     /** @test */
     public function the_builder_page_gets_the_map_and_this_hotels_content_but_never_another_hotels(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Serenity Spa', 'slug' => 'serenity-spa', 'status' => 'published']);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Secret Draft', 'slug' => 'secret-draft', 'status' => 'draft']);
         Facility::create(['hotel_id' => $this->hotelB->id, 'name' => 'Other Hotel Pool', 'slug' => 'other-pool', 'status' => 'published']);
@@ -198,12 +204,12 @@ class HotelMapTest extends TestCase
     /** @test */
     public function a_place_can_link_to_a_published_page_builder_page_but_never_a_draft(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         // A guest-visible page = status "published" AND a published version (see Page::scopePublished).
-        $spaMenu = \App\Models\Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Spa Menu', 'slug' => 'spa-menu', 'status' => 'draft']);
-        $version = \App\Models\PageVersion::create(['page_id' => $spaMenu->id, 'sections' => [], 'state' => 'published', 'published_at' => now()]);
+        $spaMenu = Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Spa Menu', 'slug' => 'spa-menu', 'status' => 'draft']);
+        $version = PageVersion::create(['page_id' => $spaMenu->id, 'sections' => [], 'state' => 'published', 'published_at' => now()]);
         $spaMenu->update(['status' => 'published', 'published_version_id' => $version->id]);
-        \App\Models\Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Draft', 'slug' => 'draft-page', 'status' => 'draft']);
+        Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Draft', 'slug' => 'draft-page', 'status' => 'draft']);
 
         $map = $this->demo;
         $map['locations'][0]['ref'] = ['type' => 'page', 'slug' => 'spa-menu'];
@@ -220,7 +226,7 @@ class HotelMapTest extends TestCase
     /** @test */
     public function an_address_typed_on_the_place_wins_over_the_linked_content(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Serenity Spa', 'slug' => 'serenity-spa', 'status' => 'published']);
         $map = $this->demo;
         $spa = array_search('spa', array_column($map['locations'], 'id'));
@@ -233,7 +239,7 @@ class HotelMapTest extends TestCase
     /** @test */
     public function a_link_on_a_place_with_no_ref_still_works(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         $map = $this->demo;
         $map['locations'][2]['link'] = 'https://example.com/menu';
         HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $map]);
@@ -254,7 +260,7 @@ class HotelMapTest extends TestCase
     /** @test */
     public function map_place_query_is_passed_through_so_links_can_open_the_map_on_a_place(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         HotelMap::create(['hotel_id' => $this->hotelA->id, 'data' => $this->demo]);
 
         $this->get('/map?place=spa')->assertInertia(fn ($page) => $page->where('place', 'spa'));
@@ -266,7 +272,7 @@ class HotelMapTest extends TestCase
     {
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Live Spa', 'slug' => 'live-spa', 'status' => 'published']);
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Draft Pool', 'slug' => 'draft-pool', 'status' => 'draft']);
-        \App\Models\Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Offers', 'slug' => 'offers', 'status' => 'draft']);
+        Page::create(['hotel_id' => $this->hotelA->id, 'name' => 'Offers', 'slug' => 'offers', 'status' => 'draft']);
 
         $this->actingAs($this->adminA)->get('/admin/map/builder')->assertInertia(function ($page) {
             $c = collect($page->toArray()['props']['content'])->keyBy('slug');

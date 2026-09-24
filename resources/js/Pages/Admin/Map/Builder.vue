@@ -9,6 +9,7 @@ import { formatDistance, formatDuration } from '@/Map/routing';
 import type { AreaKind, HotelMapData, LocationCategory, NodeType, Route } from '@/Map/types';
 import { Link, router } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useI18n } from '@/i18n';
 
 defineOptions({ layout: AdminLayout });
 
@@ -20,6 +21,7 @@ const props = defineProps<{
   flash_ok: string | null;
 }>();
 
+const { t } = useI18n();
 const b = useMapBuilder(props.map);
 const camera = useCamera();
 const saving = ref(false);
@@ -64,7 +66,7 @@ function addFloor() {
 }
 function removeFloor() {
   if (b.floors.value.length <= 1) return;
-  if (confirm(`Delete "${b.floor.value.name}" and everything on it (rooms, walkways, places)? You can undo this.`)) b.deleteFloor(b.floorId.value);
+  if (confirm(`${t('admin.map.delete_floor_confirm', 'Delete')} "${b.floor.value.name}" ${t('admin.map.delete_floor_details', 'and everything on it (rooms, walkways, places)? You can undo this.')}`)) b.deleteFloor(b.floorId.value);
 }
 const floorsTopDown = computed(() => [...b.floors.value].reverse());
 
@@ -140,7 +142,7 @@ onMounted(() => {
   window.addEventListener('keydown', onKey);
   window.addEventListener('beforeunload', beforeUnload);
   offRouter = router.on('before', (event) => {
-    if (event.detail.visit.method === 'get' && b.dirty.value && !confirm('You have unsaved changes to the map. Leave without saving?')) event.preventDefault();
+    if (event.detail.visit.method === 'get' && b.dirty.value && !confirm(t('admin.map.unsaved_leave_confirm', 'You have unsaved changes to the map. Leave without saving?'))) event.preventDefault();
   });
 });
 onBeforeUnmount(() => {

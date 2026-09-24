@@ -50,7 +50,7 @@ class MapContentLinker
             if ($model) { // unpublished or missing content is simply not linked
                 $l['image'] = ! empty($l['image']) ? $l['image'] : ($type === 'page' ? null : $model->cover_image_url);
                 $l['description'] = ! empty($l['description']) ? $l['description'] : ($type === 'page' ? null : ($model->getAttribute('short_description') ?: $model->getAttribute('description')));
-                $l['details_url'] = self::URL[$type] . $model->slug;
+                $l['details_url'] = self::URL[$type].$model->slug;
             }
             // An address typed on the place itself always wins.
             if (! empty($l['link'])) {

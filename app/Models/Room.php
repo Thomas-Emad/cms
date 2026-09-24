@@ -4,12 +4,17 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToHotel;
 use App\Models\Concerns\HasMedia;
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    use BelongsToHotel, HasMedia;
+    use BelongsToHotel, HasMedia, HasTranslations;
+
+    protected array $translatable = [
+        'name', 'short_description', 'description', 'bed_type', 'view',
+    ];
 
     protected $fillable = [
         'hotel_id', 'name', 'slug', 'short_description', 'description',

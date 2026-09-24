@@ -5,14 +5,14 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\FacilityController as AdminFacilityController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\InfoEntryController;
 use App\Http\Controllers\Admin\LayoutController as AdminLayoutController;
 use App\Http\Controllers\Admin\MapController as AdminMapController;
-use App\Http\Controllers\Admin\InfoEntryController;
 use App\Http\Controllers\Admin\MediaController;
-use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\OfferController as AdminOfferController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
+use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Guest\EventController as GuestEventController;
 use App\Http\Controllers\Guest\ExperienceController as GuestExperienceController;
@@ -20,12 +20,15 @@ use App\Http\Controllers\Guest\FacilityController as GuestFacilityController;
 use App\Http\Controllers\Guest\GalleryController as GuestGalleryController;
 use App\Http\Controllers\Guest\InfoPageController;
 use App\Http\Controllers\Guest\MapController as GuestMapController;
-use App\Http\Controllers\Guest\RoomController as GuestRoomController;
 use App\Http\Controllers\Guest\OfferController as GuestOfferController;
 use App\Http\Controllers\Guest\PageController as GuestPageController;
 use App\Http\Controllers\Guest\RestaurantController as GuestRestaurantController;
+use App\Http\Controllers\Guest\RoomController as GuestRoomController;
 use App\Http\Controllers\Guest\ServiceController as GuestServiceController;
+use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/locale', [LocaleController::class, 'update'])->name('locale.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -143,4 +146,4 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
     });
 
 // Minimal auth (login/logout only) - see routes/auth.php
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

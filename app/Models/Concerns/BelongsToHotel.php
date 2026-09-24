@@ -24,7 +24,7 @@ trait BelongsToHotel
             $currentHotel = app(CurrentHotel::class);
 
             if ($currentHotel->has()) {
-                $builder->where($builder->getModel()->getTable() . '.hotel_id', $currentHotel->id());
+                $builder->where($builder->getModel()->getTable().'.hotel_id', $currentHotel->id());
             }
         });
 

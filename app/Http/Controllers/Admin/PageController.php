@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\Pages\CreatePageAction;
 use App\Actions\Pages\PublishPageAction;
 use App\Actions\Pages\SaveDraftAction;
-use App\Http\Controllers\Controller;
 use App\Actions\Pages\UpdatePageLayoutAction;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PageSectionsRequest;
 use App\Http\Requests\Admin\StorePageRequest;
 use App\Http\Requests\Admin\UpdatePageLayoutRequest;
@@ -69,7 +69,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.builder', $page)
-            ->with('success', 'Page created. Start building below.');
+            ->with('success', __('admin.messages.page_created'));
     }
 
     /**
@@ -93,7 +93,7 @@ class PageController extends Controller
             'context' => [
                 'type' => 'page',
                 'entityName' => $page->name,
-                'backLabel' => 'Pages',
+                'backLabel' => __('nav.pages'),
                 'backHref' => '/admin/pages',
                 'apiBase' => "/admin/pages/{$page->id}",
             ],
@@ -104,7 +104,7 @@ class PageController extends Controller
     {
         $action->execute($page, $request->validated('sections'));
 
-        return back()->with('success', 'Draft saved.');
+        return back()->with('success', __('admin.messages.draft_saved'));
     }
 
     /**
@@ -116,7 +116,7 @@ class PageController extends Controller
     {
         $action->execute($page, $request->validated('layout'));
 
-        return back()->with('success', 'Layout updated.');
+        return back()->with('success', __('admin.messages.layout_updated'));
     }
 
     public function publish(Page $page, PublishPageAction $action): RedirectResponse
@@ -127,7 +127,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Page published.');
+            ->with('success', __('admin.messages.page_published'));
     }
 
     /**

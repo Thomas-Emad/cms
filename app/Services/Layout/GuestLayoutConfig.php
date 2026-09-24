@@ -12,14 +12,16 @@ namespace App\Services\Layout;
 final class GuestLayoutConfig
 {
     public const TEMPLATES = ['classic', 'tv'];
+
     public const TILE_SIZES = ['small', 'medium', 'large'];
+
     public const MAX_ITEMS = 12;
 
     public static function defaults(): array
     {
         static $cache = null;
 
-        return $cache ??= json_decode((string) file_get_contents(__DIR__ . '/../../../resources/js/Layouts/guest/layout-defaults.json'), true);
+        return $cache ??= json_decode((string) file_get_contents(__DIR__.'/../../../resources/js/Layouts/guest/layout-defaults.json'), true);
     }
 
     /** Length in characters (not bytes); works with or without the mbstring extension. */
@@ -57,7 +59,7 @@ final class GuestLayoutConfig
 
         $items = $in['items'] ?? null;
         if (! is_array($items) || ! array_is_list($items) || count($items) < 1 || count($items) > self::MAX_ITEMS) {
-            $e[] = 'Add between 1 and ' . self::MAX_ITEMS . ' menu items.';
+            $e[] = 'Add between 1 and '.self::MAX_ITEMS.' menu items.';
 
             return $e;
         }
@@ -67,6 +69,7 @@ final class GuestLayoutConfig
             $n = $i + 1;
             if (! is_array($it)) {
                 $e[] = "Menu item $n is invalid.";
+
                 continue;
             }
             $href = $it['href'] ?? null;
@@ -130,7 +133,7 @@ final class GuestLayoutConfig
                 $out[$k] = trim($raw[$k]);
             }
         }
-        if (isset($raw['items']) && self::validate(array_merge($d, $raw, ['template' => 'classic']))  === []) {
+        if (isset($raw['items']) && self::validate(array_merge($d, $raw, ['template' => 'classic'])) === []) {
             $out['items'] = array_map(fn ($it) => [
                 'href' => $it['href'],
                 'label' => trim($it['label']),

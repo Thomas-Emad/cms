@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Actions\Pages\CreatePageAction;
+use App\Actions\Pages\PublishPageAction;
 use App\Models\Facility;
 use App\Models\Hotel;
 use App\Models\User;
@@ -23,16 +24,17 @@ class BuilderPlumbingTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotel;
+
     protected User $admin;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotel = Hotel::create(['name' => 'Test Hotel', 'slug' => 'test-hotel-' . uniqid(), 'status' => 'active']);
+        $this->hotel = Hotel::create(['name' => 'Test Hotel', 'slug' => 'test-hotel-'.uniqid(), 'status' => 'active']);
         $this->admin = User::create([
             'hotel_id' => $this->hotel->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin', 'email' => 'admin-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin', 'email' => 'admin-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
     }
 
@@ -64,7 +66,7 @@ class BuilderPlumbingTest extends TestCase
             ['id' => 'hero-1', 'type' => 'hero', 'props' => ['title' => 'Published Title'], 'settings' => []],
         ]);
 
-        app(\App\Actions\Pages\PublishPageAction::class)->execute($page->fresh());
+        app(PublishPageAction::class)->execute($page->fresh());
 
         // Edit the draft AFTER publishing.
         $this->actingAs($this->admin)->putJson("/admin/pages/{$page->id}/draft", [
@@ -146,7 +148,7 @@ class BuilderPlumbingTest extends TestCase
     /** @test */
     public function a_hotel_admin_cannot_open_another_hotels_page_in_the_builder(): void
     {
-        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-' . uniqid(), 'status' => 'active']);
+        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-'.uniqid(), 'status' => 'active']);
         $otherPage = app(CreatePageAction::class)->execute($otherHotel, ['name' => 'Their Homepage', 'slug' => '', 'is_home' => true]);
 
         $response = $this->actingAs($this->admin)->get("/admin/pages/{$otherPage->id}/builder");
@@ -157,7 +159,7 @@ class BuilderPlumbingTest extends TestCase
     /** @test */
     public function a_hotel_admin_cannot_save_a_draft_for_another_hotels_page(): void
     {
-        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-' . uniqid(), 'status' => 'active']);
+        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-'.uniqid(), 'status' => 'active']);
         $otherPage = app(CreatePageAction::class)->execute($otherHotel, ['name' => 'Their Homepage', 'slug' => '', 'is_home' => true]);
 
         $response = $this->actingAs($this->admin)->putJson("/admin/pages/{$otherPage->id}/draft", [
@@ -203,7 +205,7 @@ class BuilderPlumbingTest extends TestCase
     /** @test */
     public function preview_never_leaks_another_hotels_facilities(): void
     {
-        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-' . uniqid(), 'status' => 'active']);
+        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-'.uniqid(), 'status' => 'active']);
         Facility::create(['hotel_id' => $otherHotel->id, 'name' => 'Other Hotel Spa', 'slug' => 'other-hotel-spa', 'category' => 'wellness', 'status' => 'published']);
         Facility::create(['hotel_id' => $this->hotel->id, 'name' => 'My Hotel Spa', 'slug' => 'my-hotel-spa', 'category' => 'wellness', 'status' => 'published']);
 
@@ -227,7 +229,7 @@ class BuilderPlumbingTest extends TestCase
         ], [
             ['id' => 'hero-1', 'type' => 'hero', 'props' => ['title' => 'Original Published Title'], 'settings' => []],
         ]);
-        app(\App\Actions\Pages\PublishPageAction::class)->execute($page->fresh());
+        app(PublishPageAction::class)->execute($page->fresh());
 
         // Save (not publish) a draft edit via the Builder's save endpoint.
         $this->actingAs($this->admin)->putJson("/admin/pages/{$page->id}/draft", [

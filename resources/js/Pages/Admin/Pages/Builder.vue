@@ -8,8 +8,11 @@ import SettingsPanel from '@/PageBuilder/SettingsPanel.vue';
 import { usePageBuilderStore } from '@/PageBuilder/store';
 import type { SectionContext } from '@/PageBuilder/registry';
 import type { Section } from '@/types/pageBuilder';
+import { useLocale } from '@/i18n';
 
 defineOptions({ layout: AdminLayout });
+
+const { isRtl } = useLocale();
 
 interface BuilderContext {
   type: SectionContext;
@@ -63,36 +66,37 @@ function onKeydown(e: KeyboardEvent) {
   <div class="flex flex-col h-[calc(100vh-3.5rem)] -m-6" tabindex="0" @keydown="onKeydown">
     <div class="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2">
       <div class="flex items-center gap-3">
-        <Link :href="props.context.backHref" class="text-sm text-slate-400 hover:text-slate-700">
-          ← {{ props.context.backLabel }}
+        <Link :href="props.context.backHref" class="text-sm text-slate-400 hover:text-slate-700 flex items-center gap-1">
+          <span>{{ isRtl ? '→' : '←' }}</span>
+          <span>{{ props.context.backLabel }}</span>
         </Link>
         <span class="w-px h-5 bg-slate-200" />
 
         <div class="leading-tight">
           <h1 class="text-sm font-semibold text-slate-800">{{ props.context.entityName }}</h1>
-          <p v-if="isEntityContext" class="text-xs text-slate-400">Guest Page</p>
+          <p v-if="isEntityContext" class="text-xs text-slate-400">{{ $t('page_builder.guest_page') }}</p>
         </div>
 
         <span
           class="rounded-full px-2 py-0.5 text-xs"
           :class="props.page.status === 'published' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'"
         >
-          {{ props.page.status }}
+          {{ props.page.status === 'published' ? $t('common.status.published') : $t('common.status.draft') }}
         </span>
-        <span v-if="store.state.isDirty" class="text-xs text-amber-500">Unsaved changes</span>
+        <span v-if="store.state.isDirty" class="text-xs text-amber-500">{{ $t('page_builder.unsaved_changes') }}</span>
       </div>
 
       <div class="flex items-center gap-2">
         <label v-if="!isEntityContext" class="flex items-center gap-1.5 text-xs text-slate-500">
-          Layout
+          {{ $t('page_builder.layout') }}
           <select
             v-model="layout"
             :disabled="isSavingLayout"
             class="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700"
             @change="onLayoutChange"
           >
-            <option value="scroll">Scrollable</option>
-            <option value="fullscreen">Full screen (no scroll)</option>
+            <option value="scroll">{{ $t('page_builder.scrollable') }}</option>
+            <option value="fullscreen">{{ $t('page_builder.fullscreen') }}</option>
           </select>
         </label>
 
@@ -101,20 +105,20 @@ function onKeydown(e: KeyboardEvent) {
         <button
           type="button"
           :disabled="!store.canUndo.value"
-          title="Undo (Ctrl/Cmd+Z)"
+          :title="`${$t('page_builder.undo')} (Ctrl/Cmd+Z)`"
           class="rounded-md border border-slate-300 px-2.5 py-1.5 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
           @click="store.undo()"
         >
-          ↶ Undo
+          ↶ {{ $t('page_builder.undo') }}
         </button>
         <button
           type="button"
           :disabled="!store.canRedo.value"
-          title="Redo (Ctrl/Cmd+Shift+Z)"
+          :title="`${$t('page_builder.redo')} (Ctrl/Cmd+Shift+Z)`"
           class="rounded-md border border-slate-300 px-2.5 py-1.5 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
           @click="store.redo()"
         >
-          ↷ Redo
+          ↷ {{ $t('page_builder.redo') }}
         </button>
 
         <span class="w-px h-5 bg-slate-200 mx-1" />
@@ -123,7 +127,7 @@ function onKeydown(e: KeyboardEvent) {
           :href="`${props.context.apiBase}/preview`"
           class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
         >
-          Preview
+          {{ $t('page_builder.preview') }}
         </Link>
         <button
           type="button"
@@ -131,7 +135,7 @@ function onKeydown(e: KeyboardEvent) {
           class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-50"
           @click="store.saveDraft()"
         >
-          {{ store.state.isSaving ? 'Saving…' : 'Save Draft' }}
+          {{ store.state.isSaving ? $t('common.saving') : $t('page_builder.save_draft') }}
         </button>
         <button
           type="button"
@@ -139,7 +143,7 @@ function onKeydown(e: KeyboardEvent) {
           style="background: var(--color-primary, #1F4B5A)"
           @click="store.publish()"
         >
-          Publish
+          {{ $t('page_builder.publish') }}
         </button>
       </div>
     </div>

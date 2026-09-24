@@ -17,14 +17,15 @@ class SectionResolutionTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
     }
 
     /** @test */
@@ -134,7 +135,7 @@ class SectionResolutionTest extends TestCase
     {
         $admin = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin', 'email' => 'admin-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin', 'email' => 'admin-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
 
         Facility::create(['hotel_id' => $this->hotelA->id, 'name' => 'Wellness Spa', 'slug' => 'wellness-spa', 'category' => 'wellness', 'status' => 'published']);
@@ -156,7 +157,7 @@ class SectionResolutionTest extends TestCase
     {
         $admin = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin', 'email' => 'admin2-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin', 'email' => 'admin2-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
 
         $page = app(CreatePageAction::class)->execute($this->hotelA, ['name' => 'Home', 'slug' => '', 'is_home' => true]);

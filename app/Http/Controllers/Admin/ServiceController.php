@@ -31,7 +31,7 @@ class ServiceController extends Controller
     {
         Service::create($request->validated());
 
-        return redirect()->route('admin.services.index')->with('success', 'Service created.');
+        return redirect()->route('admin.services.index')->with('success', __('admin.messages.service_created'));
     }
 
     public function edit(Service $service): Response
@@ -45,7 +45,7 @@ class ServiceController extends Controller
     {
         $service->update($request->validated());
 
-        return redirect()->route('admin.services.index')->with('success', 'Service updated.');
+        return redirect()->route('admin.services.index')->with('success', __('admin.messages.service_updated'));
     }
 
     public function destroy(Service $service): RedirectResponse
@@ -54,6 +54,6 @@ class ServiceController extends Controller
 
         $service->delete();
 
-        return redirect()->route('admin.services.index')->with('success', 'Service deleted.');
+        return redirect()->route('admin.services.index')->with('success', __('admin.messages.service_deleted'));
     }
 }

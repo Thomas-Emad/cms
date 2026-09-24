@@ -33,11 +33,11 @@ const btn = 'flex h-12 items-center justify-center rounded-full px-4 text-base f
                 {{ CATEGORY_META[loc.category].icon }}
             </div>
             <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.45))" />
-            <button type="button" class="absolute right-3 top-3 h-10 w-10 rounded-full bg-black/40 text-xl leading-none text-white backdrop-blur-sm active:scale-90" aria-label="Close" data-testid="sheet-close" @click="emit('close')">×</button>
+            <button type="button" class="absolute end-3 top-3 h-10 w-10 rounded-full bg-black/40 text-xl leading-none text-white backdrop-blur-sm active:scale-90" aria-label="Close" data-testid="sheet-close" @click="emit('close')">×</button>
         </div>
 
         <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-4" data-testid="sheet-body">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em]" style="color: #8a6f3c">{{ floorName }} · {{ CATEGORY_META[loc.category].label }}</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em]" style="color: #8a6f3c">{{ floorName }} · {{ $t('map.categories.' + loc.category) || CATEGORY_META[loc.category].label }}</p>
             <h2 class="mt-0.5 text-2xl leading-tight text-slate-900" style="font-family: var(--font-display)">{{ loc.name }}</h2>
 
             <p v-if="loc.description" class="mt-2 text-base leading-relaxed text-slate-600" :class="{ 'line-clamp-2': !expanded }">{{ loc.description }}</p>
@@ -46,36 +46,36 @@ const btn = 'flex h-12 items-center justify-center rounded-full px-4 text-base f
                 <div>
                     <dl class="space-y-2 pt-4 text-base">
                         <div v-if="loc.opening_hours" class="flex justify-between gap-4 border-t border-black/5 pt-3">
-                            <dt class="text-slate-500">Opening hours</dt>
+                            <dt class="text-slate-500">{{ $t('restaurants.opening_hours') }}</dt>
                             <dd class="font-medium text-slate-800">{{ loc.opening_hours }}</dd>
                         </div>
                         <div class="flex justify-between gap-4 border-t border-black/5 pt-3">
-                            <dt class="text-slate-500">Location</dt>
+                            <dt class="text-slate-500">{{ $t('common.location') }}</dt>
                             <dd class="font-medium text-slate-800">{{ floorName }}</dd>
                         </div>
                     </dl>
                 </div>
             </div>
 
-            <p v-if="loc.opening_hours && !expanded" class="mt-2 pb-2 text-base text-slate-500">Open {{ loc.opening_hours }}</p>
+            <p v-if="loc.opening_hours && !expanded" class="mt-2 pb-2 text-base text-slate-500">{{ loc.opening_hours }}</p>
             <div class="h-2" />
         </div>
 
         <!-- pinned actions -->
         <div class="shrink-0 px-5 pb-3 pt-2">
             <div class="grid grid-cols-2 gap-3">
-                <Link v-if="internal" :href="detailsUrl!" :class="btn" class="border border-[#183c2d]/25 text-[#183c2d]" data-testid="view-details" data-kind="page">View Details</Link>
-                <a v-else-if="detailsUrl" :href="detailsUrl" target="_blank" rel="noopener" :class="btn" class="border border-[#183c2d]/25 text-[#183c2d]" data-testid="view-details" data-kind="external">View Details</a>
+                <Link v-if="internal" :href="detailsUrl!" :class="btn" class="border border-[#183c2d]/25 text-[#183c2d]" data-testid="view-details" data-kind="page">{{ $t('common.explore') }}</Link>
+                <a v-else-if="detailsUrl" :href="detailsUrl" target="_blank" rel="noopener" :class="btn" class="border border-[#183c2d]/25 text-[#183c2d]" data-testid="view-details" data-kind="external">{{ $t('common.explore') }}</a>
                 <button v-else type="button" :class="btn" class="border border-[#183c2d]/25 text-[#183c2d]" data-testid="view-details" data-kind="expand" @click="emit('toggle')">
-                    {{ expanded ? 'Show Less' : 'More info' }}
+                    {{ expanded ? '−' : '+' }}
                 </button>
-                <button type="button" :class="btn" class="bg-[#183c2d] text-white" data-testid="get-directions" @click="emit('directions')">Get Directions</button>
+                <button type="button" :class="btn" class="bg-[#183c2d] text-white" data-testid="get-directions" @click="emit('directions')">{{ $t('map.directions') }}</button>
             </div>
 
             <button v-if="!isHere" type="button" class="mt-1 flex h-10 w-full items-center justify-center gap-2 rounded-full text-sm font-medium text-[#2b6fd6] active:scale-95" data-testid="set-here" @click="emit('here')">
-                <span aria-hidden="true">●</span> I'm here — set as my starting point
+                <span aria-hidden="true">●</span> {{ $t('map.set_start') }}
             </button>
-            <p v-else class="mt-1 flex h-10 items-center justify-center gap-2 text-sm font-medium text-[#2b6fd6]"><span aria-hidden="true">●</span> You are here</p>
+            <p v-else class="mt-1 flex h-10 items-center justify-center gap-2 text-sm font-medium text-[#2b6fd6]"><span aria-hidden="true">●</span> {{ $t('map.tap_hint') }}</p>
         </div>
     </article>
 </template>

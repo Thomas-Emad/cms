@@ -47,9 +47,15 @@ function updatePadding() {
     const m = box.value;
     const gap = 16;
     const rightSide = m.floorW + 24 + gap; // floor selector column
+    const isRtl = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+    const panelSide = (panelEl.value?.offsetWidth ?? 0) + gap + 24;
     camera.padding.value = wide.value
-        ? { left: (panelEl.value?.offsetLeft ?? 0) + (panelEl.value?.offsetWidth ?? 0) + gap, right: rightSide, top: 0, bottom: 0 }
-        : { left: 0, right: rightSide, top: m.chipsBottom + 8, bottom: m.panelH > 0 ? m.panelH + 24 : 0 };
+        ? isRtl
+            ? { left: rightSide, right: panelSide, top: 0, bottom: 0 }
+            : { left: panelSide, right: rightSide, top: 0, bottom: 0 }
+        : isRtl
+            ? { left: rightSide, right: 0, top: m.chipsBottom + 8, bottom: m.panelH > 0 ? m.panelH + 24 : 0 }
+            : { left: 0, right: rightSide, top: m.chipsBottom + 8, bottom: m.panelH > 0 ? m.panelH + 24 : 0 };
 }
 
 /** Floor selector: centred on wide screens; tucked under the chips (and above the sheet) on small ones. */
@@ -269,23 +275,23 @@ const panelKind = computed(() => {
             />
 
             <!-- search -->
-            <div v-if="!pickingOrigin" class="absolute left-3 right-3 top-3 z-40 lg:left-6 lg:right-auto lg:top-6 lg:w-[var(--panel-w)]">
+            <div v-if="!pickingOrigin" class="absolute start-3 end-3 top-3 z-40 lg:start-6 lg:end-auto lg:top-6 lg:w-[var(--panel-w)]">
                 <SearchPanel v-model="nav.query.value" :results="nav.results.value" :suggestions="nav.suggestions.value" :floors="data.floors" @select="onSelect" />
             </div>
 
             <!-- quick actions -->
-            <div ref="chipsEl" class="absolute left-3 right-3 top-[72px] z-30 lg:left-[calc(var(--panel-w)+48px)] lg:right-28 lg:top-6">
+            <div ref="chipsEl" class="absolute start-3 end-3 top-[72px] z-30 lg:start-[calc(var(--panel-w)+48px)] lg:end-28 lg:top-6">
                 <CategoryChips :groups="GROUPS" :active="nav.group.value" @select="chooseGroup" />
             </div>
 
             <!-- info card / directions: side panel on wide screens, bottom sheet on phones -->
-            <div ref="panelEl" class="absolute z-30 flex flex-col max-lg:inset-x-3 max-lg:bottom-3 max-lg:max-h-[62%] lg:left-6 lg:top-[84px] lg:w-[var(--panel-w)] lg:max-h-[calc(100%-100px)]">
+            <div ref="panelEl" class="absolute z-30 flex flex-col max-lg:inset-x-3 max-lg:bottom-3 max-lg:max-h-[62%] lg:start-6 lg:top-[84px] lg:w-[var(--panel-w)] lg:max-h-[calc(100%-100px)]">
                 <Transition name="sheet">
                     <div v-if="panelKind === 'origin'" key="origin" class="glass rounded-3xl p-5" data-testid="origin-picker">
-                        <p class="mb-3 text-lg font-semibold text-slate-900">Choose your starting point</p>
-                        <SearchPanel v-model="nav.query.value" :results="nav.results.value" :suggestions="nav.suggestions.value" :floors="data.floors" placeholder="Search where you are" @select="onSelect" />
-                        <button type="button" class="mt-3 h-12 w-full rounded-full border border-[#183c2d]/25 text-lg font-semibold text-[#183c2d] active:scale-95" @click="startPickOnMap">Tap my location on the map</button>
-                        <button type="button" class="mt-1 h-12 w-full text-base text-slate-500" @click="pickingOrigin = false">Cancel</button>
+                        <p class="mb-3 text-lg font-semibold text-slate-900">{{ $t('map.choose_start') }}</p>
+                        <SearchPanel v-model="nav.query.value" :results="nav.results.value" :suggestions="nav.suggestions.value" :floors="data.floors" :placeholder="$t('map.search_placeholder')" @select="onSelect" />
+                        <button type="button" class="mt-3 h-12 w-full rounded-full border border-[#183c2d]/25 text-lg font-semibold text-[#183c2d] active:scale-95" @click="startPickOnMap">{{ $t('map.tap_map') }}</button>
+                        <button type="button" class="mt-1 h-12 w-full text-base text-slate-500" @click="pickingOrigin = false">{{ $t('common.cancel') }}</button>
                     </div>
                     <LocationSheet
                         v-else-if="panelKind === 'sheet' && nav.selected.value"
@@ -325,25 +331,25 @@ const panelKind = computed(() => {
             </div>
 
             <!-- floors -->
-            <div ref="floorEl" class="absolute right-3 z-30 lg:right-6" :style="floorStyle">
+            <div ref="floorEl" class="absolute end-3 z-30 lg:end-6" :style="floorStyle">
                 <FloorSelector :floors="nav.floorsSorted" :current="nav.floorId.value" :route-floors="nav.routeFloors.value" @select="nav.setFloor" />
             </div>
 
             <!-- zoom / recentre / set start -->
-            <div class="absolute right-3 z-30 flex flex-col gap-2.5 lg:right-6 lg:gap-3" :style="zoomStyle">
-                <button type="button" class="glass h-11 w-11 rounded-full text-xl text-[#183c2d] active:scale-90" aria-label="Set my starting point" title="Set my starting point" data-testid="set-start" :class="{ 'ring-4 ring-[#2b6fd6]/40': nav.pickingStart.value }" @click="nav.pickingStart.value = !nav.pickingStart.value">📍</button>
-                <button type="button" class="glass h-11 w-11 rounded-full text-lg text-[#183c2d] active:scale-90" aria-label="Centre on my location" data-testid="recenter" @click="recenter">◎</button>
+            <div class="absolute end-3 z-30 flex flex-col gap-2.5 lg:end-6 lg:gap-3" :style="zoomStyle">
+                <button type="button" class="glass h-11 w-11 rounded-full text-xl text-[#183c2d] active:scale-90" :aria-label="$t('map.set_start')" :title="$t('map.set_start')" data-testid="set-start" :class="{ 'ring-4 ring-[#2b6fd6]/40': nav.pickingStart.value }" @click="nav.pickingStart.value = !nav.pickingStart.value">📍</button>
+                <button type="button" class="glass h-11 w-11 rounded-full text-lg text-[#183c2d] active:scale-90" :aria-label="$t('map.recenter')" data-testid="recenter" @click="recenter">◎</button>
                 <div class="glass overflow-hidden rounded-full">
-                    <button type="button" class="block h-11 w-11 text-2xl text-[#183c2d] active:bg-black/10" aria-label="Zoom in" data-testid="zoom-in" @click="camera.zoomBy(1.45)">+</button>
-                    <button type="button" class="block h-11 w-11 border-t border-black/5 text-2xl text-[#183c2d] active:bg-black/10" aria-label="Zoom out" data-testid="zoom-out" @click="camera.zoomBy(1 / 1.45)">−</button>
+                    <button type="button" class="block h-11 w-11 text-2xl text-[#183c2d] active:bg-black/10" :aria-label="$t('map.zoom_in')" data-testid="zoom-in" @click="camera.zoomBy(1.45)">+</button>
+                    <button type="button" class="block h-11 w-11 border-t border-black/5 text-2xl text-[#183c2d] active:bg-black/10" :aria-label="$t('map.zoom_out')" data-testid="zoom-out" @click="camera.zoomBy(1 / 1.45)">−</button>
                 </div>
             </div>
 
             <!-- "tap your location" hint -->
             <Transition name="hint">
-                <div v-if="nav.pickingStart.value" class="glass absolute left-1/2 top-24 z-40 flex -translate-x-1/2 items-center gap-4 rounded-full py-2 pl-7 pr-2 text-lg font-medium text-slate-900 max-lg:top-40" data-testid="pick-hint">
-                    Tap where you are on the map
-                    <button type="button" class="h-11 rounded-full bg-black/5 px-5 text-base active:scale-95" @click="nav.pickingStart.value = false">Cancel</button>
+                <div v-if="nav.pickingStart.value" class="glass absolute left-1/2 top-24 z-40 flex -translate-x-1/2 items-center gap-4 rounded-full py-2 ps-7 pe-2 text-lg font-medium text-slate-900 max-lg:top-40" data-testid="pick-hint">
+                    {{ $t('map.tap_hint') }}
+                    <button type="button" class="h-11 rounded-full bg-black/5 px-5 text-base active:scale-95" @click="nav.pickingStart.value = false">{{ $t('common.cancel') }}</button>
                 </div>
             </Transition>
         </div>

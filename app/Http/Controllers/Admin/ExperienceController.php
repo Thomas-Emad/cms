@@ -35,7 +35,7 @@ class ExperienceController extends Controller
     {
         Experience::create($request->validated());
 
-        return redirect()->route('admin.experiences.index')->with('success', 'Experience created.');
+        return redirect()->route('admin.experiences.index')->with('success', __('admin.messages.experience_created'));
     }
 
     public function edit(Experience $experience): Response
@@ -49,7 +49,7 @@ class ExperienceController extends Controller
     {
         $experience->update($request->validated());
 
-        return redirect()->route('admin.experiences.index')->with('success', 'Experience updated.');
+        return redirect()->route('admin.experiences.index')->with('success', __('admin.messages.experience_updated'));
     }
 
     public function destroy(Experience $experience): RedirectResponse
@@ -58,6 +58,6 @@ class ExperienceController extends Controller
 
         $experience->delete();
 
-        return redirect()->route('admin.experiences.index')->with('success', 'Experience deleted.');
+        return redirect()->route('admin.experiences.index')->with('success', __('admin.messages.experience_deleted'));
     }
 }

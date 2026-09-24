@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Verifies the draft/publish lifecycle DIRECTLY against real MySQL using
  * the exact same SQL a Laravel/Eloquent implementation of
@@ -12,20 +13,27 @@
  * assert, against a REAL MySQL 8.0.46 instance, rather than asserting it
  * by inspection alone.
  */
-
 $pdo = new PDO('mysql:host=127.0.0.1;dbname=grand_horizon_test;charset=utf8mb4', 'testuser', 'testpass');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-function pass(string $msg): void { echo "  [PASS] $msg\n"; }
-function fail(string $msg): void { echo "  [FAIL] $msg\n"; global $failures; $failures++; }
+function pass(string $msg): void
+{
+    echo "  [PASS] $msg\n";
+}
+function fail(string $msg): void
+{
+    echo "  [FAIL] $msg\n";
+    global $failures;
+    $failures++;
+}
 $failures = 0;
 
 // --- fixture: one hotel ---
-$pdo->exec("SET FOREIGN_KEY_CHECKS=0");
-$pdo->exec("DELETE FROM page_versions");
-$pdo->exec("DELETE FROM pages");
-$pdo->exec("DELETE FROM hotels");
-$pdo->exec("SET FOREIGN_KEY_CHECKS=1");
+$pdo->exec('SET FOREIGN_KEY_CHECKS=0');
+$pdo->exec('DELETE FROM page_versions');
+$pdo->exec('DELETE FROM pages');
+$pdo->exec('DELETE FROM hotels');
+$pdo->exec('SET FOREIGN_KEY_CHECKS=1');
 
 $pdo->exec("INSERT INTO hotels (name, slug, status) VALUES ('Grand Horizon', 'grand-horizon-lifecycle', 'active')");
 $hotelId = (int) $pdo->lastInsertId();
@@ -45,7 +53,7 @@ function createPage(PDO $pdo, int $hotelId, string $name, string $slug, array $s
     $stmt->execute([$pageId, $sectionsJson]);
     $draftId = (int) $pdo->lastInsertId();
 
-    $pdo->prepare("UPDATE pages SET draft_version_id = ? WHERE id = ?")->execute([$draftId, $pageId]);
+    $pdo->prepare('UPDATE pages SET draft_version_id = ? WHERE id = ?')->execute([$draftId, $pageId]);
 
     $pdo->commit();
 
@@ -58,7 +66,7 @@ function saveDraft(PDO $pdo, int $pageId, array $sections): void
     // in place. Never creates a new PageVersion.
     $sectionsJson = json_encode(['schema_version' => 1, 'sections' => $sections]);
     $draftVersionId = $pdo->query("SELECT draft_version_id FROM pages WHERE id = {$pageId}")->fetchColumn();
-    $pdo->prepare("UPDATE page_versions SET sections = ? WHERE id = ?")->execute([$sectionsJson, $draftVersionId]);
+    $pdo->prepare('UPDATE page_versions SET sections = ? WHERE id = ?')->execute([$sectionsJson, $draftVersionId]);
 }
 
 function publishPage(PDO $pdo, int $pageId): int
@@ -92,6 +100,7 @@ function getVersionTitle(PDO $pdo, int $versionId): string
 {
     $row = $pdo->query("SELECT sections FROM page_versions WHERE id = {$versionId}")->fetch(PDO::FETCH_ASSOC);
     $decoded = json_decode($row['sections'], true);
+
     return $decoded['sections'][0]['props']['title'];
 }
 
@@ -124,7 +133,7 @@ $publishedId2 = publishPage($pdo, $p['page_id']);
 $publishedId2 !== $publishedId ? pass('second publish created a genuinely NEW row') : fail('second publish reused the old row id');
 $page = getPage($pdo, $p['page_id']);
 $page['published_version_id'] == $publishedId2 ? pass('pointer moved to the second published version') : fail('pointer did not move');
-getVersionTitle($pdo, $publishedId) === 'Welcome' ? pass('first published version (id=' . $publishedId . ') still intact as revision history') : fail('first published version was mutated');
+getVersionTitle($pdo, $publishedId) === 'Welcome' ? pass('first published version (id='.$publishedId.') still intact as revision history') : fail('first published version was mutated');
 getVersionTitle($pdo, $publishedId2) === 'Version B (unpublished)' ? pass('second published version has the new content') : fail('second published content wrong');
 $publishedCount = (int) $pdo->query("SELECT COUNT(*) FROM page_versions WHERE page_id = {$p['page_id']} AND state='published'")->fetchColumn();
 $publishedCount === 2 ? pass('exactly 2 published rows exist (append-only revision log)') : fail("expected 2 published rows, got {$publishedCount}");
@@ -145,7 +154,7 @@ $allVersions = $pdo->query("SELECT id, state FROM page_versions WHERE page_id = 
 $states = array_column($allVersions, 'state');
 $states === ['draft', 'published', 'published']
     ? pass('exactly one draft row + two published rows total, in creation order - nothing was deleted or overwritten')
-    : fail('unexpected version row states: ' . implode(',', $states));
+    : fail('unexpected version row states: '.implode(',', $states));
 
-echo "\n" . ($failures === 0 ? "ALL LIFECYCLE CHECKS PASSED" : "{$failures} CHECK(S) FAILED") . "\n";
+echo "\n".($failures === 0 ? 'ALL LIFECYCLE CHECKS PASSED' : "{$failures} CHECK(S) FAILED")."\n";
 exit($failures === 0 ? 0 : 1);

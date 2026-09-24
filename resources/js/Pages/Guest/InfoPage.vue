@@ -28,11 +28,11 @@ defineProps<{
                     <span v-if="kind === 'short_call'" class="rounded-full px-8 py-2 text-4xl font-medium tabular-nums text-slate-900" style="background: var(--luxury-champagne)">
                         {{ item.value }}
                     </span>
-                    <span v-else class="text-3xl tabular-nums text-slate-600 text-right">{{ item.value }}</span>
+                    <span v-else class="text-3xl tabular-nums text-slate-600 text-end">{{ item.value }}</span>
                 </div>
             </section>
         </div>
 
-        <p v-if="!groups.length" class="text-xl text-slate-400 mt-16 text-center">Nothing to show yet.</p>
+        <p v-if="!groups.length" class="text-xl text-slate-400 mt-16 text-center">{{ $t('info.empty') }}</p>
     </div>
 </template>

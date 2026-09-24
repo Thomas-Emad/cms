@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { SECTION_REGISTRY } from './registry';
+import { useLocale } from '@/i18n';
 import type { Section, RenderMode } from '@/types/pageBuilder';
 
 const props = defineProps<{
@@ -8,14 +9,36 @@ const props = defineProps<{
   mode: RenderMode;
 }>();
 
+const { locale } = useLocale();
 const entry = computed(() => SECTION_REGISTRY[props.section.type]);
+
+const resolvedProps = computed(() => {
+  const p = { ...(props.section.props ?? {}) } as Record<string, any>;
+  const loc = locale.value;
+  if (loc !== 'en') {
+    const secTrans = (props.section as any).translations?.[loc];
+    if (secTrans?.props) {
+      Object.assign(p, secTrans.props);
+    }
+    if (p.translations?.[loc]) {
+      Object.assign(p, p.translations[loc]);
+    }
+    for (const key of Object.keys(p)) {
+      const locKey = `${key}_${loc}`;
+      if (p[locKey] !== undefined && p[locKey] !== '') {
+        p[key] = p[locKey];
+      }
+    }
+  }
+  return p;
+});
 </script>
 
 <template>
   <div v-if="entry" :data-section-id="section.id" :data-section-type="section.type">
     <component
       :is="entry.component"
-      :props="section.props"
+      :props="resolvedProps"
       :settings="section.settings ?? {}"
       :data="section.data"
       :mode="mode"

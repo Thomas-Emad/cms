@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import type { Restaurant } from '@/types/restaurant';
+import { useI18n } from '@/i18n';
 
 defineProps<{
     restaurant: Pick<Restaurant, 'name' | 'slug' | 'cuisine' | 'location' | 'cover_image_url'>;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -26,7 +29,8 @@ defineProps<{
             <span
                 class="mt-3 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-white/90 opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"
             >
-                Explore <span class="transition-transform group-hover:translate-x-1">→</span>
+                <span>{{ t('common.explore', undefined, 'Explore') }}</span>
+                <span class="inline-block transition-transform rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1">→</span>
             </span>
         </div>
     </Link>

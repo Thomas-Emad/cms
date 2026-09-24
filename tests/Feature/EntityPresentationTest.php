@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Actions\Pages\CreatePageAction;
+use App\Actions\Pages\PublishPageAction;
 use App\Actions\Presentations\CreatePresentationAction;
 use App\Actions\Presentations\PublishPresentationAction;
 use App\Models\EntityPresentation;
@@ -24,20 +26,23 @@ class EntityPresentationTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
+
     protected User $adminA;
+
     protected Restaurant $restaurantA;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
 
         $this->adminA = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin A', 'email' => 'admin-a-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin A', 'email' => 'admin-a-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
 
         $this->restaurantA = Restaurant::create(['hotel_id' => $this->hotelA->id, 'name' => 'Azure', 'slug' => 'azure', 'status' => 'published']);
@@ -155,11 +160,11 @@ class EntityPresentationTest extends TestCase
     /** @test */
     public function existing_standalone_page_lifecycle_is_completely_unaffected(): void
     {
-        $page = app(\App\Actions\Pages\CreatePageAction::class)->execute($this->hotelA, [
+        $page = app(CreatePageAction::class)->execute($this->hotelA, [
             'name' => 'Homepage', 'slug' => '', 'is_home' => true,
         ], [['id' => 'h1', 'type' => 'hero', 'props' => ['title' => 'Still works'], 'settings' => []]]);
 
-        app(\App\Actions\Pages\PublishPageAction::class)->execute($page->fresh());
+        app(PublishPageAction::class)->execute($page->fresh());
 
         $response = $this->get('/');
         $response->assertInertia(fn ($assert) => $assert->where('sections.0.props.title', 'Still works'));

@@ -36,13 +36,15 @@ function onDown(e: PointerEvent) {
 }
 function onUp(e: PointerEvent) {
     const dx = e.clientX - startX;
-    if (Math.abs(dx) > 60) step(dx < 0 ? 1 : -1);
+    const isRtl = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+    if (Math.abs(dx) > 60) step((dx < 0 ? 1 : -1) * (isRtl ? -1 : 1));
 }
 
 function onKey(e: KeyboardEvent) {
+    const isRtl = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
     if (e.key === 'Escape') close();
-    else if (e.key === 'ArrowRight') step(1);
-    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'ArrowRight') step(isRtl ? -1 : 1);
+    else if (e.key === 'ArrowLeft') step(isRtl ? 1 : -1);
 }
 
 // Lock page scroll while the viewer is open.
@@ -105,11 +107,11 @@ const colClass = computed(() => ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-
                     @pointerup="onUp"
                 />
 
-                <button type="button" class="absolute top-6 right-6 h-16 w-16 rounded-full bg-white/15 text-white text-4xl" aria-label="Close" data-testid="close" @click="close">×</button>
+                <button type="button" class="absolute top-6 end-6 h-16 w-16 rounded-full bg-white/15 text-white text-4xl" aria-label="Close" data-testid="close" @click="close">×</button>
 
                 <template v-if="images.length > 1">
-                    <button type="button" class="absolute left-6 top-1/2 -translate-y-1/2 h-20 w-20 rounded-full bg-white/15 text-white text-5xl" aria-label="Previous" data-testid="prev" @click.stop="step(-1)">‹</button>
-                    <button type="button" class="absolute right-6 top-1/2 -translate-y-1/2 h-20 w-20 rounded-full bg-white/15 text-white text-5xl" aria-label="Next" data-testid="next" @click.stop="step(1)">›</button>
+                    <button type="button" class="absolute start-6 top-1/2 -translate-y-1/2 h-20 w-20 rounded-full bg-white/15 text-white text-5xl rtl:rotate-180" aria-label="Previous" data-testid="prev" @click.stop="step(-1)">‹</button>
+                    <button type="button" class="absolute end-6 top-1/2 -translate-y-1/2 h-20 w-20 rounded-full bg-white/15 text-white text-5xl rtl:rotate-180" aria-label="Next" data-testid="next" @click.stop="step(1)">›</button>
                     <p class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 text-lg tabular-nums">{{ active! + 1 }} / {{ images.length }}</p>
                 </template>
             </div>

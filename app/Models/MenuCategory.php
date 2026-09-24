@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MenuCategory extends Model
 {
+    use HasTranslations;
+
+    protected array $translatable = ['name'];
+
     protected $fillable = ['menu_id', 'name', 'sort_order'];
 
     public function menu(): BelongsTo

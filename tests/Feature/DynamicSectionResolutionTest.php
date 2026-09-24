@@ -17,14 +17,15 @@ class DynamicSectionResolutionTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
     }
 
     protected function resolve(string $type, array $props, Hotel $hotel): array

@@ -43,7 +43,7 @@ interface SectionDefinition
      * BelongsToHotel-scoped models). For static sections this returns [].
      *
      * @return array Render-ready data, shaped however this section type's
-     *                Vue component expects it (e.g. a list of facilities).
+     *               Vue component expects it (e.g. a list of facilities).
      *
      * $entity is optional context for entity-backed presentations: when
      * a Restaurant's "Customize Guest Page" Builder resolves a

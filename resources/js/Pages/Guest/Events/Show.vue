@@ -54,8 +54,8 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
                 style="color: var(--color-primary, #1f4b5a)"
                 v-reveal="{ delay: 100 }"
             >
-                <span class="border-b border-current/40 pb-1 group-hover:border-current transition-colors">Reserve your spot</span>
-                <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                <span class="border-b border-current/40 pb-1 group-hover:border-current transition-colors">{{ $t('common.book_now') }}</span>
+                <span class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
             </a>
         </div>
     </div>

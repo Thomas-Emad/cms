@@ -37,7 +37,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['hotel_id', 'slug']);
-            $table->fullText(['name', 'description', 'short_description']);
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->fullText(['name', 'description', 'short_description']);
+            }
         });
     }
 

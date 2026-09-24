@@ -21,13 +21,13 @@ const groupLabel = computed(() => (props.context === 'page' ? 'Layout & Content'
 </script>
 
 <template>
-  <div class="w-56 shrink-0 border-r border-slate-200 bg-white p-3 overflow-y-auto">
+  <div class="w-56 shrink-0 border-e border-slate-200 bg-white p-3 overflow-y-auto">
     <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">{{ groupLabel }}</h2>
     <button
       v-for="[type, entry] in primaryEntries"
       :key="type"
       type="button"
-      class="w-full text-left rounded-md px-3 py-2 mb-1 text-sm text-slate-700 hover:bg-slate-100 flex items-center justify-between"
+      class="w-full text-start rounded-md px-3 py-2 mb-1 text-sm text-slate-700 hover:bg-slate-100 flex items-center justify-between"
       @click="store.addSection(type)"
     >
       <span>{{ entry.icon }} {{ entry.label }}</span>
@@ -40,7 +40,7 @@ const groupLabel = computed(() => (props.context === 'page' ? 'Layout & Content'
         v-for="[type, entry] in generalEntries"
         :key="type"
         type="button"
-        class="w-full text-left rounded-md px-3 py-2 mb-1 text-sm text-slate-700 hover:bg-slate-100 flex items-center justify-between"
+        class="w-full text-start rounded-md px-3 py-2 mb-1 text-sm text-slate-700 hover:bg-slate-100 flex items-center justify-between"
         @click="store.addSection(type)"
       >
         <span>{{ entry.icon }} {{ entry.label }}</span>

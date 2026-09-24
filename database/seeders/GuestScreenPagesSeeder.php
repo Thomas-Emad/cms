@@ -88,7 +88,7 @@ class GuestScreenPagesSeeder extends Seeder
         try {
             app(SaveDraftAction::class)->execute($home, $sections);
         } catch (ValidationException $e) {
-            $this->command?->warn('Home page has content that no longer validates, so it was left unchanged: ' . json_encode($e->errors()));
+            $this->command?->warn('Home page has content that no longer validates, so it was left unchanged: '.json_encode($e->errors()));
 
             return;
         }

@@ -37,10 +37,30 @@ class SaveInfoEntriesAction
                 $id = $row['id'] ?? null;
 
                 if ($id !== null && $existing->has($id)) {
-                    $existing->get($id)->update($attributes);
+                    $entry = $existing->get($id);
+                    $entry->update($attributes);
                     $keep[] = $id;
                 } else {
-                    $keep[] = InfoEntry::create($attributes + ['kind' => $kind])->id;
+                    $entry = InfoEntry::create($attributes + ['kind' => $kind]);
+                    $keep[] = $entry->id;
+                }
+
+                if (! empty($row['translations']['ar'])) {
+                    $entry->setTranslations('ar', $row['translations']['ar']);
+                } else {
+                    $arData = [];
+                    if (! empty($row['label_ar'])) {
+                        $arData['label'] = trim($row['label_ar']);
+                    }
+                    if (! empty($row['value_ar'])) {
+                        $arData['value'] = trim($row['value_ar']);
+                    }
+                    if (! empty($row['group_ar'])) {
+                        $arData['group'] = trim($row['group_ar']);
+                    }
+                    if (! empty($arData)) {
+                        $entry->setTranslations('ar', $arData);
+                    }
                 }
             }
 

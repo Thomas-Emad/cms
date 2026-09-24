@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToHotel;
 use App\Models\Concerns\HasMedia;
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Restaurant extends Model
 {
-    use BelongsToHotel, HasMedia;
+    use BelongsToHotel, HasMedia, HasTranslations;
+
+    protected array $translatable = [
+        'name', 'description', 'short_description', 'cuisine', 'dress_code', 'location',
+    ];
 
     protected $fillable = [
         'hotel_id', 'name', 'slug', 'description', 'cuisine', 'location', 'floor',

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -31,7 +32,7 @@ class Media extends Model
             return $this->path;
         }
 
-        return \Illuminate\Support\Facades\Storage::disk($this->disk)->url($this->path);
+        return Storage::disk($this->disk)->url($this->path);
     }
 
     /** Shape sent to the admin MediaManager and guest galleries. */

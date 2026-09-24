@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import type { Facility } from '@/types/facility';
+import { useI18n } from '@/i18n';
 
 defineProps<{
     facility: Pick<Facility, 'name' | 'slug' | 'short_description' | 'category' | 'cover_image_url'>;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -22,7 +25,9 @@ defineProps<{
         <div class="absolute inset-0" style="background: var(--atmosphere-gradient)" />
 
         <div class="absolute inset-x-0 bottom-0 p-5">
-            <p v-if="facility.category" class="text-xs uppercase tracking-wide text-white/70">{{ facility.category }}</p>
+            <p v-if="facility.category" class="text-xs uppercase tracking-wide text-white/70">
+                {{ t(`facilities.categories.${facility.category}`, undefined, facility.category) }}
+            </p>
             <h3 class="mt-1 text-xl text-white" style="font-family: var(--font-display)">{{ facility.name }}</h3>
             <p v-if="facility.short_description" class="mt-1 text-sm text-white/75 line-clamp-2">
                 {{ facility.short_description }}
@@ -30,7 +35,8 @@ defineProps<{
             <span
                 class="mt-3 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-white/90 opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"
             >
-                Explore <span class="transition-transform group-hover:translate-x-1">→</span>
+                <span>{{ t('common.explore', undefined, 'Explore') }}</span>
+                <span class="inline-block transition-transform rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1">→</span>
             </span>
         </div>
     </Link>

@@ -78,8 +78,8 @@ const isEditorCanvas = props.mode === 'edit';
                     :class="isEditorCanvas ? '' : 'reveal'"
                     v-reveal-mount="isEditorCanvas ? undefined : { delay: 650 }"
                 >
-                    {{ props.button_text ?? data.restaurant.button_text ?? 'Reserve a Table' }}
-                    <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                    {{ props.button_text ?? data.restaurant.button_text ?? $t('common.book_table') }}
+                    <span class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
                 </a>
             </div>
         </div>

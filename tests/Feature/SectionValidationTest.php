@@ -17,22 +17,23 @@ class SectionValidationTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotel;
+
     protected User $admin;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotel = Hotel::create(['name' => 'Test Hotel', 'slug' => 'test-hotel-' . uniqid(), 'status' => 'active']);
+        $this->hotel = Hotel::create(['name' => 'Test Hotel', 'slug' => 'test-hotel-'.uniqid(), 'status' => 'active']);
         $this->admin = User::create([
             'hotel_id' => $this->hotel->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin', 'email' => 'admin-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin', 'email' => 'admin-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
     }
 
     protected function saveSections(array $sections)
     {
-        $page = app(CreatePageAction::class)->execute($this->hotel, ['name' => 'Test', 'slug' => 'test-' . uniqid(), 'is_home' => false]);
+        $page = app(CreatePageAction::class)->execute($this->hotel, ['name' => 'Test', 'slug' => 'test-'.uniqid(), 'is_home' => false]);
 
         return $this->actingAs($this->admin)->putJson("/admin/pages/{$page->id}/draft", ['sections' => $sections]);
     }
@@ -229,7 +230,7 @@ class SectionValidationTest extends TestCase
         // schema validation (the id genuinely exists) but MUST resolve to
         // null at render time via ImageSectionDefinition's tenant re-check
         // (ResolvesMedia trait), never leaking the other hotel's file.
-        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-' . uniqid(), 'status' => 'active']);
+        $otherHotel = Hotel::create(['name' => 'Other Hotel', 'slug' => 'other-hotel-'.uniqid(), 'status' => 'active']);
         $otherMedia = Media::create(['hotel_id' => $otherHotel->id, 'disk' => 'public', 'path' => 'secret.jpg', 'mediable_type' => 'x', 'mediable_id' => 1, 'collection' => 'gallery']);
 
         $saveResponse = $this->saveSections([

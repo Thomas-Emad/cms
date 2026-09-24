@@ -50,7 +50,7 @@ class RestaurantPresentationController extends Controller
             'context' => [
                 'type' => 'restaurant',
                 'entityName' => $restaurant->name,
-                'backLabel' => 'Restaurants',
+                'backLabel' => __('nav.restaurants'),
                 'backHref' => '/admin/restaurants',
                 'apiBase' => "/admin/restaurants/{$restaurant->id}/presentation",
             ],
@@ -64,7 +64,7 @@ class RestaurantPresentationController extends Controller
         $presentation = $createAction->firstOrCreate($currentHotel->get(), $restaurant);
         $action->execute($presentation, $request->validated('sections'));
 
-        return back()->with('success', 'Draft saved.');
+        return back()->with('success', __('admin.messages.draft_saved'));
     }
 
     public function publish(Restaurant $restaurant, CreatePresentationAction $createAction, PublishPresentationAction $action, CurrentHotel $currentHotel): RedirectResponse
@@ -74,7 +74,7 @@ class RestaurantPresentationController extends Controller
         $presentation = $createAction->firstOrCreate($currentHotel->get(), $restaurant);
         $action->execute($presentation);
 
-        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant page published.');
+        return redirect()->route('admin.restaurants.index')->with('success', __('admin.messages.restaurant_published'));
     }
 
     public function preview(Restaurant $restaurant, CreatePresentationAction $createAction, PageRenderService $renderService, CurrentHotel $currentHotel): Response

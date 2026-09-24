@@ -47,7 +47,7 @@ const pill =
                     class="pointer-events-auto mt-8 inline-flex items-center gap-3 h-16 px-10 rounded-full text-xl uppercase tracking-wider text-slate-900 active:scale-95 transition-transform"
                     style="background: var(--luxury-champagne)"
                 >
-                    {{ actionLabel }} <span>→</span>
+                    {{ actionLabel }} <span class="rtl:rotate-180 inline-block">→</span>
                 </Link>
             </template>
         </StoryPlayer>
@@ -55,12 +55,12 @@ const pill =
         <button
             type="button"
             :class="pill"
-            class="absolute right-10 z-30"
+            class="absolute end-10 z-30"
             style="top: calc(var(--kiosk-topbar-h, 0px) + 2.25rem)"
             data-testid="to-grid"
             @click="view = 'grid'"
         >
-            ▦ See all
+            ▦ {{ $t('common.see_all') }}
         </button>
     </div>
 
@@ -68,7 +68,7 @@ const pill =
         <div class="flex items-center justify-between mb-10">
             <h1 class="text-5xl" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)">{{ heading }}</h1>
             <button type="button" class="flex items-center h-12 px-6 rounded-full border border-slate-300 text-slate-700 text-base uppercase tracking-wider active:scale-95 transition-transform" data-testid="to-story" @click="view = 'story'">
-                ▶ Story view
+                ▶ {{ $t('common.story_view') }}
             </button>
         </div>
 

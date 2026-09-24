@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Room;
 use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -11,7 +12,7 @@ class StoreRoomRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Room::class);
+        return $this->user()->can('create', Room::class);
     }
 
     /** Slug is optional in the form; derive it from the name when left blank. */
@@ -45,6 +46,8 @@ class StoreRoomRequest extends FormRequest
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'featured' => ['boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'array'],
         ];
     }
 }

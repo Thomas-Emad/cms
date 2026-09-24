@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class UpdateMenuAction
 {
     /**
-     * @param array<int, array{id?: int, name: string, items: array<int, array>}> $categories
+     * @param  array<int, array{id?: int, name: string, items: array<int, array>}>  $categories
      */
     public function execute(Restaurant $restaurant, array $categories): Menu
     {
@@ -32,6 +32,12 @@ class UpdateMenuAction
                     'sort_order' => $categoryIndex,
                 ])->save();
 
+                if (! empty($categoryData['translations']['ar'])) {
+                    $category->setTranslations('ar', $categoryData['translations']['ar']);
+                } elseif (! empty($categoryData['name_ar'])) {
+                    $category->setTranslations('ar', ['name' => trim($categoryData['name_ar'])]);
+                }
+
                 $keepCategoryIds[] = $category->id;
 
                 $keepItemIds = [];
@@ -50,6 +56,21 @@ class UpdateMenuAction
                         'is_available' => $itemData['is_available'] ?? true,
                         'sort_order' => $itemIndex,
                     ])->save();
+
+                    if (! empty($itemData['translations']['ar'])) {
+                        $item->setTranslations('ar', $itemData['translations']['ar']);
+                    } else {
+                        $arItemData = [];
+                        if (! empty($itemData['name_ar'])) {
+                            $arItemData['name'] = trim($itemData['name_ar']);
+                        }
+                        if (! empty($itemData['description_ar'])) {
+                            $arItemData['description'] = trim($itemData['description_ar']);
+                        }
+                        if (! empty($arItemData)) {
+                            $item->setTranslations('ar', $arItemData);
+                        }
+                    }
 
                     $keepItemIds[] = $item->id;
                 }

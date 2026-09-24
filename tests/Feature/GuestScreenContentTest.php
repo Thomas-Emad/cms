@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Facility;
 use App\Models\Hotel;
 use App\Models\InfoEntry;
 use App\Models\Media;
@@ -23,19 +24,21 @@ class GuestScreenContentTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
+
     protected User $adminA;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
 
         $this->adminA = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin A', 'email' => 'a-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin A', 'email' => 'a-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
     }
 
@@ -231,7 +234,7 @@ class GuestScreenContentTest extends TestCase
     public function meeting_rooms_page_lists_only_published_meeting_facilities(): void
     {
         foreach ([['m1', 'meeting', 'published'], ['p1', 'pool', 'published'], ['m2', 'meeting', 'draft']] as [$slug, $cat, $status]) {
-            \App\Models\Facility::create(['hotel_id' => $this->hotelA->id, 'name' => $slug, 'slug' => $slug, 'category' => $cat, 'status' => $status]);
+            Facility::create(['hotel_id' => $this->hotelA->id, 'name' => $slug, 'slug' => $slug, 'category' => $cat, 'status' => $status]);
         }
 
         $this->get('/meeting-rooms')->assertInertia(fn ($page) => $page->component('Guest/Facilities/Index')->has('facilities', 1)->where('facilities.0.slug', 'm1'));
@@ -294,7 +297,7 @@ class GuestScreenContentTest extends TestCase
     public function admin_facility_list_can_be_filtered_to_meeting_rooms(): void
     {
         foreach ([['m1', 'meeting'], ['p1', 'pool']] as [$slug, $cat]) {
-            \App\Models\Facility::create(['hotel_id' => $this->hotelA->id, 'name' => $slug, 'slug' => $slug, 'category' => $cat, 'status' => 'published']);
+            Facility::create(['hotel_id' => $this->hotelA->id, 'name' => $slug, 'slug' => $slug, 'category' => $cat, 'status' => 'published']);
         }
 
         $this->actingAs($this->adminA)->get('/admin/facilities?category=meeting')->assertInertia(fn ($page) => $page

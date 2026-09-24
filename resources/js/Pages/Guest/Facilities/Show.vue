@@ -34,15 +34,15 @@ const back = () => window.history.back();
             </div>
             <button
                 type="button"
-                class="absolute left-10 z-20 flex items-center h-12 px-6 rounded-full bg-black/40 text-white text-base uppercase tracking-wider active:scale-95 transition-transform"
+                class="absolute start-10 z-20 flex items-center gap-2 h-12 px-6 rounded-full bg-black/40 text-white text-base uppercase tracking-wider active:scale-95 transition-transform"
                 style="top: calc(var(--kiosk-topbar-h, 0px) + 1rem)"
                 @click="back"
             >
-                ← Back
+                <span class="rtl:rotate-180 inline-block">←</span> {{ $t('common.back') }}
             </button>
             <div class="relative z-10 w-full px-6 lg:px-10 pb-14 pointer-events-none">
                 <div class="mx-auto max-w-7xl">
-                    <p v-if="facility.category" class="text-white/70 text-xs uppercase tracking-[0.2em] mb-2">{{ facility.category }}</p>
+                    <p v-if="facility.category" class="text-white/70 text-xs uppercase tracking-[0.2em] mb-2">{{ $t('facilities.categories.' + facility.category) || facility.category }}</p>
                     <h1 class="text-white text-5xl lg:text-6xl" style="font-family: var(--font-display)">{{ facility.name }}</h1>
                 </div>
             </div>
@@ -60,13 +60,13 @@ const back = () => window.history.back();
 
                 <div class="lg:col-span-4 lg:col-start-9 space-y-5 text-sm">
                     <div v-if="facility.building">
-                        <p class="text-slate-400 uppercase tracking-wide text-xs">Location</p>
+                        <p class="text-slate-400 uppercase tracking-wide text-xs">{{ $t('common.location') }}</p>
                         <p class="mt-1 text-slate-700">
                             {{ [facility.building, facility.floor, facility.wing].filter(Boolean).join(', ') }}
                         </p>
                     </div>
                     <div v-if="facility.phone">
-                        <p class="text-slate-400 uppercase tracking-wide text-xs">Phone</p>
+                        <p class="text-slate-400 uppercase tracking-wide text-xs">{{ $t('common.phone') }}</p>
                         <p class="mt-1 text-slate-700">{{ facility.phone }}</p>
                     </div>
                 </div>

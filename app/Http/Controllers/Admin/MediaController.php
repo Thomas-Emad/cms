@@ -49,7 +49,7 @@ class MediaController extends Controller
         if ($data['collection'] === 'cover') {
             foreach ($request->file('files', []) as $file) {
                 if (! str_starts_with((string) $file->getMimeType(), 'image/')) {
-                    throw ValidationException::withMessages(['files' => 'The main photo must be an image, not a video.']);
+                    throw ValidationException::withMessages(['files' => __('admin.messages.cover_must_be_image')]);
                 }
             }
         }

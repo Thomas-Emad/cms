@@ -20,7 +20,7 @@ class PageHomeUniquenessTest extends TestCase
         parent::setUp();
 
         $this->hotel = Hotel::create([
-            'name' => 'Test Hotel', 'slug' => 'test-hotel-' . uniqid(), 'status' => 'active',
+            'name' => 'Test Hotel', 'slug' => 'test-hotel-'.uniqid(), 'status' => 'active',
         ]);
     }
 
@@ -76,7 +76,7 @@ class PageHomeUniquenessTest extends TestCase
     public function two_different_hotels_can_each_have_their_own_home_page(): void
     {
         $otherHotel = Hotel::create([
-            'name' => 'Other Hotel', 'slug' => 'other-hotel-' . uniqid(), 'status' => 'active',
+            'name' => 'Other Hotel', 'slug' => 'other-hotel-'.uniqid(), 'status' => 'active',
         ]);
 
         app(CreatePageAction::class)->execute($this->hotel, ['name' => 'Home', 'slug' => '', 'is_home' => true]);

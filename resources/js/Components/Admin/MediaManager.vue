@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import axios from 'axios';
+import { useI18n } from '@/i18n';
 import type { MediaItem } from '@/types/room';
 
 /**
@@ -19,6 +20,8 @@ const props = defineProps<{
     hint?: string;
 }>();
 
+const { t } = useI18n();
+
 const list = ref<MediaItem[]>([...props.items]);
 const busy = ref(false);
 const percent = ref(0);
@@ -28,7 +31,7 @@ const isCover = computed(() => props.collection === 'cover');
 function messageFrom(e: unknown): string {
     const err = e as { response?: { data?: { message?: string; errors?: Record<string, string[]> } } };
     const first = Object.values(err.response?.data?.errors ?? {})[0]?.[0];
-    return first ?? err.response?.data?.message ?? 'Something went wrong. Please try again.';
+    return first ?? err.response?.data?.message ?? t('admin.media.error_fallback', 'Something went wrong. Please try again.');
 }
 
 async function onPick(event: Event) {
@@ -60,7 +63,7 @@ async function onPick(event: Event) {
 }
 
 async function remove(item: MediaItem) {
-    if (!confirm('Remove this photo?')) return;
+    if (!confirm(t('admin.media.remove_confirm', 'Remove this photo?'))) return;
     error.value = null;
     try {
         await axios.delete(`/admin/media/${item.id}`);
@@ -99,7 +102,7 @@ async function move(index: number, direction: -1 | 1) {
                 class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
                 :class="{ 'opacity-50 pointer-events-none': busy }"
             >
-                {{ busy ? `Uploading... ${percent}%` : isCover ? (list.length ? 'Replace photo' : 'Choose photo') : 'Add photos or videos' }}
+                {{ busy ? `${t('admin.media.uploading', 'Uploading...')} ${percent}%` : isCover ? (list.length ? t('admin.media.replace_photo', 'Replace photo') : t('admin.media.choose_photo', 'Choose photo')) : t('admin.media.add_photos', 'Add photos or videos') }}
                 <input
                     type="file"
                     :accept="isCover ? 'image/jpeg,image/png,image/webp' : 'image/jpeg,image/png,image/webp,video/mp4,video/webm'"
@@ -117,22 +120,24 @@ async function move(index: number, direction: -1 | 1) {
             <li v-for="(item, i) in list" :key="item.id" class="relative group" data-testid="item">
                 <video v-if="item.type === 'video'" :src="item.url" muted preload="metadata" class="aspect-square w-full rounded-md object-cover border border-slate-200" />
                 <img v-else :src="item.url" :alt="item.alt_text ?? ''" class="aspect-square w-full rounded-md object-cover border border-slate-200" />
-                <span v-if="item.type === 'video'" class="absolute left-1 top-1 rounded bg-black/60 px-1.5 text-xs text-white">▶ video</span>
+                <span v-if="item.type === 'video'" class="absolute start-1 top-1 rounded bg-black/60 px-1.5 text-xs text-white">▶ {{ t('admin.media.video', 'video') }}</span>
                 <button
                     type="button"
-                    class="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/60 text-white text-xs leading-6 text-center hover:bg-red-600"
+                    class="absolute top-1 end-1 h-6 w-6 rounded-full bg-black/60 text-white text-xs leading-6 text-center hover:bg-red-600"
                     aria-label="Remove photo"
                     data-testid="remove"
                     @click="remove(item)"
                 >
                     ×
                 </button>
-                <div v-if="!isCover && list.length > 1" class="absolute bottom-1 left-1 flex gap-1">
+                <div v-if="!isCover && list.length > 1" class="absolute bottom-1 start-1 flex gap-1">
                     <button type="button" class="h-6 w-6 rounded bg-black/60 text-white text-xs" aria-label="Move earlier" :disabled="i === 0" data-testid="up" @click="move(i, -1)">←</button>
                     <button type="button" class="h-6 w-6 rounded bg-black/60 text-white text-xs" aria-label="Move later" :disabled="i === list.length - 1" data-testid="down" @click="move(i, 1)">→</button>
                 </div>
             </li>
         </ul>
-        <p v-else class="rounded-md border border-dashed border-slate-300 p-4 text-center text-xs text-slate-400">No photos yet.</p>
+        <p v-else class="rounded-md border border-dashed border-slate-300 p-4 text-center text-xs text-slate-400">
+            {{ t('admin.media.no_photos', 'No photos yet.') }}
+        </p>
     </div>
 </template>

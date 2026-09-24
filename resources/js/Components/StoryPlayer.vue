@@ -132,8 +132,14 @@ function onUp(e: PointerEvent) {
     if (performance.now() - downAt > 250) return; // a hold, not a tap
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
-    if (x < 0.3) prev();
-    else next();
+    const isRtl = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+    if (isRtl) {
+        if (x > 0.7) prev();
+        else next();
+    } else {
+        if (x < 0.3) prev();
+        else next();
+    }
 }
 function onCancel() {
     paused.value = false;

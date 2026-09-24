@@ -54,9 +54,9 @@ class SectionRegistryParityTest extends TestCase
         $this->assertSame(
             $manifest,
             $backendTypes,
-            "Backend SectionRegistry and section-types.json have diverged.\n" .
-            'In manifest but not backend: ' . json_encode(array_values(array_diff($manifest, $backendTypes))) . "\n" .
-            'In backend but not manifest: ' . json_encode(array_values(array_diff($backendTypes, $manifest)))
+            "Backend SectionRegistry and section-types.json have diverged.\n".
+            'In manifest but not backend: '.json_encode(array_values(array_diff($manifest, $backendTypes)))."\n".
+            'In backend but not manifest: '.json_encode(array_values(array_diff($backendTypes, $manifest)))
         );
     }
 

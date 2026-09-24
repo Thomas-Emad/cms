@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Loads the ACTUAL, unmodified App\Services\PageBuilder\SectionRegistry
  * and all 12 section definition classes (copied verbatim from app/) via a
@@ -9,29 +10,47 @@
  * registry lookup, type(), propsSchema(), defaultProps(), and isDynamic()
  * for all 12 real classes.
  */
-
 spl_autoload_register(function ($class) {
     $prefix = 'App\\';
-    if (!str_starts_with($class, $prefix)) return;
+    if (! str_starts_with($class, $prefix)) {
+        return;
+    }
     $relative = substr($class, strlen($prefix));
-    $path = __DIR__ . '/app_stub/' . str_replace('\\', '/', $relative) . '.php';
-    if (file_exists($path)) require $path;
+    $path = __DIR__.'/app_stub/'.str_replace('\\', '/', $relative).'.php';
+    if (file_exists($path)) {
+        require $path;
+    }
 });
 
 spl_autoload_register(function ($class) {
     $prefix = 'Illuminate\\';
-    if (!str_starts_with($class, $prefix)) return;
+    if (! str_starts_with($class, $prefix)) {
+        return;
+    }
     $relative = substr($class, strlen($prefix));
-    $path = __DIR__ . '/framework_stubs/Illuminate/' . str_replace('\\', '/', $relative) . '.php';
-    if (file_exists($path)) require $path;
+    $path = __DIR__.'/framework_stubs/Illuminate/'.str_replace('\\', '/', $relative).'.php';
+    if (file_exists($path)) {
+        require $path;
+    }
 });
 
-function app(string $class) { return new $class(); }
+function app(string $class)
+{
+    return new $class;
+}
 
 use App\Services\PageBuilder\SectionRegistry;
 
-function pass(string $msg): void { echo "  [PASS] $msg\n"; }
-function fail(string $msg): void { echo "  [FAIL] $msg\n"; global $failures; $failures++; }
+function pass(string $msg): void
+{
+    echo "  [PASS] $msg\n";
+}
+function fail(string $msg): void
+{
+    echo "  [FAIL] $msg\n";
+    global $failures;
+    $failures++;
+}
 $failures = 0;
 
 $expectedTypes = [
@@ -42,7 +61,7 @@ $expectedTypes = [
 ];
 
 echo "=== All 12 real definitions are registered ===\n";
-count(SectionRegistry::types()) === 12 ? pass('exactly 12 types registered') : fail('got ' . count(SectionRegistry::types()) . ' types');
+count(SectionRegistry::types()) === 12 ? pass('exactly 12 types registered') : fail('got '.count(SectionRegistry::types()).' types');
 
 foreach ($expectedTypes as $type) {
     SectionRegistry::has($type) ? pass("'{$type}' registered") : fail("'{$type}' MISSING from registry");
@@ -76,10 +95,14 @@ foreach ($expectedStatic as $type) {
 }
 
 echo "\n=== Unknown type still rejected (regression check after registry growth) ===\n";
-!SectionRegistry::has('made-up-type') ? pass("unknown type correctly not recognized") : fail('unknown type incorrectly accepted');
+! SectionRegistry::has('made-up-type') ? pass('unknown type correctly not recognized') : fail('unknown type incorrectly accepted');
 $threw = false;
-try { SectionRegistry::get('made-up-type'); } catch (InvalidArgumentException $e) { $threw = true; }
+try {
+    SectionRegistry::get('made-up-type');
+} catch (InvalidArgumentException $e) {
+    $threw = true;
+}
 $threw ? pass('get() still throws for unknown type') : fail('get() did not throw');
 
-echo "\n" . ($failures === 0 ? "ALL REGISTRY CLASS CHECKS PASSED (12/12 real definitions)" : "{$failures} CHECK(S) FAILED") . "\n";
+echo "\n".($failures === 0 ? 'ALL REGISTRY CLASS CHECKS PASSED (12/12 real definitions)' : "{$failures} CHECK(S) FAILED")."\n";
 exit($failures === 0 ? 0 : 1);

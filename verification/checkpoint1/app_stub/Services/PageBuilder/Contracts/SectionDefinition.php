@@ -40,7 +40,7 @@ interface SectionDefinition
      * BelongsToHotel-scoped models). For static sections this returns [].
      *
      * @return array Render-ready data, shaped however this section type's
-     *                Vue component expects it (e.g. a list of facilities).
+     *               Vue component expects it (e.g. a list of facilities).
      */
     public function resolve(array $props, Hotel $hotel): array;
 }

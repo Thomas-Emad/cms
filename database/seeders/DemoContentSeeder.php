@@ -76,6 +76,7 @@ class DemoContentSeeder extends Seeder
             'sort_order' => $sortOrder,
         ]);
     }
+
     protected function seedRooms(): void
     {
         $rooms = [
@@ -572,7 +573,7 @@ class DemoContentSeeder extends Seeder
                 $this->attachGalleryImage(
                     $facility,
                     $image,
-                    $facility->name . ' Gallery ' . ($index + 1),
+                    $facility->name.' Gallery '.($index + 1),
                     $index
                 );
             }

@@ -12,17 +12,24 @@ namespace App\Services\Map;
 final class MapDataValidator
 {
     public const CATEGORIES = ['reception', 'lobby', 'dining', 'cafe', 'wellness', 'fitness', 'pool', 'meeting', 'room', 'facility', 'transport', 'restroom', 'entrance', 'other'];
+
     public const NODE_TYPES = ['walk', 'elevator', 'stairs', 'entrance'];
+
     public const AREA_KINDS = ['building', 'corridor', 'room', 'public', 'service', 'water', 'outdoor'];
+
     public const REF_TYPES = ['facility', 'restaurant', 'room', 'page'];
 
     private const MAX_FLOORS = 40;
+
     private const MAX_NODES = 5000;
+
     private const MAX_LOCATIONS = 3000;
+
     private const MAX_ERRORS = 40;
 
     /** @var string[] */
     private array $errors = [];
+
     /** @var string[] */
     private array $warnings = [];
 
@@ -51,7 +58,7 @@ final class MapDataValidator
             return $this->result();
         }
         if (count($data['floors']) < 1 || count($data['floors']) > self::MAX_FLOORS) {
-            $this->err('A map needs between 1 and ' . self::MAX_FLOORS . ' floors.');
+            $this->err('A map needs between 1 and '.self::MAX_FLOORS.' floors.');
         }
         if (count($data['nodes']) > self::MAX_NODES || count($data['locations']) > self::MAX_LOCATIONS) {
             $this->err('The map is too large.');
@@ -84,10 +91,12 @@ final class MapDataValidator
             $p = "floors[$i]";
             if (! is_array($f) || ! $this->id($f['id'] ?? null)) {
                 $this->err("$p needs a text \"id\".");
+
                 continue;
             }
             if (isset($out[$f['id']])) {
                 $this->err("Duplicate floor id \"{$f['id']}\".");
+
                 continue;
             }
             foreach (['label', 'name'] as $k) {
@@ -116,6 +125,7 @@ final class MapDataValidator
             }
             $out[$f['id']] = $f;
         }
+
         return $out;
     }
 
@@ -127,11 +137,13 @@ final class MapDataValidator
             $p = "nodes[$i]";
             if (! is_array($n) || ! $this->id($n['id'] ?? null)) {
                 $this->err("$p needs a text \"id\".");
+
                 continue;
             }
             $id = $n['id'];
             if (isset($out[$id])) {
                 $this->err("Duplicate node id \"$id\".");
+
                 continue;
             }
             if (! isset($floors[$n['floor'] ?? null])) {
@@ -159,7 +171,8 @@ final class MapDataValidator
         foreach ($out as $id => $n) {
             foreach (is_array($n['connections'] ?? null) ? $n['connections'] : [] as $c) {
                 if (! is_string($c) || ! isset($out[$c])) {
-                    $this->err("Node \"$id\" connects to unknown node \"" . (is_scalar($c) ? $c : '?') . '".');
+                    $this->err("Node \"$id\" connects to unknown node \"".(is_scalar($c) ? $c : '?').'".');
+
                     continue;
                 }
                 if (($n['floor'] ?? null) !== ($out[$c]['floor'] ?? null)) {
@@ -170,6 +183,7 @@ final class MapDataValidator
                 }
             }
         }
+
         return $out;
     }
 
@@ -181,11 +195,13 @@ final class MapDataValidator
             $p = "locations[$i]";
             if (! is_array($l) || ! $this->id($l['id'] ?? null)) {
                 $this->err("$p needs a text \"id\".");
+
                 continue;
             }
             $id = $l['id'];
             if (isset($out[$id])) {
                 $this->err("Duplicate location id \"$id\".");
+
                 continue;
             }
             if (! is_string($l['name'] ?? null) || trim($l['name']) === '') {
@@ -228,6 +244,7 @@ final class MapDataValidator
             }
             $out[$id] = $l;
         }
+
         return $out;
     }
 
@@ -235,6 +252,7 @@ final class MapDataValidator
     {
         if (! $nodes) {
             $this->warn('The map has no walkway nodes, so no directions can be given.');
+
             return;
         }
         // undirected adjacency
@@ -266,7 +284,7 @@ final class MapDataValidator
 
         $lost = array_keys(array_diff_key($nodes, $seen));
         if ($lost) {
-            $this->warn(count($lost) . ' walkway node(s) cannot be reached from the start (' . implode(', ', array_slice($lost, 0, 5)) . (count($lost) > 5 ? ', ...' : '') . '). Guests will get no route to places near them.');
+            $this->warn(count($lost).' walkway node(s) cannot be reached from the start ('.implode(', ', array_slice($lost, 0, 5)).(count($lost) > 5 ? ', ...' : '').'). Guests will get no route to places near them.');
         }
         $stranded = [];
         foreach ($locations as $id => $l) {
@@ -275,7 +293,7 @@ final class MapDataValidator
             }
         }
         if ($stranded) {
-            $this->warn('No walking route to: ' . implode(', ', array_slice($stranded, 0, 8)) . (count($stranded) > 8 ? ', ...' : '') . '.');
+            $this->warn('No walking route to: '.implode(', ', array_slice($stranded, 0, 8)).(count($stranded) > 8 ? ', ...' : '').'.');
         }
     }
 
@@ -286,6 +304,7 @@ final class MapDataValidator
                 return true;
             }
         }
+
         return false;
     }
 
@@ -301,6 +320,7 @@ final class MapDataValidator
                 return false;
             }
         }
+
         return true;
     }
 
@@ -321,6 +341,7 @@ final class MapDataValidator
         if ($error) {
             $this->errors[] = $error;
         }
+
         return ['errors' => $this->errors, 'warnings' => $this->warnings];
     }
 }

@@ -34,7 +34,7 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
                         </h1>
                     </div>
                     <p v-if="offer.price" class="reveal mt-3 text-white/85 text-lg" v-reveal-mount="{ delay: 520 }">
-                        From ${{ offer.price }}<span v-if="offer.discount"> · Save {{ offer.discount }}%</span>
+                        {{ $t('offers.from_price', { price: offer.price }) }}<span v-if="offer.discount"> · {{ $t('offers.save_percent', { percent: offer.discount }) }}</span>
                     </p>
                 </div>
             </div>
@@ -45,7 +45,7 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
                 {{ offer.description }}
             </p>
             <p v-if="offer.valid_until" class="reveal mt-4 text-xs uppercase tracking-wide text-slate-400" v-reveal="{ delay: 80 }">
-                Valid until {{ offer.valid_until }}
+                {{ $t('offers.valid_until') }} {{ offer.valid_until }}
             </p>
             <a
                 v-if="offer.booking_url"
@@ -54,8 +54,8 @@ const { style: parallaxStyle } = useParallax(heroRef, { strength: 0.12 });
                 style="color: var(--color-primary, #1f4b5a)"
                 v-reveal="{ delay: 160 }"
             >
-                <span class="border-b border-current/40 pb-1 group-hover:border-current transition-colors">Book this offer</span>
-                <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                <span class="border-b border-current/40 pb-1 group-hover:border-current transition-colors">{{ $t('common.book_now') }}</span>
+                <span class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
             </a>
         </div>
     </div>

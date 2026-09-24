@@ -21,19 +21,21 @@ class PagesAdminUiTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
+
     protected User $adminA;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
 
         $this->adminA = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin A', 'email' => 'admin-a-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin A', 'email' => 'admin-a-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
     }
 
@@ -170,7 +172,7 @@ class PagesAdminUiTest extends TestCase
     {
         $staff = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_staff', 'status' => 'active',
-            'name' => 'Staff', 'email' => 'staff-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Staff', 'email' => 'staff-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
 
         $createResponse = $this->actingAs($staff)->post('/admin/pages', [

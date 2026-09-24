@@ -40,6 +40,6 @@ class LayoutController extends Controller
 
         $store->save($hotel->id, $input);
 
-        return redirect()->route('admin.layout.edit')->with('layout_saved', 'Layout saved. Guest screens use it immediately.');
+        return redirect()->route('admin.layout.edit')->with('layout_saved', __('admin.messages.layout_saved'));
     }
 }

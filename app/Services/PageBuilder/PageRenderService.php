@@ -26,16 +26,35 @@ class PageRenderService
 {
     public function resolveSections(array $sections, Hotel $hotel, mixed $entity = null): array
     {
-        return array_map(function (array $section) use ($hotel, $entity) {
+        $locale = app()->getLocale();
+
+        return array_map(function (array $section) use ($hotel, $entity, $locale) {
+            $props = $section['props'] ?? [];
+
+            if ($locale !== 'en') {
+                if (isset($section['translations'][$locale]['props']) && is_array($section['translations'][$locale]['props'])) {
+                    $props = array_merge($props, $section['translations'][$locale]['props']);
+                }
+                if (isset($props['translations'][$locale]) && is_array($props['translations'][$locale])) {
+                    $props = array_merge($props, $props['translations'][$locale]);
+                }
+                foreach ($props as $key => $val) {
+                    $locKey = "{$key}_{$locale}";
+                    if (isset($props[$locKey]) && $props[$locKey] !== '' && $props[$locKey] !== null) {
+                        $props[$key] = $props[$locKey];
+                    }
+                }
+            }
+
             if (! SectionRegistry::has($section['type'])) {
-                return [...$section, 'data' => []];
+                return [...$section, 'props' => $props, 'data' => []];
             }
 
             $definition = SectionRegistry::get($section['type']);
 
-            $data = $definition->resolve($section['props'] ?? [], $hotel, $entity);
+            $data = $definition->resolve($props, $hotel, $entity);
 
-            return [...$section, 'data' => $data];
+            return [...$section, 'props' => $props, 'data' => $data];
         }, $sections);
     }
 

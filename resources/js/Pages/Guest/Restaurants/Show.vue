@@ -46,13 +46,13 @@ defineProps<{
                 </p>
                 <div class="lg:col-span-4 lg:col-start-9 space-y-5 text-sm">
                     <div v-if="restaurant.dress_code">
-                        <p class="text-slate-400 uppercase tracking-wide text-xs">Dress code</p>
+                        <p class="text-slate-400 uppercase tracking-wide text-xs">{{ $t('restaurants.dress_code') }}</p>
                         <p class="mt-1 text-slate-700">{{ restaurant.dress_code }}</p>
                     </div>
                     <div v-if="restaurant.reservation_url">
-                        <p class="text-slate-400 uppercase tracking-wide text-xs">Reservations</p>
+                        <p class="text-slate-400 uppercase tracking-wide text-xs">{{ $t('restaurants.reservations') }}</p>
                         <a :href="restaurant.reservation_url" class="mt-1 inline-block text-slate-700 border-b border-slate-300 hover:border-slate-700 transition-colors">
-                            Book a table
+                            {{ $t('common.book_table') }}
                         </a>
                     </div>
                 </div>
@@ -60,7 +60,7 @@ defineProps<{
 
             <div v-if="restaurant.active_menu" class="mt-16 lg:mt-24">
                 <h2 class="text-2xl lg:text-3xl mb-8 text-center" style="font-family: var(--font-display); color: var(--color-primary, #1f4b5a)">
-                    Menu
+                    {{ $t('restaurants.menu') }}
                 </h2>
                 <div class="mx-auto max-w-2xl space-y-10">
                     <div v-for="category in restaurant.active_menu.categories" :key="category.id">

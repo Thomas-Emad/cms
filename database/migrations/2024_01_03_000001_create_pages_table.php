@@ -36,12 +36,15 @@ return new class extends Migration
         // which case it equals hotel_id), plus a plain unique index on it.
         // MySQL unique indexes permit unlimited NULLs but only one occurrence
         // of any given non-NULL value - so at most one is_home=true row can
-        // exist per hotel, enforced by the database itself, not just app code.
-        DB::statement(
-            'ALTER TABLE pages ADD COLUMN home_marker BIGINT UNSIGNED
-                GENERATED ALWAYS AS (IF(is_home = 1, hotel_id, NULL)) VIRTUAL'
-        );
-        DB::statement('ALTER TABLE pages ADD UNIQUE INDEX pages_home_marker_unique (home_marker)');
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement('CREATE UNIQUE INDEX pages_home_marker_unique ON pages(hotel_id) WHERE is_home = 1');
+        } else {
+            DB::statement(
+                'ALTER TABLE pages ADD COLUMN home_marker BIGINT UNSIGNED
+                    GENERATED ALWAYS AS (IF(is_home = 1, hotel_id, NULL)) VIRTUAL'
+            );
+            DB::statement('ALTER TABLE pages ADD UNIQUE INDEX pages_home_marker_unique (home_marker)');
+        }
     }
 
     public function down(): void

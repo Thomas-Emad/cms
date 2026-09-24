@@ -12,12 +12,12 @@ class InfoPageController extends Controller
 {
     public function timing(): Response
     {
-        return $this->render(InfoEntry::KIND_TIMING, 'Timing', 'Opening and service times');
+        return $this->render(InfoEntry::KIND_TIMING, __('info.timing_title'), __('info.timing_subtitle'));
     }
 
     public function shortCalls(): Response
     {
-        return $this->render(InfoEntry::KIND_SHORT_CALL, 'Short Calls', 'Dial these numbers from your room phone');
+        return $this->render(InfoEntry::KIND_SHORT_CALL, __('info.short_calls_title'), __('info.short_calls_subtitle'));
     }
 
     private function render(string $kind, string $title, string $subtitle): Response

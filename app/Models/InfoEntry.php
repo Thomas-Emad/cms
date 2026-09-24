@@ -3,14 +3,18 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToHotel;
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class InfoEntry extends Model
 {
-    use BelongsToHotel;
+    use BelongsToHotel, HasTranslations;
+
+    protected array $translatable = ['group', 'label', 'value'];
 
     public const KIND_TIMING = 'timing';
+
     public const KIND_SHORT_CALL = 'short_call';
 
     protected $fillable = ['hotel_id', 'kind', 'group', 'label', 'value', 'sort_order'];

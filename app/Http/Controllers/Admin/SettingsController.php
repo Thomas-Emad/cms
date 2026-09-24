@@ -41,6 +41,6 @@ class SettingsController extends Controller
             ->firstOrCreate(['hotel_id' => $hotel->id])
             ->update(['guest_view' => $request->validated('guest_view')]);
 
-        return back()->with('success', 'Guest view updated.');
+        return back()->with('success', __('admin.messages.guest_view_updated'));
     }
 }

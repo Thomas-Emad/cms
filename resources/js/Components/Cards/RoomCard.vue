@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { useI18n } from '@/i18n';
 import type { Room } from '@/types/room';
 
 const props = defineProps<{
     room: Pick<Room, 'name' | 'slug' | 'short_description' | 'size_sqm' | 'max_guests' | 'cover_image_url'>;
 }>();
 
+const { t } = useI18n();
+
 const facts = computed(() =>
     [
-        props.room.size_sqm ? `${props.room.size_sqm} m²` : null,
-        props.room.max_guests ? `${props.room.max_guests} guest${props.room.max_guests > 1 ? 's' : ''}` : null,
+        props.room.size_sqm ? `${props.room.size_sqm} ${t('rooms.sqm')}` : null,
+        props.room.max_guests
+            ? `${props.room.max_guests} ${props.room.max_guests > 1 ? t('rooms.guests') : t('rooms.guest_single')}`
+            : null,
     ]
         .filter(Boolean)
         .join(' · '),

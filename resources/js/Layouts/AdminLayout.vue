@@ -2,48 +2,55 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import type { SharedPageProps } from '@/types/hotel';
+import { useI18n } from '@/i18n';
+import LanguageSwitcher from '@/Components/LanguageSwitcher.vue';
 
 const page = usePage<SharedPageProps>();
+const { t } = useI18n();
 
-const nav = [
-  { label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
+const nav = computed(() => [
+  { key: 'nav.dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
   {
+    key: 'nav.hotel',
     label: 'Hotel',
     children: [
-      { label: 'Hotel Information', href: '#', disabled: true },
-      { label: 'Theme', href: '#', disabled: true },
-      { label: 'Settings', href: '#', disabled: true },
+      { key: 'nav.hotel_info', label: 'Hotel Information', href: '#', disabled: true },
+      { key: 'nav.theme', label: 'Theme', href: '#', disabled: true },
+      { key: 'nav.settings', label: 'Settings', href: '#', disabled: true },
     ],
   },
   {
+    key: 'nav.content',
     label: 'Content',
     children: [
-      { label: 'Facilities', href: '/admin/facilities' },
-      { label: 'Meeting Rooms', href: '/admin/facilities?category=meeting' },
-      { label: 'Rooms & Suites', href: '/admin/rooms' },
-      { label: 'Timing', href: '/admin/timing' },
-      { label: 'Short Calls', href: '/admin/short-calls' },
-      { label: 'Gallery', href: '/admin/gallery' },
-      { label: 'Hotel Map', href: '/admin/map/builder' },
-      { label: 'Restaurants', href: '/admin/restaurants' },
-      { label: 'Services', href: '/admin/services' },
-      { label: 'Events', href: '/admin/events' },
-      { label: 'Offers', href: '/admin/offers' },
-      { label: 'Experiences', href: '/admin/experiences' },
+      { key: 'nav.facilities', label: 'Facilities', href: '/admin/facilities' },
+      { key: 'nav.meeting_rooms', label: 'Meeting Rooms', href: '/admin/facilities?category=meeting' },
+      { key: 'nav.rooms', label: 'Rooms & Suites', href: '/admin/rooms' },
+      { key: 'nav.timing', label: 'Timing', href: '/admin/timing' },
+      { key: 'nav.short_calls', label: 'Short Calls', href: '/admin/short-calls' },
+      { key: 'nav.gallery', label: 'Gallery', href: '/admin/gallery' },
+      { key: 'nav.hotel_map', label: 'Hotel Map', href: '/admin/map/builder' },
+      { key: 'nav.restaurants', label: 'Restaurants', href: '/admin/restaurants' },
+      { key: 'nav.services', label: 'Services', href: '/admin/services' },
+      { key: 'nav.events', label: 'Events', href: '/admin/events' },
+      { key: 'nav.offers', label: 'Offers', href: '/admin/offers' },
+      { key: 'nav.experiences', label: 'Experiences', href: '/admin/experiences' },
     ],
   },
   {
+    key: 'nav.website',
     label: 'Website',
     children: [
-      { label: 'Pages', href: '/admin/pages' },
-      { label: 'Guest Layout', href: '/admin/layout', disabled: false },
+      { key: 'nav.pages', label: 'Pages', href: '/admin/pages' },
+      { key: 'nav.guest_layout', label: 'Guest Layout', href: '/admin/layout', disabled: false },
     ],
   },
   {
+    key: 'nav.media',
     label: 'Media',
-    children: [{ label: 'Media Library', href: '#', disabled: true }],
+    children: [{ key: 'nav.media_library', label: 'Media Library', href: '#', disabled: true }],
   },
-];
+]);
 
 /**
  * Active-state match: a link is "active" if the current URL starts with
@@ -60,37 +67,37 @@ function isActive(href: string): boolean {
 
 <template>
   <div class="min-h-screen flex bg-slate-50 text-slate-900">
-    <aside class="w-64 shrink-0 border-r border-slate-200 bg-white px-4 py-6 hidden md:block">
+    <aside class="w-64 shrink-0 border-e border-slate-200 bg-white px-4 py-6 hidden md:block">
       <div class="mb-6 font-semibold text-slate-800">
         {{ page.props.hotel?.name ?? 'Admin' }}
       </div>
 
       <nav class="space-y-4">
-        <div v-for="item in nav" :key="item.label">
+        <div v-for="item in nav" :key="item.key">
           <Link
             v-if="item.href"
             :href="item.href"
             class="block rounded-md px-2 py-1.5 text-sm font-medium"
             :class="isActive(item.href) ? 'bg-slate-100 text-slate-900' : 'text-slate-700 hover:bg-slate-100'"
           >
-            {{ item.icon }} {{ item.label }}
+            {{ item.icon }} {{ t(item.key, undefined, item.label) }}
           </Link>
 
           <div v-else>
             <div class="px-2 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">
-              {{ item.label }}
+              {{ t(item.key, undefined, item.label) }}
             </div>
             <component
               :is="child.disabled ? 'span' : Link"
               v-for="child in item.children"
-              :key="child.label"
+              :key="child.key"
               :href="child.disabled ? undefined : child.href"
               class="block rounded-md px-2 py-1.5 text-sm"
               :class="child.disabled
                 ? 'text-slate-300 cursor-not-allowed'
                 : (isActive(child.href) ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-100')"
             >
-              {{ child.label }}
+              {{ t(child.key, undefined, child.label) }}
             </component>
           </div>
         </div>
@@ -99,8 +106,9 @@ function isActive(href: string): boolean {
 
     <div class="flex-1 flex flex-col min-w-0">
       <header class="border-b border-slate-200 bg-white px-6 py-3 flex items-center justify-between">
-        <span class="text-sm text-slate-500">Admin Dashboard</span>
-        <div class="flex items-center gap-3">
+        <span class="text-sm text-slate-500">{{ t('nav.admin_dashboard', undefined, 'Admin Dashboard') }}</span>
+        <div class="flex items-center gap-4">
+          <LanguageSwitcher variant="admin" />
           <span class="text-sm text-slate-700">{{ page.props.auth?.user?.name }}</span>
           <Link
             :href="route('logout')"
@@ -108,7 +116,7 @@ function isActive(href: string): boolean {
             as="button"
             class="text-sm text-slate-400 hover:text-slate-700"
           >
-            Log out
+            {{ t('nav.logout', undefined, 'Log out') }}
           </Link>
         </div>
       </header>

@@ -18,8 +18,12 @@ class SaveInfoEntriesRequest extends FormRequest
             'entries' => ['present', 'array', 'max:200'],
             'entries.*.id' => ['nullable', 'integer'],
             'entries.*.group' => ['nullable', 'string', 'max:100'],
+            'entries.*.group_ar' => ['nullable', 'string', 'max:100'],
             'entries.*.label' => ['required', 'string', 'max:100'],
+            'entries.*.label_ar' => ['nullable', 'string', 'max:100'],
             'entries.*.value' => ['required', 'string', 'max:100'],
+            'entries.*.value_ar' => ['nullable', 'string', 'max:100'],
+            'entries.*.translations' => ['nullable', 'array'],
         ];
     }
 }

@@ -11,9 +11,7 @@ use Inertia\Response;
 
 class PageController extends Controller
 {
-    public function __construct(private PageRenderService $renderService)
-    {
-    }
+    public function __construct(private PageRenderService $renderService) {}
 
     /**
      * Guests only ever reach this via published_version_id - there is no

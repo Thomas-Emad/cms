@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Restaurant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -10,7 +11,7 @@ class StoreRestaurantRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Restaurant::class);
+        return $this->user()->can('create', Restaurant::class);
     }
 
     public function rules(): array
@@ -36,6 +37,8 @@ class StoreRestaurantRequest extends FormRequest
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'featured' => ['boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'array'],
         ];
     }
 }

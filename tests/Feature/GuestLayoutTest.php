@@ -7,6 +7,7 @@ use App\Models\HotelSettings;
 use App\Models\User;
 use App\Services\Layout\GuestLayoutConfig;
 use App\Services\Layout\GuestLayoutStore;
+use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -21,17 +22,19 @@ class GuestLayoutTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotelA;
+
     protected Hotel $hotelB;
+
     protected User $adminA;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-' . uniqid(), 'status' => 'active']);
-        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-' . uniqid(), 'status' => 'active']);
+        $this->hotelA = Hotel::create(['name' => 'Hotel A', 'slug' => 'hotel-a-'.uniqid(), 'status' => 'active']);
+        $this->hotelB = Hotel::create(['name' => 'Hotel B', 'slug' => 'hotel-b-'.uniqid(), 'status' => 'active']);
         $this->adminA = User::create([
             'hotel_id' => $this->hotelA->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin A', 'email' => 'a-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin A', 'email' => 'a-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
     }
 
@@ -60,7 +63,7 @@ class GuestLayoutTest extends TestCase
     /** @test */
     public function the_admin_can_save_a_valid_layout_and_guests_get_it_via_the_shared_inertia_prop(): void
     {
-        app(\App\Services\Tenancy\CurrentHotel::class)->set($this->hotelA);
+        app(CurrentHotel::class)->set($this->hotelA);
         $config = array_merge(GuestLayoutConfig::defaults(), ['template' => 'tv', 'headline' => 'Welcome']);
 
         $this->actingAs($this->adminA)->put('/admin/layout', $config)
@@ -80,7 +83,7 @@ class GuestLayoutTest extends TestCase
     }
 
     /** @test */
-    public function the_admin_area_never_gets_the_guestLayout_prop_even_when_signed_in(): void
+    public function the_admin_area_never_gets_the_guest_layout_prop_even_when_signed_in(): void
     {
         $this->actingAs($this->adminA)->get('/admin/map')->assertInertia(fn ($page) => $page->where('guestLayout', null));
     }

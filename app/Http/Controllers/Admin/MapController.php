@@ -93,7 +93,7 @@ class MapController extends Controller
         $raw = $request->input('json');
         $data = json_decode($raw, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return $this->fail(['That is not valid JSON: ' . json_last_error_msg() . '.'], $raw);
+            return $this->fail(['That is not valid JSON: '.json_last_error_msg().'.'], $raw);
         }
 
         return $this->store($hotel->id, $data, $validator, $raw);
@@ -120,7 +120,7 @@ class MapController extends Controller
         HotelMap::withoutGlobalScopes()->updateOrCreate(['hotel_id' => $hotelId], ['data' => $data]);
 
         return redirect()->route($route)
-            ->with('map_saved', 'Map saved.')
+            ->with('map_saved', __('admin.messages.map_saved'))
             ->with('map_warnings', $result['warnings']);
     }
 

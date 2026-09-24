@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Experience;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -10,7 +11,7 @@ class StoreExperienceRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Experience::class);
+        return $this->user()->can('create', Experience::class);
     }
 
     public function rules(): array
@@ -31,6 +32,8 @@ class StoreExperienceRequest extends FormRequest
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'featured' => ['boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'array'],
         ];
     }
 }

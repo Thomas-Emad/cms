@@ -35,7 +35,7 @@ class OfferController extends Controller
     {
         Offer::create($request->validated());
 
-        return redirect()->route('admin.offers.index')->with('success', 'Offer created.');
+        return redirect()->route('admin.offers.index')->with('success', __('admin.messages.offer_created'));
     }
 
     public function edit(Offer $offer): Response
@@ -49,7 +49,7 @@ class OfferController extends Controller
     {
         $offer->update($request->validated());
 
-        return redirect()->route('admin.offers.index')->with('success', 'Offer updated.');
+        return redirect()->route('admin.offers.index')->with('success', __('admin.messages.offer_updated'));
     }
 
     public function destroy(Offer $offer): RedirectResponse
@@ -58,6 +58,6 @@ class OfferController extends Controller
 
         $offer->delete();
 
-        return redirect()->route('admin.offers.index')->with('success', 'Offer deleted.');
+        return redirect()->route('admin.offers.index')->with('success', __('admin.messages.offer_deleted'));
     }
 }

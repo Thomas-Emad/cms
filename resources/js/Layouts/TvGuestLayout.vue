@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import type { Hotel } from '@/types/hotel';
+import LanguageSwitcher from '@/Components/LanguageSwitcher.vue';
 
 defineProps<{
     hotel?: Hotel;
@@ -78,8 +79,9 @@ onUnmounted(() => {
              "home" is just another tile a page provides, same as a real
              Smart TV remote's dedicated Home button rather than an
              on-screen one. -->
-        <div v-if="!onHome" class="fixed top-4 right-6 z-50 text-sm tabular-nums text-white/70" aria-label="Current time">
-            {{ clock }}
+        <div v-if="!onHome" class="fixed top-4 right-6 rtl:right-auto rtl:left-6 z-50 flex items-center gap-4 text-sm tabular-nums text-white/70" aria-label="Current time">
+            <LanguageSwitcher variant="guest" />
+            <span>{{ clock }}</span>
         </div>
 
         <main class="min-h-screen">

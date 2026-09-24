@@ -67,7 +67,21 @@ export function resolveConfig(raw: unknown): GuestLayoutConfig {
 
 export const visibleItems = (c: GuestLayoutConfig) => c.items.filter((i) => i.visible);
 
-/** Black or white text, whichever reads better on this background. */
+export const ROUTE_LABELS: Record<string, string> = {
+    '/facilities': 'nav.facilities',
+    '/timing': 'nav.timing',
+    '/map': 'nav.hotel_map',
+    '/short-calls': 'nav.short_calls',
+    '/rooms': 'nav.rooms',
+    '/gallery': 'nav.gallery',
+    '/meeting-rooms': 'nav.meeting_rooms',
+    '/restaurants': 'nav.restaurants',
+    '/services': 'nav.services',
+    '/events': 'nav.events',
+    '/offers': 'nav.offers',
+    '/experiences': 'nav.experiences',
+};
+
 export function readableOn(hex: string | null): '#ffffff' | '#111111' {
     if (!isHex(hex)) return '#ffffff';
     const n = parseInt(hex.slice(1), 16);
@@ -78,3 +92,17 @@ export function readableOn(hex: string | null): '#ffffff' | '#111111' {
     const L = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
     return L > 0.4 ? '#111111' : '#ffffff';
 }
+
+export function localizedItemLabel(
+    item: { href: string; label: string },
+    translate: (key: string, params?: Record<string, string | number>, fallback?: string) => string,
+): string {
+    const key = ROUTE_LABELS[item.href];
+    if (key) {
+        return translate(key, undefined, item.label);
+    }
+    return item.label;
+}
+
+
+

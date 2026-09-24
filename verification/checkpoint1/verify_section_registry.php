@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Loads the ACTUAL, unmodified App\Services\PageBuilder\SectionRegistry
  * and its section definition classes (copied verbatim, not reimplemented)
@@ -13,29 +14,47 @@
  * it as a service-container resolver; here it just does `new $class()`,
  * which is behaviorally identical for these stateless definition classes.
  */
-
 spl_autoload_register(function ($class) {
     $prefix = 'App\\';
-    if (!str_starts_with($class, $prefix)) return;
+    if (! str_starts_with($class, $prefix)) {
+        return;
+    }
     $relative = substr($class, strlen($prefix));
-    $path = __DIR__ . '/app_stub/' . str_replace('\\', '/', $relative) . '.php';
-    if (file_exists($path)) require $path;
+    $path = __DIR__.'/app_stub/'.str_replace('\\', '/', $relative).'.php';
+    if (file_exists($path)) {
+        require $path;
+    }
 });
 
 spl_autoload_register(function ($class) {
     $prefix = 'Illuminate\\';
-    if (!str_starts_with($class, $prefix)) return;
+    if (! str_starts_with($class, $prefix)) {
+        return;
+    }
     $relative = substr($class, strlen($prefix));
-    $path = __DIR__ . '/framework_stubs/Illuminate/' . str_replace('\\', '/', $relative) . '.php';
-    if (file_exists($path)) require $path;
+    $path = __DIR__.'/framework_stubs/Illuminate/'.str_replace('\\', '/', $relative).'.php';
+    if (file_exists($path)) {
+        require $path;
+    }
 });
 
-function app(string $class) { return new $class(); }
+function app(string $class)
+{
+    return new $class;
+}
 
 use App\Services\PageBuilder\SectionRegistry;
 
-function pass(string $msg): void { echo "  [PASS] $msg\n"; }
-function fail(string $msg): void { echo "  [FAIL] $msg\n"; global $failures; $failures++; }
+function pass(string $msg): void
+{
+    echo "  [PASS] $msg\n";
+}
+function fail(string $msg): void
+{
+    echo "  [FAIL] $msg\n";
+    global $failures;
+    $failures++;
+}
 $failures = 0;
 
 echo "=== SectionRegistry: known types ===\n";
@@ -44,7 +63,7 @@ SectionRegistry::has('text') ? pass("'text' recognized") : fail("'text' not reco
 SectionRegistry::has('facility-grid') ? pass("'facility-grid' recognized") : fail("'facility-grid' not recognized");
 
 echo "\n=== SectionRegistry: unknown types are rejected, not silently accepted ===\n";
-!SectionRegistry::has('evil-custom-html') ? pass("unknown type 'evil-custom-html' correctly NOT recognized") : fail('unknown type was accepted!');
+! SectionRegistry::has('evil-custom-html') ? pass("unknown type 'evil-custom-html' correctly NOT recognized") : fail('unknown type was accepted!');
 
 $threw = false;
 try {
@@ -56,7 +75,7 @@ $threw ? pass('SectionRegistry::get() throws for an unknown type rather than ret
 
 echo "\n=== Per-type schema correctness ===\n";
 $hero = SectionRegistry::get('hero');
-$hero->isDynamic() === false ? pass("hero correctly marked as NOT dynamic (no DB query, no preview-resolve network call needed)") : fail('hero should not be dynamic');
+$hero->isDynamic() === false ? pass('hero correctly marked as NOT dynamic (no DB query, no preview-resolve network call needed)') : fail('hero should not be dynamic');
 array_key_exists('title', $hero->propsSchema()) ? pass('hero propsSchema requires a title') : fail('hero schema missing title rule');
 
 $facilityGrid = SectionRegistry::get('facility-grid');
@@ -66,7 +85,7 @@ foreach (['category', 'featured_only', 'limit', 'columns'] as $key) {
     array_key_exists($key, $schema) ? pass("facility-grid schema validates '{$key}'") : fail("facility-grid schema missing '{$key}'");
 }
 $defaults = $facilityGrid->defaultProps();
-$defaults['limit'] === 6 ? pass('facility-grid default limit is 6, matching the design spec example') : fail('unexpected default limit: ' . $defaults['limit']);
+$defaults['limit'] === 6 ? pass('facility-grid default limit is 6, matching the design spec example') : fail('unexpected default limit: '.$defaults['limit']);
 
-echo "\n" . ($failures === 0 ? "ALL SECTIONREGISTRY CHECKS PASSED" : "{$failures} CHECK(S) FAILED") . "\n";
+echo "\n".($failures === 0 ? 'ALL SECTIONREGISTRY CHECKS PASSED' : "{$failures} CHECK(S) FAILED")."\n";
 exit($failures === 0 ? 0 : 1);

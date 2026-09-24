@@ -7,9 +7,7 @@ use App\Services\PageBuilder\SectionsValidator;
 
 class SaveDraftAction
 {
-    public function __construct(private SectionsValidator $validator)
-    {
-    }
+    public function __construct(private SectionsValidator $validator) {}
 
     /**
      * Mutates the existing draft_version_id row in place - this is the

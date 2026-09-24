@@ -5,6 +5,7 @@ import ClassicShell from '@/Layouts/guest/ClassicShell.vue';
 import TvShell from '@/Layouts/guest/TvShell.vue';
 import { useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import { useI18n } from '@/i18n';
 
 defineOptions({ layout: AdminLayout });
 
@@ -14,6 +15,8 @@ const props = defineProps<{
   errors_list: string[];
   flash_ok: string | null;
 }>();
+
+const { t } = useI18n();
 
 const form = useForm<GuestLayoutConfig>({ ...props.config, items: props.config.items.map((i) => ({ ...i })) });
 
@@ -29,7 +32,7 @@ function move(i: number, dir: -1 | 1) {
   [form.items[i], form.items[j]] = [form.items[j], form.items[i]];
 }
 function resetItems() {
-  if (confirm('Replace the menu with the default items?')) form.items = props.defaults.items.map((i) => ({ ...i }));
+  if (confirm(t('admin.layout.reset_confirm', 'Replace the menu with the default items?'))) form.items = props.defaults.items.map((i) => ({ ...i }));
 }
 
 const save = () => form.put('/admin/layout', { preserveScroll: true });
@@ -47,8 +50,8 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
   <div class="grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-[26rem_1fr]">
     <!-- ============ form ============ -->
     <form class="min-w-0" @submit.prevent="save">
-      <h1 class="text-xl font-semibold text-slate-800">Guest Layout</h1>
-      <p class="mt-1 text-sm text-slate-500">Choose how the guest screens look and what's in the menu. Changes apply to every guest screen as soon as you save.</p>
+      <h1 class="text-xl font-semibold text-slate-800">{{ $t('admin.layout.title', 'Guest Layout') }}</h1>
+      <p class="mt-1 text-sm text-slate-500">{{ $t('admin.layout.subtitle', "Choose how the guest screens look and what's in the menu. Changes apply to every guest screen as soon as you save.") }}</p>
 
       <p v-if="flash_ok && !form.isDirty" class="mt-3 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700" data-testid="saved">{{ flash_ok }}</p>
       <div v-if="errors_list.length" class="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700" data-testid="errors">
@@ -62,7 +65,7 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
           v-for="t in TEMPLATES"
           :key="t.id"
           type="button"
-          class="rounded-lg border p-3 text-left transition"
+          class="rounded-lg border p-3 text-start transition"
           :class="form.template === t.id ? 'border-slate-800 ring-2 ring-slate-800' : 'border-slate-200 hover:bg-slate-50'"
           :data-testid="`template-${t.id}`"
           @click="form.template = t.id"
@@ -73,20 +76,20 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
       </div>
 
       <div class="mt-2 rounded-lg border border-slate-200 bg-white p-4">
-        <label class="flex items-center justify-between text-sm">Show the clock <input v-model="form.show_clock" type="checkbox" /></label>
+        <label class="flex items-center justify-between text-sm">{{ $t('admin.layout.show_clock', 'Show the clock') }} <input v-model="form.show_clock" type="checkbox" /></label>
 
         <template v-if="form.template === 'tv'">
           <label class="mt-3 flex items-center justify-between text-sm">
-            Lock the home screen (no scrolling)
+            {{ $t('admin.layout.lock_home_scroll', 'Lock the home screen (no scrolling)') }}
             <input v-model="form.lock_home_scroll" type="checkbox" data-testid="lock-scroll" />
           </label>
-          <label :class="label">Tile size</label>
+          <label :class="label">{{ $t('admin.layout.tile_size', 'Tile size') }}</label>
           <select v-model="form.tile_size" :class="field" data-testid="tile-size">
             <option v-for="s in (Object.keys(TILE_DIMENSIONS) as TileSize[])" :key="s" :value="s">{{ s[0].toUpperCase() + s.slice(1) }}</option>
           </select>
-          <label :class="label">Headline over the home picture (optional)</label>
+          <label :class="label">{{ $t('admin.layout.headline_label', 'Headline over the home picture (optional)') }}</label>
           <input v-model="form.headline" maxlength="80" placeholder="e.g. Welcome to Grand Horizon" :class="field" />
-          <label :class="label">Tagline under the hotel name (optional)</label>
+          <label :class="label">{{ $t('admin.layout.tagline_label', 'Tagline under the hotel name (optional)') }}</label>
           <input v-model="form.tagline" maxlength="80" placeholder="e.g. A Smarter Stay" :class="field" />
         </template>
       </div>
@@ -94,8 +97,8 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
       <!-- menu items -->
       <div class="mt-4 rounded-lg border border-slate-200 bg-white p-4">
         <div class="flex items-center justify-between">
-          <p class="text-sm font-semibold text-slate-700">Menu items</p>
-          <button type="button" class="text-xs text-slate-400 hover:underline" @click="resetItems">Reset to defaults</button>
+          <p class="text-sm font-semibold text-slate-700">{{ $t('admin.layout.menu_items', 'Menu items') }}</p>
+          <button type="button" class="text-xs text-slate-400 hover:underline" @click="resetItems">{{ $t('admin.layout.reset_defaults', 'Reset to defaults') }}</button>
         </div>
 
         <ul class="mt-2 space-y-2" data-testid="items">
@@ -108,25 +111,31 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
               <input v-model="it.icon" maxlength="4" class="w-11 rounded-md border border-slate-300 px-1 py-1.5 text-center text-lg" :aria-label="`Icon for ${it.label}`" />
               <input v-model="it.label" class="min-w-0 flex-1 rounded-md border border-slate-300 px-2 py-1.5 text-sm" :aria-label="`Name for item ${i + 1}`" />
               <input v-if="form.template === 'tv'" type="color" :value="it.color ?? '#1f2937'" class="h-8 w-8 shrink-0 rounded" title="Tile colour" @input="it.color = ($event.target as HTMLInputElement).value" />
-              <label class="flex shrink-0 items-center gap-1 text-xs text-slate-500"><input v-model="it.visible" type="checkbox" />Show</label>
+              <label class="flex shrink-0 items-center gap-1 text-xs text-slate-500"><input v-model="it.visible" type="checkbox" />{{ $t('admin.layout.show', 'Show') }}</label>
               <button type="button" class="shrink-0 text-red-400 hover:text-red-600" aria-label="Delete item" @click="removeItem(i)">✕</button>
             </div>
             <input v-model="it.href" placeholder="/facilities" class="mt-1.5 w-full rounded-md border border-slate-300 px-2 py-1 font-mono text-xs" :aria-label="`Page address for ${it.label}`" />
           </li>
         </ul>
-        <button type="button" class="mt-2 w-full rounded-md border border-dashed border-slate-300 py-1.5 text-sm text-slate-500 hover:bg-slate-50" data-testid="add-item" @click="addItem">+ Add item</button>
+        <button type="button" class="mt-2 w-full rounded-md border border-dashed border-slate-300 py-1.5 text-sm text-slate-500 hover:bg-slate-50" data-testid="add-item" @click="addItem">
+          {{ $t('admin.layout.add_item', '+ Add item') }}
+        </button>
       </div>
 
       <button type="submit" :disabled="form.processing" class="mt-4 w-full rounded-md bg-slate-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50" data-testid="save">
-        {{ form.processing ? 'Saving…' : 'Save layout' }}
+        {{ form.processing ? $t('admin.common.saving', 'Saving…') : $t('admin.layout.save_layout', 'Save layout') }}
       </button>
     </form>
 
     <!-- ============ live preview ============ -->
     <div class="min-w-0">
       <div class="mb-2 flex gap-2">
-        <button type="button" class="rounded-md border px-3 py-1 text-sm" :class="previewTab === 'home' ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-300 text-slate-600'" data-testid="preview-home" @click="previewTab = 'home'">Home screen</button>
-        <button type="button" class="rounded-md border px-3 py-1 text-sm" :class="previewTab === 'other' ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-300 text-slate-600'" data-testid="preview-other" @click="previewTab = 'other'">Another page</button>
+        <button type="button" class="rounded-md border px-3 py-1 text-sm" :class="previewTab === 'home' ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-300 text-slate-600'" data-testid="preview-home" @click="previewTab = 'home'">
+          {{ $t('admin.layout.preview_home', 'Home screen') }}
+        </button>
+        <button type="button" class="rounded-md border px-3 py-1 text-sm" :class="previewTab === 'other' ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-300 text-slate-600'" data-testid="preview-other" @click="previewTab = 'other'">
+          {{ $t('admin.layout.preview_other', 'Another page') }}
+        </button>
       </div>
       <div class="overflow-hidden rounded-xl border border-slate-300 bg-slate-900" style="aspect-ratio: 16 / 9" data-testid="preview">
         <div class="h-full w-full origin-top-left" style="width: 177.78%; height: 177.78%; transform: scale(0.5625); font-size: 22px">
@@ -138,7 +147,7 @@ const label = 'mb-1 mt-3 block text-xs font-medium text-slate-500';
           </div>
         </div>
       </div>
-      <p class="mt-2 text-xs text-slate-400">Preview only — it doesn't scroll or respond to the remote here. Save and open a guest screen to try it for real.</p>
+      <p class="mt-2 text-xs text-slate-400">{{ $t('admin.layout.preview_note', "Preview only — it doesn't scroll or respond to the remote here. Save and open a guest screen to try it for real.") }}</p>
     </div>
   </div>
 </template>

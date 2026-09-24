@@ -4,12 +4,17 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToHotel;
 use App\Models\Concerns\HasMedia;
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Experience extends Model
 {
-    use BelongsToHotel, HasMedia;
+    use BelongsToHotel, HasMedia, HasTranslations;
+
+    protected array $translatable = [
+        'title', 'description', 'short_description', 'duration',
+    ];
 
     protected $fillable = [
         'hotel_id', 'title', 'slug', 'description', 'category',

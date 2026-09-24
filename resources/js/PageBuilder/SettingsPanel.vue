@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { inject, computed } from 'vue';
+import { inject, computed, ref } from 'vue';
 import { SECTION_REGISTRY } from './registry';
 import type { PageBuilderStore } from './store';
 
 const store = inject<PageBuilderStore>('pageBuilderStore')!;
+const activeLang = ref<'en' | 'ar'>('en');
 
 const section = computed(() => store.selectedSection.value);
 const entry = computed(() => (section.value ? SECTION_REGISTRY[section.value.type] : null));
@@ -17,7 +18,8 @@ const entry = computed(() => (section.value ? SECTION_REGISTRY[section.value.typ
  */
 function onTypedFieldInput(key: string, value: unknown) {
   if (!section.value) return;
-  store.updateSectionPropsBatched(section.value.id, { [key]: value }, `${section.value.id}:${key}`);
+  const propKey = activeLang.value === 'ar' ? `${key}_ar` : key;
+  store.updateSectionPropsBatched(section.value.id, { [propKey]: value }, `${section.value.id}:${propKey}`);
 }
 
 function onDiscreteFieldInput(key: string, value: unknown) {
@@ -27,15 +29,68 @@ function onDiscreteFieldInput(key: string, value: unknown) {
 </script>
 
 <template>
-  <div class="w-72 shrink-0 border-l border-slate-200 bg-white p-4 overflow-y-auto">
+  <div class="w-72 shrink-0 border-s border-slate-200 bg-white p-4 overflow-y-auto">
     <div v-if="!section" class="text-sm text-slate-400">
       Select a section to edit its properties.
     </div>
 
     <div v-else>
-      <h2 class="text-sm font-semibold text-slate-800 mb-3">{{ entry?.label ?? section.type }}</h2>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold text-slate-800">{{ entry?.label ?? section.type }}</h2>
+        <div class="inline-flex rounded-md bg-slate-100 p-0.5 text-xs font-medium">
+          <button
+            type="button"
+            class="px-2 py-0.5 rounded"
+            :class="activeLang === 'en' ? 'bg-white shadow text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'"
+            @click="activeLang = 'en'"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            class="px-2 py-0.5 rounded"
+            :class="activeLang === 'ar' ? 'bg-white shadow text-slate-900 font-semibold' : 'text-slate-500 hover:text-slate-900'"
+            @click="activeLang = 'ar'"
+          >
+            AR
+          </button>
+        </div>
+      </div>
+
+      <div v-if="activeLang === 'ar'" class="mb-3 rounded bg-amber-50 p-2 text-xs text-amber-800">
+        Editing Arabic text. Leave empty to use English fallback.
+      </div>
 
       <div v-for="field in entry?.editorFields ?? []" :key="field.key" class="mb-3">
+        <!-- In AR tab, only display text and textarea fields for translation -->
+        <template v-if="activeLang === 'ar'">
+          <div v-if="field.type === 'text' || field.type === 'textarea'">
+            <label class="block text-xs font-medium text-slate-600 mb-1">
+              {{ field.label }} (العربية)
+            </label>
+            <input
+              v-if="field.type === 'text'"
+              :value="section.props[`${field.key}_ar`] ?? ''"
+              type="text"
+              dir="rtl"
+              :placeholder="String(section.props[field.key] ?? '')"
+              class="w-full rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+              @input="onTypedFieldInput(field.key, ($event.target as HTMLInputElement).value)"
+            />
+            <textarea
+              v-else-if="field.type === 'textarea'"
+              :value="section.props[`${field.key}_ar`] ?? ''"
+              rows="3"
+              dir="rtl"
+              :placeholder="String(section.props[field.key] ?? '')"
+              class="w-full rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+              @input="onTypedFieldInput(field.key, ($event.target as HTMLTextAreaElement).value)"
+            />
+          </div>
+        </template>
+
+        <!-- In EN tab, display all standard fields -->
+        <template v-else>
         <label class="block text-xs font-medium text-slate-600 mb-1">{{ field.label }}</label>
 
         <input
@@ -115,6 +170,7 @@ function onDiscreteFieldInput(key: string, value: unknown) {
               .filter((n) => !isNaN(n))
           )"
         />
+        </template>
       </div>
 
       <p v-if="entry?.isDynamic" class="text-xs text-slate-400 mt-2">

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Services\PageBuilder\SectionRegistry;
+use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
 class SectionRegistryCompletenessTest extends TestCase
@@ -47,14 +48,14 @@ class SectionRegistryCompletenessTest extends TestCase
         foreach (SectionRegistry::types() as $type) {
             $definition = SectionRegistry::get($type);
 
-            $validator = \Illuminate\Support\Facades\Validator::make(
+            $validator = Validator::make(
                 $definition->defaultProps(),
                 $definition->propsSchema()
             );
 
             $this->assertFalse(
                 $validator->fails(),
-                "defaultProps() for '{$type}' fails its own propsSchema(): " . json_encode($validator->errors()->all())
+                "defaultProps() for '{$type}' fails its own propsSchema(): ".json_encode($validator->errors()->all())
             );
         }
     }

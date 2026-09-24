@@ -20,7 +20,7 @@ defineProps<{
             class="shrink-0 rounded-full px-4 py-2 text-xs uppercase tracking-wide text-white transition-opacity hover:opacity-90"
             style="background: var(--color-primary, #1f4b5a)"
         >
-            Request
+            {{ $t('services.request') }}
         </button>
         <span v-else-if="service.price" class="shrink-0 text-sm text-slate-600">${{ service.price }}</span>
     </div>

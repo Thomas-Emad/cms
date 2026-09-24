@@ -25,7 +25,7 @@ const index = computed(() => Math.max(0, props.floors.findIndex((f) => f.id === 
     <nav ref="nav" class="glass no-scrollbar relative max-h-full overflow-y-auto overscroll-contain rounded-3xl p-1.5" aria-label="Floors" data-testid="floor-selector">
         <!-- sliding highlight: springs between floors like a lift car -->
         <div
-            class="absolute left-1.5 rounded-2xl bg-[#183c2d] transition-transform duration-500 motion-reduce:transition-none"
+            class="absolute start-1.5 rounded-2xl bg-[#183c2d] transition-transform duration-500 motion-reduce:transition-none"
             :style="{ width: `${SIZE}px`, height: `${SIZE}px`, transform: `translateY(${index * (SIZE + GAP)}px)`, transitionTimingFunction: 'var(--ease-spring)' }"
         />
         <ul class="relative flex flex-col" :style="{ gap: `${GAP}px` }">
@@ -40,7 +40,7 @@ const index = computed(() => Math.max(0, props.floors.findIndex((f) => f.id === 
                     @click="emit('select', f.id)"
                 >
                     {{ f.label }}
-                    <span v-if="routeFloors.has(f.id)" class="absolute right-2 top-2 h-2.5 w-2.5 rounded-full" :class="f.id === current ? 'bg-[#b99a62]' : 'bg-[#14805e]'" />
+                    <span v-if="routeFloors.has(f.id)" class="absolute end-2 top-2 h-2.5 w-2.5 rounded-full" :class="f.id === current ? 'bg-[#b99a62]' : 'bg-[#14805e]'" />
                 </button>
             </li>
         </ul>

@@ -41,7 +41,7 @@ class LoginRequest extends FormRequest
             // `php artisan lang:publish`), so relying on that key would show
             // the literal string "auth.failed" to the user until published.
             throw ValidationException::withMessages([
-                'email' => 'These credentials do not match our records.',
+                'email' => __('auth.failed'),
             ]);
         }
 
@@ -50,7 +50,7 @@ class LoginRequest extends FormRequest
             $this->session()->invalidate();
 
             throw ValidationException::withMessages([
-                'email' => 'This account is disabled. Contact your hotel administrator.',
+                'email' => __('auth.disabled'),
             ]);
         }
 
@@ -72,10 +72,11 @@ class LoginRequest extends FormRequest
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
-        // Hardcoded for the same reason as above (auth.throttle key may not
-        // exist). ceil() on minutes kept for a friendlier message.
         throw ValidationException::withMessages([
-            'email' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minute(s).',
+            'email' => __('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => (int) ceil($seconds / 60),
+            ]),
         ]);
     }
 
@@ -84,6 +85,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
+        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
 }

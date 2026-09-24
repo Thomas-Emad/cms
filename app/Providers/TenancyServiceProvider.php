@@ -10,7 +10,7 @@ class TenancyServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(CurrentHotel::class, function () {
-            return new CurrentHotel();
+            return new CurrentHotel;
         });
     }
 }

@@ -23,7 +23,7 @@ trait ResolvesMedia
 {
     /**
      * @return array{url: string, alt_text: ?string}|null Null if the id is
-     *         missing, doesn't exist, or belongs to a different hotel.
+     *                                                    missing, doesn't exist, or belongs to a different hotel.
      */
     protected function resolveMedia(?int $mediaId, Hotel $hotel): ?array
     {
@@ -51,7 +51,7 @@ trait ResolvesMedia
      * seeing 4 images instead of 5 because one was deleted is much better
      * than a 500 error on the whole page.
      *
-     * @param int[] $mediaIds
+     * @param  int[]  $mediaIds
      * @return array<array{url: string, alt_text: ?string}>
      */
     protected function resolveMediaList(array $mediaIds, Hotel $hotel): array

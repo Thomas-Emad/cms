@@ -41,7 +41,7 @@ class RestaurantController extends Controller
         $restaurant = Restaurant::create($request->validated());
 
         return redirect()->route('admin.restaurants.edit', $restaurant)
-            ->with('success', 'Restaurant created. Add a menu below.');
+            ->with('success', __('admin.messages.restaurant_created'));
     }
 
     public function edit(Restaurant $restaurant): Response
@@ -59,7 +59,7 @@ class RestaurantController extends Controller
     {
         $restaurant->update($request->validated());
 
-        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant updated.');
+        return redirect()->route('admin.restaurants.index')->with('success', __('admin.messages.restaurant_updated'));
     }
 
     public function destroy(Restaurant $restaurant): RedirectResponse
@@ -68,13 +68,13 @@ class RestaurantController extends Controller
 
         $restaurant->delete();
 
-        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant deleted.');
+        return redirect()->route('admin.restaurants.index')->with('success', __('admin.messages.restaurant_deleted'));
     }
 
     public function updateMenu(UpdateMenuRequest $request, Restaurant $restaurant, UpdateMenuAction $action): RedirectResponse
     {
         $action->execute($restaurant, $request->validated('categories'));
 
-        return redirect()->route('admin.restaurants.edit', $restaurant)->with('success', 'Menu saved.');
+        return redirect()->route('admin.restaurants.edit', $restaurant)->with('success', __('admin.messages.menu_saved'));
     }
 }

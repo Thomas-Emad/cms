@@ -28,16 +28,17 @@ class BuilderInteractionPersistenceTest extends TestCase
     use RefreshDatabase;
 
     protected Hotel $hotel;
+
     protected User $admin;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->hotel = Hotel::create(['name' => 'Test Hotel', 'slug' => 'test-hotel-' . uniqid(), 'status' => 'active']);
+        $this->hotel = Hotel::create(['name' => 'Test Hotel', 'slug' => 'test-hotel-'.uniqid(), 'status' => 'active']);
         $this->admin = User::create([
             'hotel_id' => $this->hotel->id, 'role' => 'hotel_admin', 'status' => 'active',
-            'name' => 'Admin', 'email' => 'admin-' . uniqid() . '@example.com', 'password' => Hash::make('password'),
+            'name' => 'Admin', 'email' => 'admin-'.uniqid().'@example.com', 'password' => Hash::make('password'),
         ]);
     }
 

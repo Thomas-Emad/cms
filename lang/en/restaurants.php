@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Dining & Bars',
+    'subtitle' => 'Exquisite dining experiences curated by world-class chefs.',
+    'empty' => 'No dining options available right now.',
+    'menu' => 'Menu',
+    'full_menu' => 'View Full Menu',
+    'cuisine' => 'Cuisine',
+    'dress_code' => 'Dress Code',
+    'hours' => 'Hours',
+    'location' => 'Location',
+    'reserve' => 'Reserve a table',
+    'reservations' => 'Reservations',
+    'more_dining' => 'Explore more dining options',
+    'add_restaurant' => '+ Add Restaurant',
+    'edit_restaurant' => 'Edit Restaurant',
+    'save_menu' => 'Save Menu',
+    'saving_menu' => 'Saving menu...',
+    'add_category' => '+ Add Category',
+    'add_item' => '+ Add Menu Item',
+    'category_name' => 'Category Name',
+    'item_name' => 'Item Name',
+    'item_description' => 'Description',
+    'price' => 'Price',
+    'available' => 'Available',
+];

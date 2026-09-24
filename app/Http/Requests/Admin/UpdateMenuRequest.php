@@ -26,13 +26,18 @@ class UpdateMenuRequest extends FormRequest
             'categories' => ['required', 'array', 'min:1'],
             'categories.*.id' => ['nullable', 'integer'], // present = existing row, absent = new
             'categories.*.name' => ['required', 'string', 'max:255'],
+            'categories.*.name_ar' => ['nullable', 'string', 'max:255'],
+            'categories.*.translations' => ['nullable', 'array'],
             'categories.*.items' => ['array'],
             'categories.*.items.*.id' => ['nullable', 'integer'],
             'categories.*.items.*.name' => ['required', 'string', 'max:255'],
+            'categories.*.items.*.name_ar' => ['nullable', 'string', 'max:255'],
             'categories.*.items.*.description' => ['nullable', 'string'],
+            'categories.*.items.*.description_ar' => ['nullable', 'string'],
             'categories.*.items.*.price' => ['required', 'numeric', 'min:0'],
             'categories.*.items.*.dietary_info' => ['nullable', 'array'],
             'categories.*.items.*.is_available' => ['boolean'],
+            'categories.*.items.*.translations' => ['nullable', 'array'],
         ];
     }
 }

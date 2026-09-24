@@ -61,7 +61,7 @@ class SectionRegistry
 
     /**
      * @var array<string, string[]> type => contexts it's relevant in.
-     *      'any' means it shows up in every Builder regardless of context.
+     *                              'any' means it shows up in every Builder regardless of context.
      */
     private static array $contexts = [
         'hero' => ['page'],

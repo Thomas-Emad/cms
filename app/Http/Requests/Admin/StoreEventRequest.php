@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -10,7 +11,7 @@ class StoreEventRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Event::class);
+        return $this->user()->can('create', Event::class);
     }
 
     public function rules(): array
@@ -34,6 +35,8 @@ class StoreEventRequest extends FormRequest
             'booking_required' => ['boolean'],
             'booking_url' => ['nullable', 'required_if:booking_required,true', 'url', 'max:255'],
             'status' => ['required', Rule::in(['draft', 'published', 'cancelled', 'archived'])],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'array'],
         ];
     }
 }

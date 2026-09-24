@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -55,7 +56,7 @@ class FacilityController extends Controller
                 'gallery_urls' => $facility->gallery->pluck('url'),
             ],
             'slides' => collect([$facility->cover])->filter()->concat($facility->gallery)
-                ->map(fn (\App\Models\Media $m) => $m->toPayload())->values(),
+                ->map(fn (Media $m) => $m->toPayload())->values(),
         ]);
     }
 }

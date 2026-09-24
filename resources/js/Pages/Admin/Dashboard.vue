@@ -11,13 +11,13 @@ defineProps<{
 
 <template>
   <div>
-    <h1 class="text-xl font-semibold text-slate-800">Dashboard</h1>
+    <h1 class="text-xl font-semibold text-slate-800">{{ $t('nav.dashboard') }}</h1>
     <p class="mt-1 text-sm text-slate-500">
-      Managing <strong>{{ hotel.name }}</strong> ({{ hotel.status }})
+      {{ $t('admin.dashboard.managing', 'Managing') }} <strong>{{ hotel.name }}</strong> ({{ $t(`admin.status.${hotel.status}`, hotel.status) }})
     </p>
 
     <div class="mt-6 rounded-lg border border-dashed border-slate-300 p-6 text-sm text-slate-400">
-      Content widgets (facility count, upcoming events, draft pages...) land in Phase 2+.
+      {{ $t('admin.dashboard.placeholder', 'Content widgets (facility count, upcoming events, draft pages...) land in Phase 2+.') }}
     </div>
   </div>
 </template>

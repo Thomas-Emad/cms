@@ -49,7 +49,7 @@ defineProps<{
                 <span class="border-b border-current/40 pb-1 group-hover:border-current transition-colors">
                     {{ props.button_text }}
                 </span>
-                <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                <span class="inline-block transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180">→</span>
             </a>
         </div>
     </section>

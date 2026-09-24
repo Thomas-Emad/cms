@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Offer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -10,7 +11,7 @@ class StoreOfferRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Offer::class);
+        return $this->user()->can('create', Offer::class);
     }
 
     public function rules(): array
@@ -34,6 +35,8 @@ class StoreOfferRequest extends FormRequest
             'booking_url' => ['nullable', 'url', 'max:255'],
             'status' => ['required', Rule::in(['draft', 'published', 'expired', 'archived'])],
             'featured' => ['boolean'],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'array'],
         ];
     }
 }

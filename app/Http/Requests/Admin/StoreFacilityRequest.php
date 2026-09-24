@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Facility;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -10,7 +11,7 @@ class StoreFacilityRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Facility::class);
+        return $this->user()->can('create', Facility::class);
     }
 
     public function rules(): array
@@ -43,6 +44,8 @@ class StoreFacilityRequest extends FormRequest
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'featured' => ['boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'array'],
             // Cover/gallery images are handled separately via a dedicated
             // media upload endpoint (not built this pass - see README),
             // not as fields on this request.

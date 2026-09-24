@@ -8,7 +8,6 @@ use App\Models\Facility;
 use App\Models\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -61,7 +60,7 @@ class FacilityController extends Controller
 
         // Straight to the edit screen so photos can be added right away.
         return redirect()->route('admin.facilities.edit', $facility)
-            ->with('success', 'Facility created. You can now add photos.');
+            ->with('success', __('admin.messages.facility_created'));
     }
 
     public function edit(Facility $facility): Response
@@ -80,7 +79,7 @@ class FacilityController extends Controller
         $facility->update($request->validated());
 
         return redirect()->route('admin.facilities.edit', $facility)
-            ->with('success', 'Facility updated.');
+            ->with('success', __('admin.messages.facility_updated'));
     }
 
     public function destroy(Facility $facility): RedirectResponse
@@ -90,6 +89,6 @@ class FacilityController extends Controller
         $facility->delete();
 
         return redirect()->route('admin.facilities.index')
-            ->with('success', 'Facility deleted.');
+            ->with('success', __('admin.messages.facility_deleted'));
     }
 }

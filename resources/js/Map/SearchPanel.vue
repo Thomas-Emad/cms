@@ -35,8 +35,8 @@ function choose(id: string) {
                 v-model="query"
                 type="search"
                 class="min-w-0 flex-1 bg-transparent text-lg text-slate-900 outline-none placeholder:text-slate-400"
-                :placeholder="placeholder ?? 'Where would you like to go?'"
-                aria-label="Search places"
+                :placeholder="placeholder ?? $t('map.search_placeholder')"
+                :aria-label="$t('map.search_label')"
                 autocomplete="off"
                 @focus="focused = true"
                 @blur="focused = false"
@@ -48,11 +48,11 @@ function choose(id: string) {
         <div class="expander" :class="{ 'expander--open': open }">
             <div>
                 <ul class="max-h-[min(320px,45vh)] overflow-y-auto overscroll-contain border-t border-black/5 px-2 py-2" role="listbox">
-                    <li v-if="!list.length" class="px-4 py-6 text-center text-slate-400">No places match “{{ query }}”.</li>
+                    <li v-if="!list.length" class="px-4 py-6 text-center text-slate-400">{{ $t('map.no_results') }}</li>
                     <li v-for="(loc, i) in list" :key="loc.id" role="option">
                         <button
                             type="button"
-                            class="search-row flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left active:bg-black/5"
+                            class="search-row flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-start active:bg-black/5"
                             :style="{ animationDelay: `${i * 25}ms` }"
                             @pointerdown.prevent
                             @click="choose(loc.id)"
@@ -60,7 +60,7 @@ function choose(id: string) {
                             <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base text-white" :style="{ background: CATEGORY_META[loc.category].color }">{{ CATEGORY_META[loc.category].icon }}</span>
                             <span class="min-w-0">
                                 <span class="block truncate text-base font-medium text-slate-900">{{ loc.name }}</span>
-                                <span class="block text-sm text-slate-500">{{ CATEGORY_META[loc.category].label }} · {{ floorName(loc.floor) }}</span>
+                                <span class="block text-sm text-slate-500">{{ $t('map.categories.' + loc.category) || CATEGORY_META[loc.category].label }} · {{ floorName(loc.floor) }}</span>
                             </span>
                         </button>
                     </li>

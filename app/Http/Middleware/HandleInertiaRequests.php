@@ -26,6 +26,36 @@ class HandleInertiaRequests extends Middleware
             'guestLayout' => fn () => $request->is('admin*') || ! app(CurrentHotel::class)->has()
                 ? null
                 : app(GuestLayoutStore::class)->forHotel(app(CurrentHotel::class)->get()->id),
+            'locale' => fn () => app()->getLocale(),
+            'direction' => fn () => app()->getLocale() === 'ar' ? 'rtl' : 'ltr',
+            'translations' => fn () => $this->translations(),
         ]);
+    }
+
+    protected function translations(): array
+    {
+        $locale = app()->getLocale();
+        $translations = [];
+
+        // 1. Load PHP translation files from lang/{locale}/*.php
+        $phpPath = base_path("lang/{$locale}");
+        if (is_dir($phpPath)) {
+            $files = glob("{$phpPath}/*.php") ?: [];
+            foreach ($files as $file) {
+                $group = basename($file, '.php');
+                $translations[$group] = require $file;
+            }
+        }
+
+        // 2. Load JSON translations from lang/{locale}.json
+        $path = base_path("lang/{$locale}.json");
+        if (file_exists($path)) {
+            $decoded = json_decode((string) file_get_contents($path), true);
+            if (is_array($decoded)) {
+                $translations = array_replace_recursive($translations, $decoded);
+            }
+        }
+
+        return $translations;
     }
 }

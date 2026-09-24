@@ -29,6 +29,6 @@ defineProps<{
             </h3>
             <p v-if="event.location" class="text-sm text-slate-500">{{ event.location }}</p>
         </div>
-        <span class="ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400">→</span>
+        <span class="ms-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 rtl:rotate-180 inline-block">→</span>
     </Link>
 </template>
