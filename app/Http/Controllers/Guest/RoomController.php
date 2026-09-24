@@ -15,12 +15,18 @@ class RoomController extends Controller
         return Inertia::render('Guest/Rooms/Index', [
             'rooms' => Room::query()
                 ->published()
-                ->with('cover')
+                ->with('cover', 'translations')
                 ->ordered()
                 ->get()
                 ->map(fn (Room $r) => [
-                    ...$r->only(['id', 'name', 'slug', 'short_description', 'size_sqm', 'max_guests']),
+                    'id' => $r->id,
+                    'slug' => $r->slug,
+                    'size_sqm' => $r->size_sqm,
+                    'max_guests' => $r->max_guests,
                     'cover_image_url' => $r->cover_image_url,
+                    // Translatable:
+                    'name' => $r->name,
+                    'short_description' => $r->short_description,
                 ]),
         ]);
     }
@@ -29,18 +35,25 @@ class RoomController extends Controller
     {
         abort_unless($room->status === 'published', 404);
 
-        $room->load('cover', 'gallery');
+        $room->load('cover', 'gallery', 'translations');
 
         return Inertia::render('Guest/Rooms/Show', [
             'room' => [
-                ...$room->only([
-                    'id', 'name', 'slug', 'short_description', 'description',
-                    'size_sqm', 'max_guests', 'bed_type', 'view', 'features',
-                ]),
+                'id' => $room->id,
+                'slug' => $room->slug,
+                'size_sqm' => $room->size_sqm,
+                'max_guests' => $room->max_guests,
+                'features' => $room->features,
                 'cover_image_url' => $room->cover_image_url,
                 // Played as a story on the room page: main photo first, then the gallery (photos and videos).
                 'slides' => collect([$room->cover])->filter()->concat($room->gallery)
                     ->map(fn (Media $m) => $m->toPayload())->values(),
+                // Translatable:
+                'name' => $room->name,
+                'short_description' => $room->short_description,
+                'description' => $room->description,
+                'bed_type' => $room->bed_type,
+                'view' => $room->view,
             ],
         ]);
     }

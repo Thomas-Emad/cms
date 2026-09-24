@@ -12,10 +12,18 @@ class ServiceController extends Controller
     public function index(): Response
     {
         return Inertia::render('Guest/Services/Index', [
-            'services' => Service::query()->published()->ordered()->get()
-                ->map(fn (Service $s) => $s->only([
-                    'id', 'name', 'slug', 'description', 'icon', 'price', 'request_enabled', 'contact',
-                ])),
+            'services' => Service::query()->published()->with('translations')->ordered()->get()
+                ->map(fn (Service $s) => [
+                    'id' => $s->id,
+                    'slug' => $s->slug,
+                    'icon' => $s->icon,
+                    'price' => $s->price,
+                    'request_enabled' => $s->request_enabled,
+                    'contact' => $s->contact,
+                    // Translatable:
+                    'name' => $s->name,
+                    'description' => $s->description,
+                ]),
         ]);
     }
 }

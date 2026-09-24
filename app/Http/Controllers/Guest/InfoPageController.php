@@ -24,7 +24,7 @@ class InfoPageController extends Controller
     {
         // groupBy keeps first-appearance order, so admin ordering is preserved
         // both between groups and inside each group.
-        $groups = InfoEntry::query()->kind($kind)->ordered()->get()
+        $groups = InfoEntry::query()->kind($kind)->with('translations')->ordered()->get()
             ->groupBy(fn (InfoEntry $e) => $e->group ?? '')
             ->map(fn ($items, $name) => [
                 'name' => $name !== '' ? $name : null,

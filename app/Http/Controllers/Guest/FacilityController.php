@@ -34,12 +34,17 @@ class FacilityController extends Controller
             'facilities' => Facility::query()
                 ->published()
                 ->category($category)
-                ->with('cover')
+                ->with('cover', 'translations')
                 ->ordered()
                 ->get()
-                ->map(fn(Facility $f) => [
-                    ...$f->only(['id', 'name', 'slug', 'short_description', 'category']),
+                ->map(fn (Facility $f) => [
+                    'id' => $f->id,
+                    'slug' => $f->slug,
+                    'category' => $f->category,
                     'cover_image_url' => $f->cover_image_url,
+                    // Translatable:
+                    'name' => $f->name,
+                    'short_description' => $f->short_description,
                 ]),
         ]);
     }
@@ -48,15 +53,32 @@ class FacilityController extends Controller
     {
         abort_unless($facility->status === 'published', 404);
 
-        $facility->load('cover', 'gallery');
+        $facility->load('cover', 'gallery', 'translations');
 
         return Inertia::render('Guest/Facilities/Show', [
             'facility' => [
-                ...$facility->toArray(),
+                'id' => $facility->id,
+                'slug' => $facility->slug,
+                'status' => $facility->status,
+                'category' => $facility->category,
+                'phone' => $facility->phone,
+                'email' => $facility->email,
+                'opening_hours' => $facility->opening_hours,
+                'amenities' => $facility->amenities,
+                'featured' => $facility->featured,
+                'sort_order' => $facility->sort_order,
+                'cover_image_url' => $facility->cover_image_url,
                 'gallery_urls' => $facility->gallery->pluck('url'),
+                // Translatable — resolved through getAttribute() so the current locale is applied:
+                'name' => $facility->name,
+                'short_description' => $facility->short_description,
+                'description' => $facility->description,
+                'building' => $facility->building,
+                'floor' => $facility->floor,
+                'wing' => $facility->wing,
             ],
             'slides' => collect([$facility->cover])->filter()->concat($facility->gallery)
-                ->map(fn(Media $m) => $m->toPayload())->values(),
+                ->map(fn (Media $m) => $m->toPayload())->values(),
         ]);
     }
 }

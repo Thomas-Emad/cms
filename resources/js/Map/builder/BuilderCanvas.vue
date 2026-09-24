@@ -321,7 +321,7 @@ const pe = (kinds: string[]) => (kinds.includes(b.tool.value) ? 'auto' : 'none')
                 <circle v-if="b.doorPick.value" r="16" fill="rgba(43,111,214,0.18)" stroke="#2b6fd6" stroke-width="2" stroke-dasharray="3 3" />
                 <circle :r="n.type === 'walk' ? 6.5 : 11" :fill="NODE_COLOR[n.type]" stroke="#fff" stroke-width="2.5" />
                 <text v-if="NODE_GLYPH[n.type]" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#fff" pointer-events="none">{{ NODE_GLYPH[n.type] }}</text>
-                <text v-if="vertical(n.id)" y="-17" text-anchor="middle" font-size="11" font-weight="700" :fill="NODE_COLOR[n.type]" pointer-events="none">linked</text>
+                <text v-if="vertical(n.id)" y="-17" text-anchor="middle" font-size="11" font-weight="700" :fill="NODE_COLOR[n.type]" pointer-events="none">{{ $t('admin.map.linked') }}</text>
                 <line v-if="n.door && isSel('node', n.id)" x1="0" y1="0" :x2="(n.door.x - n.x) * cam.zoom.value" :y2="(n.door.y - n.y) * cam.zoom.value" stroke="#2b6fd6" stroke-width="2" stroke-dasharray="3 3" pointer-events="none" />
             </g>
 

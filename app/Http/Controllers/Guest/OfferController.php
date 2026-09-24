@@ -12,10 +12,16 @@ class OfferController extends Controller
     public function index(): Response
     {
         return Inertia::render('Guest/Offers/Index', [
-            'offers' => Offer::query()->active()->with('cover')->latest()->get()
+            'offers' => Offer::query()->active()->with('cover', 'translations')->latest()->get()
                 ->map(fn (Offer $o) => [
-                    ...$o->only(['id', 'title', 'slug', 'price', 'discount', 'valid_until']),
+                    'id' => $o->id,
+                    'slug' => $o->slug,
+                    'price' => $o->price,
+                    'valid_until' => $o->valid_until,
                     'cover_image_url' => $o->cover_image_url,
+                    // Translatable:
+                    'title' => $o->title,
+                    'discount' => $o->discount,
                 ]),
         ]);
     }
@@ -24,12 +30,25 @@ class OfferController extends Controller
     {
         abort_unless($offer->status === 'published', 404);
 
-        $offer->load('gallery');
+        $offer->load('gallery', 'translations');
 
         return Inertia::render('Guest/Offers/Show', [
             'offer' => [
-                ...$offer->toArray(),
+                'id' => $offer->id,
+                'slug' => $offer->slug,
+                'price' => $offer->price,
+                'valid_from' => $offer->valid_from,
+                'valid_until' => $offer->valid_until,
+                'booking_url' => $offer->booking_url,
+                'status' => $offer->status,
+                'featured' => $offer->featured,
+                'cover_image_url' => $offer->cover_image_url,
                 'gallery_urls' => $offer->gallery->pluck('url'),
+                // Translatable:
+                'title' => $offer->title,
+                'description' => $offer->description,
+                'short_description' => $offer->short_description,
+                'discount' => $offer->discount,
             ],
         ]);
     }

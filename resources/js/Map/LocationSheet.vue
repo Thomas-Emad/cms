@@ -33,7 +33,7 @@ const btn = 'flex h-12 items-center justify-center rounded-full px-4 text-base f
                 {{ CATEGORY_META[loc.category].icon }}
             </div>
             <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.45))" />
-            <button type="button" class="absolute end-3 top-3 h-10 w-10 rounded-full bg-black/40 text-xl leading-none text-white backdrop-blur-sm active:scale-90" aria-label="Close" data-testid="sheet-close" @click="emit('close')">×</button>
+            <button type="button" class="absolute end-3 top-3 h-10 w-10 rounded-full bg-black/40 text-xl leading-none text-white backdrop-blur-sm active:scale-90" :aria-label="$t('common.close')" data-testid="sheet-close" @click="emit('close')">×</button>
         </div>
 
         <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-4" data-testid="sheet-body">

@@ -41,7 +41,7 @@ function choose(id: string) {
                 @focus="focused = true"
                 @blur="focused = false"
             />
-            <button v-if="query" type="button" class="h-9 w-9 rounded-full bg-black/5 text-lg text-slate-500 active:scale-90" aria-label="Clear search" @pointerdown.prevent @click="query = ''">×</button>
+            <button v-if="query" type="button" class="h-9 w-9 rounded-full bg-black/5 text-lg text-slate-500 active:scale-90" :aria-label="$t('common.clear')" @pointerdown.prevent @click="query = ''">×</button>
         </label>
 
         <!-- results: expand smoothly beneath the field -->

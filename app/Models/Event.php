@@ -13,19 +13,33 @@ class Event extends Model
     use BelongsToHotel, HasMedia, HasTranslations;
 
     protected array $translatable = [
-        'title', 'description', 'short_description', 'location',
+        'title',
+        'description',
+        'short_description',
+        'location',
     ];
 
     protected $fillable = [
-        'hotel_id', 'title', 'slug', 'description',
-        'start_date', 'end_date', 'start_time', 'end_time', 'location',
-        'capacity', 'booking_required', 'booking_url', 'status',
+        'hotel_id',
+        'title',
+        'slug',
+        'description',
+        'start_date',
+        'end_date',
+        'start_time',
+        'end_time',
+        'location',
+        'capacity',
+        'booking_required',
+        'booking_url',
+        'status',
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start_date' => 'date:Y-m-d',
+        'end_date' => 'date:Y-m-d',
         'booking_required' => 'boolean',
+        'created_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     protected $appends = ['cover_image_url'];

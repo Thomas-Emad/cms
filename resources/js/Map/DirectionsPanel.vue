@@ -73,7 +73,7 @@ const btn = 'flex h-12 items-center justify-center rounded-full px-4 text-base f
                 <template v-else-if="route">
                     <p class="text-4xl font-semibold text-slate-900" data-testid="summary">{{ formatDistance(route.meters) || '0 m' }} <span class="text-2xl font-normal text-slate-500">· {{ formatDuration(route.seconds) }} {{ $t('map.walk') }}</span></p>
                     <p v-if="viaLift" class="mt-1 text-base text-slate-500">
-                        {{ viaLift.kind === 'stairs' ? $t('map.stairs') : $t('map.elevator') }} {{ viaLift.direction }} {{ floorName(viaLift.toFloor) }}
+                        {{ viaLift.kind === 'stairs' ? $t('map.stairs') : $t('map.elevator') }} {{ viaLift.direction === 'up' ? $t('map.up') : $t('map.down') }} {{ floorName(viaLift.toFloor) }}
                     </p>
                     <ol class="mt-3 space-y-1 pb-2">
                         <li v-for="s in steps" :key="s.index">
@@ -109,7 +109,7 @@ const btn = 'flex h-12 items-center justify-center rounded-full px-4 text-base f
 
                 <p v-if="nextStep" class="mt-3 flex items-center gap-3 rounded-2xl bg-black/5 px-3.5 py-2.5 text-sm text-slate-600" data-testid="next-preview">
                     <span class="text-xl text-[#183c2d]">{{ STEP_ICON[nextStep.kind] }}</span>
-                    <span><b class="text-slate-900">{{ nextStep.text }}</b><template v-if="step.meters >= 1"> in {{ formatDistance(step.meters) }}</template></span>
+                    <span><b class="text-slate-900">{{ nextStep.text }}</b><template v-if="step.meters >= 1"> {{ $t('map.in_distance', { distance: formatDistance(step.meters) }) }}</template></span>
                 </p>
 
                 <div class="mt-4 flex justify-center gap-2" aria-hidden="true">

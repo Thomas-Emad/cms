@@ -1,6 +1,15 @@
 import { computed, ref } from 'vue';
+import { t } from '@/i18n';
 import { buildGraph, nearestNode, nodeForLocation, originFromLocation, planRoute } from '../routing';
 import type { AreaKind, HotelMapData, LocationCategory, MapArea, MapFloor, MapLocation, MapNode, NodeType, Point, Route } from '../types';
+
+function tr(key: string, params?: Record<string, string | number>, fallback?: string): string {
+    try {
+        return t(key, params, fallback);
+    } catch {
+        return fallback ?? key;
+    }
+}
 
 export type Tool = 'select' | 'area' | 'location' | 'path';
 export type Selection = { kind: 'area' | 'node' | 'location'; id: string } | null;
@@ -468,10 +477,10 @@ export function useMapBuilder(initial: HotelMapData | null) {
         const fname = (id: string) => floorOf(id)?.name ?? id;
 
         for (const l of d.locations) {
-            if (!l.name.trim()) out.push({ level: 'error', text: `A place on the ${fname(l.floor)} has no name.`, target: { kind: 'location', id: l.id, floor: l.floor } });
-            if (!nodeForLocation(d, l)) out.push({ level: 'error', text: `${l.name || 'A place'} is on the ${fname(l.floor)}, which has no walkway yet. Draw a walkway there.`, target: { kind: 'location', id: l.id, floor: l.floor } });
+            if (!l.name.trim()) out.push({ level: 'error', text: tr('admin.map.issues.place_no_name', { floor: fname(l.floor) }, `A place on the ${fname(l.floor)} has no name.`), target: { kind: 'location', id: l.id, floor: l.floor } });
+            if (!nodeForLocation(d, l)) out.push({ level: 'error', text: tr('admin.map.issues.place_no_walkway', { name: l.name || 'A place', floor: fname(l.floor) }, `${l.name || 'A place'} is on the ${fname(l.floor)}, which has no walkway yet. Draw a walkway there.`), target: { kind: 'location', id: l.id, floor: l.floor } });
         }
-        if (d.locations.length && !d.default_start) out.push({ level: 'warning', text: 'Choose where the kiosk is ("You are here"): select a place and tick "This is where the kiosk is".' });
+        if (d.locations.length && !d.default_start) out.push({ level: 'warning', text: tr('admin.map.issues.no_kiosk', undefined, 'Choose where the kiosk is ("You are here"): select a place and tick "This is where the kiosk is".') });
 
         const graph = buildGraph(d);
         const start = d.default_start ? location(d.default_start) : undefined;
@@ -482,15 +491,16 @@ export function useMapBuilder(initial: HotelMapData | null) {
             while (queue.length) for (const e of graph.adj.get(queue.shift()!) ?? []) if (!seen.has(e.to)) (seen.add(e.to), queue.push(e.to));
             for (const l of d.locations) {
                 const n = nodeForLocation(d, l);
-                if (n && !seen.has(n.id)) out.push({ level: 'warning', text: `No walking route to ${l.name} (its walkway isn't connected to the rest).`, target: { kind: 'location', id: l.id, floor: l.floor } });
+                if (n && !seen.has(n.id)) out.push({ level: 'warning', text: tr('admin.map.issues.no_route_to_place', { name: l.name }, `No walking route to ${l.name} (its walkway isn't connected to the rest).`), target: { kind: 'location', id: l.id, floor: l.floor } });
             }
             const orphans = d.nodes.filter((n) => !seen.has(n.id) && !d.locations.some((l) => l.node === n.id));
-            if (orphans.length) out.push({ level: 'warning', text: `${orphans.length} walkway point(s) aren't connected to the rest.`, target: { kind: 'node', id: orphans[0].id, floor: orphans[0].floor } });
+            if (orphans.length) out.push({ level: 'warning', text: tr('admin.map.issues.orphan_points', { count: orphans.length }, `${orphans.length} walkway point(s) aren't connected to the rest.`), target: { kind: 'node', id: orphans[0].id, floor: orphans[0].floor } });
         }
         if (d.floors.length > 1) {
             for (const n of d.nodes) {
                 if ((n.type === 'elevator' || n.type === 'stairs') && !n.connections.some((c) => node(c)?.floor !== n.floor)) {
-                    out.push({ level: 'warning', text: `A ${n.type === 'stairs' ? 'staircase' : 'lift'} on the ${fname(n.floor)} isn't connected to other floors.`, target: { kind: 'node', id: n.id, floor: n.floor } });
+                    const typeLabel = n.type === 'stairs' ? tr('admin.map.node_types.stairs', undefined, 'staircase') : tr('admin.map.node_types.elevator', undefined, 'lift');
+                    out.push({ level: 'warning', text: tr('admin.map.issues.vertical_unconnected', { type: typeLabel, floor: fname(n.floor) }, `A ${n.type === 'stairs' ? 'staircase' : 'lift'} on the ${fname(n.floor)} isn't connected to other floors.`), target: { kind: 'node', id: n.id, floor: n.floor } });
                 }
             }
         }

@@ -36,9 +36,9 @@ class MapContentLinker
         }
 
         $found = [
-            'facility' => $slugs['facility'] ? Facility::published()->whereIn('slug', array_unique($slugs['facility']))->with('cover')->get()->keyBy('slug') : collect(),
-            'restaurant' => $slugs['restaurant'] ? Restaurant::published()->whereIn('slug', array_unique($slugs['restaurant']))->with('cover')->get()->keyBy('slug') : collect(),
-            'room' => $slugs['room'] ? Room::published()->whereIn('slug', array_unique($slugs['room']))->with('cover')->get()->keyBy('slug') : collect(),
+            'facility' => $slugs['facility'] ? Facility::published()->whereIn('slug', array_unique($slugs['facility']))->with('cover', 'translations')->get()->keyBy('slug') : collect(),
+            'restaurant' => $slugs['restaurant'] ? Restaurant::published()->whereIn('slug', array_unique($slugs['restaurant']))->with('cover', 'translations')->get()->keyBy('slug') : collect(),
+            'room' => $slugs['room'] ? Room::published()->whereIn('slug', array_unique($slugs['room']))->with('cover', 'translations')->get()->keyBy('slug') : collect(),
             // Page Builder pages: guests can only ever reach the PUBLISHED version.
             'page' => $slugs['page'] ? Page::published()->whereIn('slug', array_unique($slugs['page']))->get()->keyBy('slug') : collect(),
         ];
@@ -48,8 +48,11 @@ class MapContentLinker
             $slug = $l['ref']['slug'] ?? null;
             $model = isset($found[$type]) ? $found[$type]->get($slug) : null;
             if ($model) { // unpublished or missing content is simply not linked
+                if ($type !== 'page' && ! empty($model->name)) {
+                    $l['name'] = $model->name;
+                }
                 $l['image'] = ! empty($l['image']) ? $l['image'] : ($type === 'page' ? null : $model->cover_image_url);
-                $l['description'] = ! empty($l['description']) ? $l['description'] : ($type === 'page' ? null : ($model->getAttribute('short_description') ?: $model->getAttribute('description')));
+                $l['description'] = ! empty($l['description']) ? $l['description'] : ($type === 'page' ? null : ($model->short_description ?: $model->description));
                 $l['details_url'] = self::URL[$type].$model->slug;
             }
             // An address typed on the place itself always wins.

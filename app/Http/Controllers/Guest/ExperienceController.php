@@ -17,12 +17,18 @@ class ExperienceController extends Controller
             'experiences' => Experience::query()
                 ->published()
                 ->category($request->string('category')->value() ?: null)
-                ->with('cover')
+                ->with('cover', 'translations')
                 ->ordered()
                 ->get()
                 ->map(fn (Experience $e) => [
-                    ...$e->only(['id', 'title', 'slug', 'category', 'duration', 'price']),
+                    'id' => $e->id,
+                    'slug' => $e->slug,
+                    'category' => $e->category,
+                    'price' => $e->price,
                     'cover_image_url' => $e->cover_image_url,
+                    // Translatable:
+                    'title' => $e->title,
+                    'duration' => $e->duration,
                 ]),
         ]);
     }
@@ -31,12 +37,24 @@ class ExperienceController extends Controller
     {
         abort_unless($experience->status === 'published', 404);
 
-        $experience->load('gallery');
+        $experience->load('gallery', 'translations');
 
         return Inertia::render('Guest/Experiences/Show', [
             'experience' => [
-                ...$experience->toArray(),
+                'id' => $experience->id,
+                'slug' => $experience->slug,
+                'category' => $experience->category,
+                'price' => $experience->price,
+                'booking_url' => $experience->booking_url,
+                'status' => $experience->status,
+                'featured' => $experience->featured,
+                'cover_image_url' => $experience->cover_image_url,
                 'gallery_urls' => $experience->gallery->pluck('url'),
+                // Translatable:
+                'title' => $experience->title,
+                'description' => $experience->description,
+                'short_description' => $experience->short_description,
+                'duration' => $experience->duration,
             ],
         ]);
     }

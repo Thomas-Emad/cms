@@ -45,7 +45,10 @@ class RestaurantMenuSectionDefinition implements SectionDefinition
             return ['menu' => null];
         }
 
-        $menu = $entity->activeMenu()->with('categories.items')->first();
+        $menu = $entity->activeMenu()->with([
+            'categories.translations',
+            'categories.items.translations',
+        ])->first();
 
         if (! $menu) {
             return ['menu' => null];

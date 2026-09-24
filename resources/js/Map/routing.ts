@@ -153,6 +153,21 @@ export function turnAngle(a: Point, b: Point): number {
 
 const vec = (from: Point, to: Point): Point => ({ x: to.x - from.x, y: to.y - from.y });
 const len = (v: Point) => Math.hypot(v.x, v.y);
+import { t } from '@/i18n';
+
+function tr(key: string, params?: Record<string, string | number>, fallback?: string): string {
+    try {
+        return t(key, params, fallback);
+    } catch {
+        let msg = fallback ?? key;
+        if (params) {
+            for (const [k, v] of Object.entries(params)) {
+                msg = msg.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+            }
+        }
+        return msg;
+    }
+}
 
 function turnKind(angle: number): StepKind | null {
     const a = Math.abs(angle);
@@ -163,14 +178,17 @@ function turnKind(angle: number): StepKind | null {
     return right ? 'right' : 'left';
 }
 
-const TURN_TEXT: Record<string, string> = {
-    left: 'Turn left',
-    right: 'Turn right',
-    'slight-left': 'Bear left',
-    'slight-right': 'Bear right',
-    uturn: 'Turn around',
-    straight: 'Head straight',
-};
+function getTurnText(kind: string): string {
+    const map: Record<string, { key: string; en: string }> = {
+        left: { key: 'map.turn_left', en: 'Turn left' },
+        right: { key: 'map.turn_right', en: 'Turn right' },
+        'slight-left': { key: 'map.bear_left', en: 'Bear left' },
+        'slight-right': { key: 'map.bear_right', en: 'Bear right' },
+        uturn: { key: 'map.turn_around', en: 'Turn around' },
+        straight: { key: 'map.head_straight', en: 'Head straight' },
+    };
+    return map[kind] ? tr(map[kind].key, undefined, map[kind].en) : kind;
+}
 
 type Action =
     | { i: number; type: 'start'; angle: number | null }
@@ -249,7 +267,7 @@ export function planRoute(graph: Graph, data: HotelMapData, origin: Origin, dest
     const legEndName = (idx: number): string | null => {
         const node = pts[idx];
         const act = actions.find((a) => a.i === idx && (a.type === 'vertical' || a.type === 'arrive'));
-        if (act?.type === 'vertical') return act.kind === 'stairs' ? 'the stairs' : 'the elevators';
+        if (act?.type === 'vertical') return act.kind === 'stairs' ? tr('map.the_stairs', undefined, 'the stairs') : tr('map.the_elevators', undefined, 'the elevators');
         if (act?.type === 'arrive') return dest.name;
         return landmarkNear(node, [dest.id, origin.locationId ?? '']);
     };
@@ -282,24 +300,43 @@ export function planRoute(graph: Graph, data: HotelMapData, origin: Origin, dest
             case 'start': {
                 const kind = act.angle !== null ? turnKind(act.angle) : null;
                 const from = origin.locationId ? origin.label : null;
-                const towards = target ? ` toward ${target}` : '';
+                const towards = target ? ` ${tr('map.toward_place', { name: target }, `toward ${target}`)}` : '';
                 if (kind) {
-                    steps.push({ ...base, kind, text: TURN_TEXT[kind], detail: `${from ? `Leave ${from} and ` : ''}${TURN_TEXT[kind].toLowerCase()}${towards}.` });
+                    const turnStr = getTurnText(kind);
+                    steps.push({
+                        ...base,
+                        kind,
+                        text: turnStr,
+                        detail: from ? `${tr('map.leave_place', { name: from }, `Leave ${from}`)} ${turnStr.toLowerCase()}${towards}.` : `${turnStr}${towards}.`,
+                    });
                 } else {
-                    steps.push({ ...base, kind: 'start', text: 'Head straight', detail: `${from ? `Leave ${from} and head` : 'Head'} straight${towards}.` });
+                    const straightStr = tr('map.head_straight', undefined, 'Head straight');
+                    steps.push({
+                        ...base,
+                        kind: 'start',
+                        text: straightStr,
+                        detail: from ? `${tr('map.leave_place', { name: from }, `Leave ${from}`)} ${straightStr.toLowerCase()}${towards}.` : `${straightStr}${towards}.`,
+                    });
                 }
                 break;
             }
             case 'turn': {
                 const at = landmarkNear(node, [dest.id]);
-                steps.push({ ...base, kind: act.kind, text: TURN_TEXT[act.kind], detail: `${TURN_TEXT[act.kind]}${at ? ` at ${at}` : ''}${target ? `, toward ${target}` : ''}.` });
+                const turnStr = getTurnText(act.kind);
+                steps.push({
+                    ...base,
+                    kind: act.kind,
+                    text: turnStr,
+                    detail: `${turnStr}${at ? ` ${tr('map.at_place', { name: at }, `at ${at}`)}` : ''}${target ? `, ${tr('map.toward_place', { name: target }, `toward ${target}`)}` : ''}.`,
+                });
                 break;
             }
             case 'vertical': {
                 const from = node;
                 const to = pts[act.to];
                 const direction = (graph.level.get(to.floor) ?? 0) > (graph.level.get(from.floor) ?? 0) ? 'up' : 'down';
-                const vias = act.kind === 'stairs' ? 'the stairs' : 'the elevator';
+                const dirLabel = direction === 'up' ? tr('map.up', undefined, 'up') : tr('map.down', undefined, 'down');
+                const vias = act.kind === 'stairs' ? tr('map.the_stairs', undefined, 'the stairs') : tr('map.the_elevator', undefined, 'the elevator');
                 const t: Transition = { floor: from.floor, toFloor: to.floor, x: from.x, y: from.y, kind: act.kind, direction };
                 transitions.push(t);
                 let rideSeconds = 0;
@@ -310,21 +347,23 @@ export function planRoute(graph: Graph, data: HotelMapData, origin: Origin, dest
                     seconds: rideSeconds,
                     path: [],
                     kind: act.kind,
-                    text: act.kind === 'stairs' ? `Take the stairs ${direction}` : 'Take the elevator',
-                    detail: `Use ${vias} to go ${direction} to the ${floorName(to.floor)}.`,
+                    text: act.kind === 'stairs' ? tr('map.take_stairs_dir', { direction: dirLabel }, `Take the stairs ${direction}`) : tr('map.take_elevator', undefined, 'Take the elevator'),
+                    detail: tr('map.vertical_detail', { via: vias, direction: dirLabel, floor: floorName(to.floor) }, `Use ${vias} to go ${direction} to the ${floorName(to.floor)}.`),
                     transition: t,
                 });
                 break;
             }
             case 'exit': {
-                const what = act.via === 'stairs' ? 'the stairs' : 'the elevator';
+                const what = act.via === 'stairs' ? tr('map.the_stairs', undefined, 'the stairs') : tr('map.the_elevator', undefined, 'the elevator');
                 const kind = act.kind && act.kind !== 'uturn' ? act.kind : null;
-                const towards = target ? ` toward ${target}` : '';
+                const towards = target ? ` ${tr('map.toward_place', { name: target }, `toward ${target}`)}` : '';
                 steps.push({
                     ...base,
                     kind: kind ?? 'exit',
-                    text: kind ? TURN_TEXT[kind] : 'Head straight',
-                    detail: kind ? `After exiting ${what}, ${TURN_TEXT[kind].toLowerCase()}${towards}.` : `Exit ${what} and head straight${towards}.`,
+                    text: kind ? getTurnText(kind) : tr('map.head_straight', undefined, 'Head straight'),
+                    detail: kind
+                        ? tr('map.exit_turn_detail', { via: what, turn: getTurnText(kind).toLowerCase(), towards }, `After exiting ${what}, ${getTurnText(kind).toLowerCase()}${towards}.`)
+                        : tr('map.exit_straight_detail', { via: what, towards }, `Exit ${what} and head straight${towards}.`),
                 });
                 break;
             }
@@ -332,16 +371,16 @@ export function planRoute(graph: Graph, data: HotelMapData, origin: Origin, dest
                 const back = last > 0 && edges[last - 1].kind === 'walk' ? vec(pts[last - 1], pts[last]) : null;
                 // Entering the room: along the walkway to the door, then straight in.
                 const toDest: Point = Math.abs(dest.x - pts[last].x) > 8 && Math.abs(dest.y - pts[last].y) > 20 ? { x: 0, y: dest.y - pts[last].y } : vec(pts[last], dest);
-                let where = 'is right here';
+                let where = tr('map.is_right_here', undefined, 'is right here');
                 if (len(toDest) > 20) {
                     if (back) {
                         const side = turnAngle(back, toDest);
-                        where = Math.abs(side) < 30 ? 'is straight ahead' : side > 0 ? 'is on your right' : 'is on your left';
+                        where = Math.abs(side) < 30 ? tr('map.is_straight_ahead', undefined, 'is straight ahead') : side > 0 ? tr('map.is_on_your_right', undefined, 'is on your right') : tr('map.is_on_your_left', undefined, 'is on your left');
                     } else {
-                        where = 'is nearby';
+                        where = tr('map.is_nearby', undefined, 'is nearby');
                     }
                 }
-                steps.push({ ...base, meters: 0, seconds: 0, path: [], kind: 'arrive', text: 'You have arrived', detail: `${dest.name} ${where}.` });
+                steps.push({ ...base, meters: 0, seconds: 0, path: [], kind: 'arrive', text: tr('map.you_have_arrived', undefined, 'You have arrived'), detail: `${dest.name} ${where}.` });
                 break;
             }
         }
@@ -386,10 +425,10 @@ export function planRoute(graph: Graph, data: HotelMapData, origin: Origin, dest
 
 export function formatDistance(meters: number): string {
     if (meters < 1) return '';
-    return meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(1)} km`;
+    return meters < 1000 ? `${Math.round(meters)} ${tr('map.meter_unit', undefined, 'm')}` : `${(meters / 1000).toFixed(1)} ${tr('map.km_unit', undefined, 'km')}`;
 }
 
 export function formatDuration(seconds: number): string {
     const minutes = Math.max(1, Math.round(seconds / 60));
-    return `${minutes} min`;
+    return `${minutes} ${tr('map.min_unit', undefined, 'min')}`;
 }

@@ -197,6 +197,28 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'Name',
+        'title' => 'Title',
+        'email' => 'Email Address',
+        'password' => 'Password',
+        'description' => 'Description',
+        'short_description' => 'Short Description',
+        'category' => 'Category',
+        'price' => 'Price',
+        'phone' => 'Phone',
+        'status' => 'Status',
+        'location' => 'Location',
+        'building' => 'Building',
+        'floor' => 'Floor',
+        'wing' => 'Wing',
+        'start_date' => 'Start Date',
+        'end_date' => 'End Date',
+        'start_time' => 'Start Time',
+        'end_time' => 'End Time',
+        'checkin_time' => 'Check-in Time',
+        'checkout_time' => 'Check-out Time',
+        'default_locale' => 'Default Language',
+    ],
 
 ];
