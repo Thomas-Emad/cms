@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Theme;
 use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,26 +13,79 @@ use Inertia\Response;
 
 class ThemeController extends Controller
 {
-    public function edit(CurrentHotel $currentHotel): Response
+    public function edit(Request $request, CurrentHotel $currentHotel): Response
     {
         $hotel = $currentHotel->get();
         $this->authorize('view', $hotel);
 
-        $theme = $hotel->activeTheme ?? $hotel->themes()->firstOrCreate(
-            ['is_active' => true],
-            [
-                'name' => 'Guest Layout Theme',
-                'primary_color' => '#059669',
-                'secondary_color' => '#B99A62',
-                'font_family' => 'Instrument Sans',
-                'border_radius' => 'medium',
-                'button_style' => 'rounded',
-                'card_style' => 'elevated',
-            ]
-        );
+        $branches = $hotel->branches()->ordered()->get(['id', 'name', 'slug', 'city']);
+        $branchId = $request->integer('branch_id') ?: null;
+
+        $selectedBranch = null;
+        if ($branchId) {
+            $selectedBranch = $branches->firstWhere('id', $branchId);
+            if (! $selectedBranch) {
+                $branchId = null;
+            }
+        }
+
+        // Master theme for the hotel
+        $masterTheme = $hotel->themes()
+            ->whereNull('hotel_branch_id')
+            ->where('is_active', true)
+            ->first()
+            ?? $hotel->activeTheme
+            ?? $hotel->themes()->firstOrCreate(
+                ['is_active' => true, 'hotel_branch_id' => null],
+                [
+                    'name' => 'Guest Layout Theme',
+                    'primary_color' => '#059669',
+                    'secondary_color' => '#B99A62',
+                    'font_family' => 'Instrument Sans',
+                    'border_radius' => 'medium',
+                    'button_style' => 'rounded',
+                    'card_style' => 'elevated',
+                ]
+            );
+
+        $hasCustomBranchTheme = false;
+        if ($selectedBranch) {
+            $branchTheme = $hotel->themes()
+                ->where('hotel_branch_id', $selectedBranch->id)
+                ->first();
+
+            if ($branchTheme) {
+                $theme = $branchTheme;
+                $hasCustomBranchTheme = true;
+            } else {
+                // Default to master theme styling for a branch that doesn't yet have custom styling
+                $theme = new Theme([
+                    'hotel_id' => $hotel->id,
+                    'hotel_branch_id' => $selectedBranch->id,
+                    'name' => $selectedBranch->name.' Theme',
+                    'primary_color' => $masterTheme->primary_color,
+                    'secondary_color' => $masterTheme->secondary_color,
+                    'font_family' => $masterTheme->font_family,
+                    'border_radius' => $masterTheme->border_radius,
+                    'button_style' => $masterTheme->button_style,
+                    'card_style' => $masterTheme->card_style,
+                    'config' => $masterTheme->config ?? [],
+                    'is_active' => true,
+                ]);
+            }
+        } else {
+            $theme = $masterTheme;
+        }
 
         return Inertia::render('Admin/Theme/Edit', [
-            'theme' => $theme,
+            'theme' => array_merge($theme->toArray(), [
+                'header_bg' => $theme->header_bg,
+                'footer_bg' => $theme->footer_bg,
+            ]),
+            'branches' => $branches,
+            'selected_branch_id' => $selectedBranch?->id,
+            'selected_branch' => $selectedBranch,
+            'has_custom_branch_theme' => $hasCustomBranchTheme,
             'presets' => [
                 [
                     'id' => 'emerald',
@@ -124,6 +178,11 @@ class ThemeController extends Controller
         $this->authorize('update', $hotel);
 
         $validated = $request->validate([
+            'hotel_branch_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('hotel_branches', 'id')->where('hotel_id', $hotel->id),
+            ],
             'name' => ['nullable', 'string', 'max:100'],
             'primary_color' => ['required', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'secondary_color' => ['required', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
@@ -135,7 +194,11 @@ class ThemeController extends Controller
             'card_style' => ['nullable', 'string', Rule::in(['flat', 'outlined', 'elevated'])],
         ]);
 
-        $theme = $hotel->activeTheme ?? $hotel->themes()->first();
+        $branchId = $validated['hotel_branch_id'] ?? null;
+
+        $theme = $branchId
+            ? $hotel->themes()->where('hotel_branch_id', $branchId)->first()
+            : ($hotel->themes()->whereNull('hotel_branch_id')->first() ?? $hotel->activeTheme);
 
         $config = $theme?->config ?? [];
         if (! empty($validated['header_bg'])) {
@@ -146,18 +209,46 @@ class ThemeController extends Controller
         }
 
         $saveData = array_merge(
-            collect($validated)->except(['header_bg', 'footer_bg'])->all(),
-            ['config' => $config, 'is_active' => true]
+            collect($validated)->except(['header_bg', 'footer_bg', 'hotel_branch_id'])->all(),
+            [
+                'config' => $config,
+                'is_active' => true,
+                'hotel_branch_id' => $branchId,
+            ]
         );
 
         if ($theme) {
             $theme->update($saveData);
         } else {
             $hotel->themes()->create(array_merge($saveData, [
-                'name' => $validated['name'] ?? 'Guest Layout Theme',
+                'name' => $validated['name'] ?? ($branchId ? 'Branch Custom Theme' : 'Guest Layout Theme'),
             ]));
         }
 
-        return redirect()->route('admin.theme.edit')->with('success', __('Theme updated successfully! Changes are live on the guest site.'));
+        $redirectParams = $branchId ? ['branch_id' => $branchId] : [];
+
+        return redirect()->route('admin.theme.edit', $redirectParams)
+            ->with('success', __('Theme updated successfully! Changes are live on the guest site.'));
+    }
+
+    public function resetBranchTheme(Request $request, CurrentHotel $currentHotel): RedirectResponse
+    {
+        $hotel = $currentHotel->get();
+        $this->authorize('update', $hotel);
+
+        $validated = $request->validate([
+            'hotel_branch_id' => [
+                'required',
+                'integer',
+                Rule::exists('hotel_branches', 'id')->where('hotel_id', $hotel->id),
+            ],
+        ]);
+
+        $hotel->themes()
+            ->where('hotel_branch_id', $validated['hotel_branch_id'])
+            ->delete();
+
+        return redirect()->route('admin.theme.edit', ['branch_id' => $validated['hotel_branch_id']])
+            ->with('success', __('Branch theme reset to hotel master theme.'));
     }
 }

@@ -40,7 +40,7 @@ class Hotel extends Model
 
     public function activeTheme(): HasOne
     {
-        return $this->hasOne(Theme::class)->where('is_active', true);
+        return $this->hasOne(Theme::class)->where('is_active', true)->whereNull('hotel_branch_id');
     }
 
     public function users(): HasMany
@@ -51,5 +51,25 @@ class Hotel extends Model
     public function branches(): HasMany
     {
         return $this->hasMany(HotelBranch::class);
+    }
+
+    public function primaryAdmin(): HasOne
+    {
+        return $this->hasOne(User::class)->where('role', 'hotel_admin')->oldestOfMany();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->status === 'suspended';
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
     }
 }

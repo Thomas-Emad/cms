@@ -37,8 +37,13 @@ return [
         'map_saved' => 'تم حفظ الخريطة بنجاح.',
         'saved' => 'تم الحفظ.',
         'cover_must_be_image' => 'يجب أن تكون الصورة الرئيسية صورة وليست مقطع فيديو.',
+        'customer_created' => 'تم إنشاء فندق العميل بنجاح.',
+        'customer_updated' => 'تم تحديث بيانات فندق العميل بنجاح.',
+        'customer_deleted' => 'تم حذف فندق العميل.',
     ],
     'dashboard_title' => 'لوحة التحكم',
     'managing' => 'إدارة',
     'dashboard_desc' => 'مرحباً بكم في بوابة إدارة الفندق والمحتوى.',
+    'branch' => 'الفرع',
+    'branch_assignment' => 'نطاق الفرع',
 ];

@@ -19,7 +19,7 @@ class Restaurant extends Model
     ];
 
     protected $fillable = [
-        'hotel_id', 'name', 'slug', 'description', 'cuisine', 'location', 'floor',
+        'hotel_id', 'hotel_branch_id', 'name', 'slug', 'description', 'cuisine', 'location', 'floor',
         'opening_hours', 'dress_code', 'phone', 'reservation_url',
         'status', 'featured', 'sort_order',
     ];

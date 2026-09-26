@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Theme;
 use App\Services\Layout\GuestLayoutStore;
 use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Http\Request;
@@ -22,16 +23,40 @@ class HandleInertiaRequests extends Middleware
             'hotel' => fn () => app(CurrentHotel::class)->has()
                 ? app(CurrentHotel::class)->get()->only(['id', 'name', 'slug', 'status'])
                 : null,
+            'branch' => fn () => app(CurrentHotel::class)->hasBranch()
+                ? app(CurrentHotel::class)->branch()->only(['id', 'name', 'slug', 'domain', 'city'])
+                : null,
+            'branches' => fn () => app(CurrentHotel::class)->has()
+                ? app(CurrentHotel::class)->get()->branches()->ordered()->get(['id', 'name', 'slug', 'city'])
+                : [],
             // Which guest-screen template + menu to use. Not needed (so not queried) in the admin area.
             'guestLayout' => fn () => $request->is('admin*') || ! app(CurrentHotel::class)->has()
                 ? null
-                : app(GuestLayoutStore::class)->forHotel(app(CurrentHotel::class)->get()->id),
+                : app(GuestLayoutStore::class)->forHotel(
+                    app(CurrentHotel::class)->get()->id,
+                    app(CurrentHotel::class)->branch()?->id
+                ),
             'theme' => function () {
                 if (! app(CurrentHotel::class)->has()) {
                     return null;
                 }
                 $hotel = app(CurrentHotel::class)->get();
-                $theme = $hotel->activeTheme ?? $hotel->themes()->first();
+                $currentBranch = app(CurrentHotel::class)->branch();
+
+                $theme = null;
+                if ($currentBranch) {
+                    $theme = Theme::where('hotel_id', $hotel->id)
+                        ->where('hotel_branch_id', $currentBranch->id)
+                        ->where('is_active', true)
+                        ->first();
+                }
+
+                if (! $theme) {
+                    $theme = Theme::where('hotel_id', $hotel->id)
+                        ->whereNull('hotel_branch_id')
+                        ->where('is_active', true)
+                        ->first() ?? $hotel->activeTheme ?? $hotel->themes()->first();
+                }
 
                 if ($theme) {
                     return array_merge(

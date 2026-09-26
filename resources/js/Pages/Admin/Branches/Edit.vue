@@ -26,6 +26,7 @@ const rawTranslations = (props.branch as any)?.translations_data?.ar ?? {};
 const form = useForm({
     name: props.branch?.name ?? '',
     slug: props.branch?.slug ?? '',
+    domain: props.branch?.domain ?? '',
     city: props.branch?.city ?? '',
     address: props.branch?.address ?? '',
     phone: props.branch?.phone ?? '',
@@ -38,6 +39,7 @@ const form = useForm({
     latitude: props.branch?.latitude ?? null,
     longitude: props.branch?.longitude ?? null,
     status: props.branch?.status ?? 'published',
+    guest_layout: props.branch?.guest_layout ?? '',
     is_main: Boolean(props.branch?.is_main),
     sort_order: props.branch?.sort_order ?? 0,
     translations: {
@@ -63,6 +65,12 @@ const statuses = [
     { value: 'draft', label: 'Draft (hidden)' },
     { value: 'published', label: 'Published' },
     { value: 'archived', label: 'Archived' },
+];
+
+const layoutOptions = [
+    { value: '', label: 'Default (Inherit Hotel Master Layout)' },
+    { value: 'classic', label: 'Classic Dock (Mobile / Web Guest Portal)' },
+    { value: 'tv', label: 'Smart TV Layout' },
 ];
 </script>
 
@@ -140,6 +148,16 @@ const statuses = [
                             :error="form.errors.slug"
                             placeholder="auto from name (e.g. smarttel-cairo)"
                             required
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <AdminInput
+                            v-model="form.domain"
+                            :label="t('branches.domain', undefined, 'Branch Domain (optional)')"
+                            :error="form.errors.domain"
+                            placeholder="e.g. cairo.smarttel.com or cairo-resort.com"
+                            :hint="t('branches.domain_hint', undefined, 'Allows direct guest/admin access to this branch via its own domain or subdomain.')"
                         />
                     </div>
 
@@ -245,6 +263,31 @@ const statuses = [
                             <TagListInput
                                 v-model="form.gallery_urls"
                                 :placeholder="t('branches.gallery_urls_placeholder', undefined, 'Paste image URL and press Enter to add')"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Guest Portal Layout Override -->
+                    <div class="rounded-lg bg-amber-50/60 p-4 border border-amber-200/80 space-y-3">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div class="text-xs font-semibold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                                <span>📺</span>
+                                <span>{{ t('branches.guest_layout_title', undefined, 'Guest Portal Layout & Experience') }}</span>
+                            </div>
+                            <a
+                                v-if="isEdit"
+                                :href="`/admin/layout?branch_id=${branch!.id}`"
+                                class="text-xs font-medium text-amber-700 hover:text-amber-800 underline flex items-center gap-1"
+                            >
+                                <span>{{ t('branches.customize_layout', undefined, 'Open Full Branch Layout Customizer →') }}</span>
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <AdminSelect
+                                v-model="form.guest_layout"
+                                :label="t('branches.guest_layout', undefined, 'Portal Layout')"
+                                :options="layoutOptions"
+                                :hint="t('branches.guest_layout_hint', undefined, 'Choose Smart TV or Classic Dock specifically for this branch, or inherit the hotel default.')"
                             />
                         </div>
                     </div>

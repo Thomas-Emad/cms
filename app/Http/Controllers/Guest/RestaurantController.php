@@ -14,9 +14,12 @@ class RestaurantController extends Controller
 {
     public function index(): Response
     {
+        $branchId = app(CurrentHotel::class)->branch()?->id;
+
         return Inertia::render('Guest/Restaurants/Index', [
             'restaurants' => Restaurant::query()
                 ->published()
+                ->forBranch($branchId)
                 ->with('cover', 'translations')
                 ->ordered()
                 ->get()

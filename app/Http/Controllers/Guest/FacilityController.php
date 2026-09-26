@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
 use App\Models\Media;
+use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,11 +29,14 @@ class FacilityController extends Controller
 
     private function listing(?string $category, string $title): Response
     {
+        $branchId = app(CurrentHotel::class)->branch()?->id;
+
         return Inertia::render('Guest/Facilities/Index', [
             'title' => $title,
             'category' => $category,
             'facilities' => Facility::query()
                 ->published()
+                ->forBranch($branchId)
                 ->category($category)
                 ->with('cover', 'translations')
                 ->ordered()

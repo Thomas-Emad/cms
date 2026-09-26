@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import type { SharedPageProps } from '@/types/hotel';
 import { useI18n } from '@/i18n';
@@ -22,6 +23,7 @@ defineEmits<{
 
 const page = usePage<SharedPageProps>();
 const { t, locale } = useI18n();
+const isSuperAdmin = computed(() => page.props.auth?.user?.role === 'super_admin');
 </script>
 
 <template>
@@ -42,16 +44,16 @@ const { t, locale } = useI18n();
       <div class="flex items-center gap-2">
         <span class="h-2 w-2 rounded-full hidden sm:inline-block" style="background-color: var(--admin-primary, #059669)" />
         <h2 class="text-sm font-semibold text-slate-700 truncate">
-          {{ title ?? t('nav.admin_dashboard', undefined, 'Admin Dashboard') }}
+          {{ title ?? (isSuperAdmin ? (locale === 'ar' ? 'لوحة تحكم المنصة الرئيسية' : 'Platform Administration') : t('nav.admin_dashboard', undefined, 'Admin Dashboard')) }}
         </h2>
       </div>
     </div>
 
     <!-- Right: Quick actions, Theme, Lang, User & Logout -->
     <div class="flex items-center gap-2 sm:gap-3.5">
-      <!-- Quick Guest Preview Button -->
+      <!-- Quick Guest Preview Button (hidden for platform super admin managing all accounts) -->
       <a
-        v-if="showGuestPreview"
+        v-if="!isSuperAdmin && showGuestPreview && page.props.hotel"
         href="/"
         target="_blank"
         rel="noopener noreferrer"
@@ -79,9 +81,14 @@ const { t, locale } = useI18n();
         >
           {{ (page.props.auth?.user?.name ?? 'A').charAt(0).toUpperCase() }}
         </span>
-        <span class="text-xs font-medium text-slate-700 hidden lg:inline max-w-[120px] truncate">
-          {{ page.props.auth?.user?.name }}
-        </span>
+        <div class="hidden lg:flex flex-col">
+          <span class="text-xs font-medium text-slate-700 max-w-[120px] truncate leading-tight">
+            {{ page.props.auth?.user?.name }}
+          </span>
+          <span v-if="isSuperAdmin" class="text-[10px] font-semibold text-indigo-600 leading-tight">
+            Super Admin
+          </span>
+        </div>
       </div>
 
       <!-- Logout -->

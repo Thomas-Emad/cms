@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Offer;
+use App\Services\Tenancy\CurrentHotel;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -11,8 +12,10 @@ class OfferController extends Controller
 {
     public function index(): Response
     {
+        $branchId = app(CurrentHotel::class)->branch()?->id;
+
         return Inertia::render('Guest/Offers/Index', [
-            'offers' => Offer::query()->active()->with('cover', 'translations')->latest()->get()
+            'offers' => Offer::query()->active()->forBranch($branchId)->with('cover', 'translations')->latest()->get()
                 ->map(fn (Offer $o) => [
                     'id' => $o->id,
                     'slug' => $o->slug,

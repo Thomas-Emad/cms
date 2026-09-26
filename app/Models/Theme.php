@@ -10,7 +10,7 @@ class Theme extends Model
     use BelongsToHotel;
 
     protected $fillable = [
-        'hotel_id', 'name', 'is_active', 'primary_color', 'secondary_color',
+        'hotel_id', 'hotel_branch_id', 'name', 'is_active', 'primary_color', 'secondary_color',
         'font_family', 'border_radius', 'button_style', 'card_style', 'config',
     ];
 

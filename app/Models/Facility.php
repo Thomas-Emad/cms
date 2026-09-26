@@ -17,7 +17,7 @@ class Facility extends Model
     ];
 
     protected $fillable = [
-        'hotel_id', 'name', 'slug', 'description', 'short_description', 'category',
+        'hotel_id', 'hotel_branch_id', 'name', 'slug', 'description', 'short_description', 'category',
         'building', 'floor', 'wing', 'pos_x', 'pos_y',
         'opening_hours', 'phone', 'email', 'amenities', 'status', 'featured', 'sort_order',
     ];

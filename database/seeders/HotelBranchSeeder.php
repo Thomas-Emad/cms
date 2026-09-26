@@ -20,6 +20,7 @@ class HotelBranchSeeder extends Seeder
             [
                 'slug' => 'smarttel-cairo-garden-city',
                 'name' => 'Smarttel Hotel Cairo',
+                'domain' => 'cairo.smarttel.com',
                 'city' => 'Cairo, Egypt',
                 'address' => 'Nile Corniche, Garden City, Cairo, Egypt',
                 'phone' => '+20 2 2578 0444',
@@ -74,6 +75,7 @@ class HotelBranchSeeder extends Seeder
             [
                 'slug' => 'smarttel-alexandria-corniche',
                 'name' => 'Smarttel Hotel Alexandria',
+                'domain' => 'alexandria.smarttel.com',
                 'city' => 'Alexandria, Egypt',
                 'address' => 'Alexandria Corniche, Sidi Bishr, Alexandria, Egypt',
                 'phone' => '+20 3 547 7799',
@@ -128,6 +130,7 @@ class HotelBranchSeeder extends Seeder
             [
                 'slug' => 'smarttel-sharm-el-sheikh',
                 'name' => 'Smarttel Resort Sharm El Sheikh',
+                'domain' => 'sharm.smarttel.com',
                 'city' => 'Sharm El Sheikh, Egypt',
                 'address' => 'Naama Bay, Sharm El Sheikh, South Sinai, Egypt',
                 'phone' => '+20 69 360 0136',

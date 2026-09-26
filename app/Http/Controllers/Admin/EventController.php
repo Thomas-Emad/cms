@@ -6,19 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreEventRequest;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class EventController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Event::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         return Inertia::render('Admin/Events/Index', [
-            'events' => Event::query()->orderBy('start_date')->with('cover')->paginate(20)
+            'selected_branch_id' => $branchId,
+            'events' => Event::query()
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
+                ->orderBy('start_date')
+                ->with(['cover', 'branch:id,name,city'])
+                ->paginate(20)
+                ->withQueryString()
                 ->through(fn (Event $e) => [
-                    ...$e->only(['id', 'title', 'slug', 'start_date', 'status']),
+                    ...$e->only(['id', 'title', 'slug', 'start_date', 'status', 'hotel_branch_id']),
+                    'branch' => $e->branch ? ['id' => $e->branch->id, 'name' => $e->branch->name, 'city' => $e->branch->city] : null,
                     'cover_image_url' => $e->cover_image_url,
                 ]),
         ]);

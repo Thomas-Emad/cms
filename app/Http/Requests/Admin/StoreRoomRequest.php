@@ -28,6 +28,10 @@ class StoreRoomRequest extends FormRequest
         $roomId = $this->route('room')?->id;
 
         return [
+            'hotel_branch_id' => [
+                'nullable', 'integer',
+                Rule::exists('hotel_branches', 'id')->where('hotel_id', app(CurrentHotel::class)->id() ?? 0),
+            ],
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required', 'string', 'max:255', 'alpha_dash',

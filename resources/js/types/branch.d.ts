@@ -5,6 +5,7 @@ export interface HotelBranch {
   hotel_id?: number;
   name: string;
   slug: string;
+  domain?: string | null;
   city?: string | null;
   address?: string | null;
   phone?: string | null;
@@ -19,6 +20,8 @@ export interface HotelBranch {
   latitude?: number | null;
   longitude?: number | null;
   status: 'draft' | 'published' | 'archived';
+  guest_layout?: 'classic' | 'tv' | null;
+  metadata?: Record<string, any> | null;
   is_main: boolean;
   sort_order: number;
   translations_data?: {

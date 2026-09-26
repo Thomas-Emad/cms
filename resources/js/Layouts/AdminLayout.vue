@@ -8,7 +8,7 @@ import AdminFooter from '@/Components/Admin/AdminFooter.vue';
 import { useAdminTheme } from '@/composables/useAdminTheme';
 
 const page = usePage<SharedPageProps>();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { initTheme } = useAdminTheme();
 const mobileSidebarOpen = ref(false);
 
@@ -16,51 +16,69 @@ onMounted(() => {
   initTheme();
 });
 
-const nav = computed(() => [
-  { key: 'nav.dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
-  {
-    key: 'nav.hotel',
-    label: 'Hotel',
-    children: [
-      { key: 'nav.branches', label: 'Branches', href: '/admin/branches' },
-      { key: 'nav.theme', label: 'Theme', href: '/admin/theme', disabled: false },
-      { key: 'nav.settings', label: 'Settings', href: '/admin/settings', disabled: false },
-    ],
-  },
+const isSuperAdmin = computed(() => page.props.auth?.user?.role === 'super_admin');
 
-  {
-    key: 'nav.content',
-    label: 'Content',
-    children: [
-      { key: 'nav.facilities', label: 'Facilities', href: '/admin/facilities' },
-      { key: 'nav.meeting_rooms', label: 'Meeting Rooms', href: '/admin/facilities?category=meeting' },
-      { key: 'nav.rooms', label: 'Rooms & Suites', href: '/admin/rooms' },
-      { key: 'nav.timing', label: 'Timing', href: '/admin/timing' },
-      { key: 'nav.short_calls', label: 'Short Calls', href: '/admin/short-calls' },
-      { key: 'nav.gallery', label: 'Gallery', href: '/admin/gallery' },
-      { key: 'nav.hotel_map', label: 'Hotel Map', href: '/admin/map/builder' },
-      { key: 'nav.restaurants', label: 'Restaurants', href: '/admin/restaurants' },
-      { key: 'nav.services', label: 'Services', href: '/admin/services' },
-      { key: 'nav.events', label: 'Events', href: '/admin/events' },
-      { key: 'nav.offers', label: 'Offers', href: '/admin/offers' },
-      { key: 'nav.experiences', label: 'Experiences', href: '/admin/experiences' },
-    ],
-  },
-  {
-    key: 'nav.website',
-    label: 'Website',
-    children: [
-      { key: 'nav.pages', label: 'Pages', href: '/admin/pages' },
-      { key: 'nav.guest_layout', label: 'Guest Layout', href: '/admin/layout', disabled: false },
-      { key: 'nav.theme', label: 'Theme', href: '/admin/theme', disabled: false },
-    ],
-  },
-  {
-    key: 'nav.media',
-    label: 'Media',
-    children: [{ key: 'nav.media_library', label: 'Media Library', href: '#', disabled: true }],
-  },
-]);
+const nav = computed(() => {
+  if (isSuperAdmin.value) {
+    return [
+      {
+        key: 'nav.platform',
+        label: locale.value === 'ar' ? 'إدارة المنصة الرئيسية' : 'Platform Administration',
+        children: [
+          { key: 'nav.platform_overview', label: locale.value === 'ar' ? 'نظرة عامة على المنصة' : 'Platform Overview', href: '/admin/platform-dashboard', icon: '📊' },
+          { key: 'nav.customers', label: locale.value === 'ar' ? 'حسابات الفنادق المشتركة' : 'Hotel Accounts', href: '/admin/customers', icon: '🏨' },
+          { key: 'nav.create_customer', label: locale.value === 'ar' ? 'إضافة فندق جديد' : 'Add Hotel Account', href: '/admin/customers/create', icon: '➕' },
+        ],
+      },
+    ];
+  }
+
+  return [
+    { key: 'nav.dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
+    {
+      key: 'nav.hotel',
+      label: 'Hotel',
+      children: [
+        { key: 'nav.branches', label: 'Branches', href: '/admin/branches' },
+        { key: 'nav.theme', label: 'Theme', href: '/admin/theme', disabled: false },
+        { key: 'nav.settings', label: 'Settings', href: '/admin/settings', disabled: false },
+      ],
+    },
+
+    {
+      key: 'nav.content',
+      label: 'Content',
+      children: [
+        { key: 'nav.facilities', label: 'Facilities', href: '/admin/facilities' },
+        { key: 'nav.meeting_rooms', label: 'Meeting Rooms', href: '/admin/facilities?category=meeting' },
+        { key: 'nav.rooms', label: 'Rooms & Suites', href: '/admin/rooms' },
+        { key: 'nav.timing', label: 'Timing', href: '/admin/timing' },
+        { key: 'nav.short_calls', label: 'Short Calls', href: '/admin/short-calls' },
+        { key: 'nav.gallery', label: 'Gallery', href: '/admin/gallery' },
+        { key: 'nav.hotel_map', label: 'Hotel Map', href: '/admin/map/builder' },
+        { key: 'nav.restaurants', label: 'Restaurants', href: '/admin/restaurants' },
+        { key: 'nav.services', label: 'Services', href: '/admin/services' },
+        { key: 'nav.events', label: 'Events', href: '/admin/events' },
+        { key: 'nav.offers', label: 'Offers', href: '/admin/offers' },
+        { key: 'nav.experiences', label: 'Experiences', href: '/admin/experiences' },
+      ],
+    },
+    {
+      key: 'nav.website',
+      label: 'Website',
+      children: [
+        { key: 'nav.pages', label: 'Pages', href: '/admin/pages' },
+        { key: 'nav.guest_layout', label: 'Guest Layout', href: '/admin/layout', disabled: false },
+        { key: 'nav.theme', label: 'Theme', href: '/admin/theme', disabled: false },
+      ],
+    },
+    {
+      key: 'nav.media',
+      label: 'Media',
+      children: [{ key: 'nav.media_library', label: 'Media Library', href: '#', disabled: true }],
+    },
+  ];
+});
 
 /**
  * Active-state match: a link is "active" if the current URL starts with
@@ -92,7 +110,9 @@ function isActive(href: string): boolean {
         <div class="flex items-center justify-between pb-4 border-b border-slate-200">
           <div class="flex items-center gap-2">
             <span class="h-2.5 w-2.5 rounded-full shrink-0" style="background-color: var(--admin-primary)" />
-            <span class="font-semibold text-slate-800 truncate">{{ page.props.hotel?.name ?? 'Admin' }}</span>
+            <span class="font-semibold text-slate-800 truncate text-sm">
+              {{ isSuperAdmin ? (locale === 'ar' ? 'إدارة المنصة الرئيسية' : 'Platform Administration') : (page.props.hotel?.name ?? 'Admin') }}
+            </span>
           </div>
           <button
             type="button"
@@ -116,7 +136,8 @@ function isActive(href: string): boolean {
               :class="!isActive(item.href) ? 'text-slate-700 hover:bg-slate-100' : ''"
               @click="mobileSidebarOpen = false"
             >
-              {{ item.icon }} {{ t(item.key, undefined, item.label) }}
+              <span v-if="item.icon" class="me-1.5">{{ item.icon }}</span>
+              <span>{{ t(item.key, undefined, item.label) }}</span>
             </Link>
 
             <div v-else>
@@ -135,7 +156,8 @@ function isActive(href: string): boolean {
                   : (!isActive(child.href) ? 'text-slate-600 hover:bg-slate-100' : '')"
                 @click="!child.disabled ? (mobileSidebarOpen = false) : undefined"
               >
-                {{ t(child.key, undefined, child.label) }}
+                <span v-if="child.icon" class="me-1.5">{{ child.icon }}</span>
+                <span>{{ t(child.key, undefined, child.label) }}</span>
               </component>
             </div>
           </div>
@@ -147,8 +169,8 @@ function isActive(href: string): boolean {
     <aside class="w-64 shrink-0 border-e border-slate-200 bg-white px-4 py-6 hidden md:block">
       <div class="mb-6 flex items-center gap-2">
         <span class="h-2.5 w-2.5 rounded-full shrink-0" style="background-color: var(--admin-primary)" />
-        <div class="font-semibold text-slate-800 truncate">
-          {{ page.props.hotel?.name ?? 'Admin' }}
+        <div class="font-semibold text-slate-800 truncate text-sm">
+          {{ isSuperAdmin ? (locale === 'ar' ? 'إدارة المنصة الرئيسية' : 'Platform Administration') : (page.props.hotel?.name ?? 'Admin') }}
         </div>
       </div>
 
@@ -161,7 +183,8 @@ function isActive(href: string): boolean {
             :style="isActive(item.href) ? { backgroundColor: 'var(--admin-sidebar-active-bg)', color: 'var(--admin-sidebar-active-text)', fontWeight: 600 } : {}"
             :class="!isActive(item.href) ? 'text-slate-700 hover:bg-slate-100' : ''"
           >
-            {{ item.icon }} {{ t(item.key, undefined, item.label) }}
+            <span v-if="item.icon" class="me-1.5">{{ item.icon }}</span>
+            <span>{{ t(item.key, undefined, item.label) }}</span>
           </Link>
 
           <div v-else>
@@ -179,7 +202,8 @@ function isActive(href: string): boolean {
                 ? 'text-slate-300 cursor-not-allowed'
                 : (!isActive(child.href) ? 'text-slate-600 hover:bg-slate-100' : '')"
             >
-              {{ t(child.key, undefined, child.label) }}
+              <span v-if="child.icon" class="me-1.5">{{ child.icon }}</span>
+              <span>{{ t(child.key, undefined, child.label) }}</span>
             </component>
           </div>
         </div>
@@ -194,7 +218,7 @@ function isActive(href: string): boolean {
         <slot />
       </main>
 
-      <AdminFooter :hotel-name="page.props.hotel?.name ?? 'Grand Horizon'" />
+      <AdminFooter :hotel-name="isSuperAdmin ? 'SaaS Platform Admin' : (page.props.hotel?.name ?? 'Grand Horizon')" />
     </div>
   </div>
 </template>

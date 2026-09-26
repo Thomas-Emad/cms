@@ -3,7 +3,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import { useI18n } from '@/i18n';
-import { AdminTable, CreateButton, EditButton, ShowButton, AdminInput, AdminBadge } from '@/Components/Admin';
+import { AdminTable, CreateButton, EditButton, ShowButton, AdminInput, AdminBadge, BranchFilter } from '@/Components/Admin';
 import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
@@ -16,6 +16,8 @@ interface PageRow {
   is_home: boolean;
   published_version_id: number | null;
   updated_at: string;
+  hotel_branch_id?: number | null;
+  branch?: { id: number; name: string; city?: string | null } | null;
 }
 
 interface Paginated<T> {
@@ -25,17 +27,21 @@ interface Paginated<T> {
 
 const props = defineProps<{
   pages: Paginated<PageRow>;
-  filters: { q: string | null };
+  filters: { q: string | null; branch_id?: number | null };
+  selected_branch_id?: number | null;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const search = ref(props.filters.q ?? '');
 
 let searchTimeout: ReturnType<typeof setTimeout>;
 watch(search, (value) => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    router.get('/admin/pages', { q: value || undefined }, { preserveState: true, replace: true });
+    router.get('/admin/pages', {
+      q: value || undefined,
+      branch_id: props.selected_branch_id || undefined,
+    }, { preserveState: true, replace: true });
   }, 300);
 });
 </script>
@@ -54,12 +60,18 @@ watch(search, (value) => {
       </CreateButton>
     </div>
 
-    <div v-if="pages.data.length || filters.q" class="mb-4 max-w-sm">
-      <AdminInput
-        v-model="search"
-        type="text"
-        :placeholder="t('admin.pages.search_placeholder', undefined, 'Search pages by name or slug…')"
-        prefix="🔍"
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <div class="max-w-sm w-full">
+        <AdminInput
+          v-model="search"
+          type="text"
+          :placeholder="t('admin.pages.search_placeholder', undefined, 'Search pages by name or slug…')"
+          prefix="🔍"
+        />
+      </div>
+      <BranchFilter
+        :selected-branch-id="selected_branch_id"
+        :extra-params="filters.q ? { q: filters.q } : {}"
       />
     </div>
 
@@ -71,6 +83,7 @@ watch(search, (value) => {
       <template #header>
         <tr>
           <th class="px-4 py-3 text-start">{{ t('common.name', undefined, 'Name') }}</th>
+          <th class="px-4 py-3 text-start">{{ t('admin.branch', undefined, 'Branch') }}</th>
           <th class="px-4 py-3 text-start">{{ t('admin.pages.slug', undefined, 'Slug') }}</th>
           <th class="px-4 py-3 text-start">{{ t('common.status', undefined, 'Status') }}</th>
           <th class="px-4 py-3 text-start">{{ t('admin.pages.updated', undefined, 'Updated') }}</th>
@@ -91,6 +104,14 @@ watch(search, (value) => {
             :title="t('admin.pages.is_home_tooltip', undefined, 'This is the homepage')"
           >
             {{ t('common.home', undefined, 'Home') }}
+          </span>
+        </td>
+        <td class="px-4 py-3">
+          <AdminBadge v-if="(pageRow as any).branch" variant="info">
+            📍 {{ (pageRow as any).branch.name }}
+          </AdminBadge>
+          <span v-else class="text-xs text-slate-400">
+            {{ locale === 'ar' ? 'عام (كل الفروع)' : 'All Branches' }}
           </span>
         </td>
         <td class="px-4 py-3 text-slate-500 font-mono text-xs">

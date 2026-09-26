@@ -2,6 +2,10 @@
 
 return [
     'dashboard' => 'Dashboard',
+    'platform' => 'Platform',
+    'platform_overview' => 'Platform Overview',
+    'customers' => 'Hotel Accounts',
+    'create_customer' => 'Add Hotel Account',
     'hotel' => 'Hotel',
     'hotel_info' => 'Hotel Information',
     'theme' => 'Theme',

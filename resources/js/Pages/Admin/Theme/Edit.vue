@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { useI18n } from '@/i18n';
 import { AdminCard, AdminInput, AdminSelect, AdminButton } from '@/Components/Admin';
@@ -9,6 +9,7 @@ defineOptions({ layout: AdminLayout });
 
 interface ThemeModel {
     id?: number;
+    hotel_branch_id?: number | null;
     name: string;
     primary_color: string;
     secondary_color: string;
@@ -31,16 +32,28 @@ interface ThemePreset {
     footer_bg?: string;
 }
 
+interface BranchItem {
+    id: number;
+    name: string;
+    slug: string;
+    city?: string | null;
+}
+
 const props = defineProps<{
     theme: ThemeModel;
     presets: ThemePreset[];
     flash_ok?: string | null;
+    branches?: BranchItem[];
+    selected_branch_id?: number | null;
+    selected_branch?: BranchItem | null;
+    has_custom_branch_theme?: boolean;
 }>();
 
 const { t, locale } = useI18n();
 
 const form = useForm({
-    name: props.theme?.name ?? 'Guest Layout Theme',
+    hotel_branch_id: props.selected_branch_id ?? null,
+    name: props.theme?.name ?? (props.selected_branch ? `${props.selected_branch.name} Theme` : 'Guest Layout Theme'),
     primary_color: props.theme?.primary_color ?? '#059669',
     secondary_color: props.theme?.secondary_color ?? '#10B981',
     header_bg: props.theme?.header_bg ?? '#064e3b',
@@ -73,6 +86,24 @@ function deriveDarkenedHex(hex: string, factor = 0.35): string {
     const g = Math.max(0, Math.min(255, Math.round(parseInt(clean.substring(2, 4), 16) * factor)));
     const b = Math.max(0, Math.min(255, Math.round(parseInt(clean.substring(4, 6), 16) * factor)));
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
+function selectBranch(branchId: number | null) {
+    router.get('/admin/theme', branchId ? { branch_id: branchId } : {}, {
+        preserveState: false,
+    });
+}
+
+function resetToMasterTheme() {
+    if (!props.selected_branch_id) return;
+    const msg = locale.value === 'ar'
+        ? 'هل أنت متأكد من رغبتك في حذف المظهر المخصص لهذا الفرع والرجوع لوراثة المظهر العام للفندق؟'
+        : 'Are you sure you want to reset this branch theme to inherit the hotel master theme?';
+    if (confirm(msg)) {
+        router.delete('/admin/theme/branch-reset', {
+            data: { hotel_branch_id: props.selected_branch_id },
+        });
+    }
 }
 
 function save() {
@@ -116,10 +147,69 @@ const cardOptions = [
             </h1>
             <p class="text-sm text-slate-500">
                 {{ locale === 'ar'
-                    ? 'تحكم في ألوان وهوية موقع النزيل وتطبيق الشاشات الذكية، بما في ذلك ألوان الشريط العلوي والقائمة السفلية.'
-                    : 'Customize primary branding colors, header bar, and footer/dock colors seen by guests across Classic and Smart TV layouts.'
+                    ? 'تحكم في ألوان وهوية موقع النزيل وتطبيق الشاشات الذكية، سواء للمظهر العام أو لفروع محددة.'
+                    : 'Customize primary branding colors, header bar, and dock colors seen by guests across the main hotel and individual branches.'
                 }}
             </p>
+        </div>
+
+        <!-- Branch / Master Theme Selector Tabs -->
+        <div v-if="branches && branches.length > 0" class="flex items-center gap-2 border-b border-slate-200 pb-3 overflow-x-auto">
+            <button
+                type="button"
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap"
+                :class="!selected_branch_id ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+                @click="selectBranch(null)"
+            >
+                <span>🏨</span>
+                <span>{{ locale === 'ar' ? 'المظهر العام للفندق (كل الفروع)' : 'Hotel Master Theme (All Branches)' }}</span>
+            </button>
+            <button
+                v-for="b in branches"
+                :key="b.id"
+                type="button"
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap"
+                :class="selected_branch_id === b.id ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+                @click="selectBranch(b.id)"
+            >
+                <span>📍</span>
+                <span>{{ b.name }} {{ b.city ? `(${b.city})` : '' }}</span>
+            </button>
+        </div>
+
+        <!-- Branch Context Banner -->
+        <div v-if="selected_branch" class="space-y-2">
+            <div v-if="has_custom_branch_theme" class="rounded-lg bg-blue-50 border border-blue-200 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-base">🎨</span>
+                    <div>
+                        <h3 class="text-xs font-semibold text-blue-900">
+                            {{ locale === 'ar' ? `مظهر مخصص نشط لفرع: ${selected_branch.name}` : `Custom Theme Active for: ${selected_branch.name}` }}
+                        </h3>
+                        <p class="text-xs text-blue-700 mt-0.5">
+                            {{ locale === 'ar' ? 'هذا الفرع يستخدم حالياً مظهراً مستقلاً وخاصاً به عند زيارة النزلاء لموقعه.' : 'This branch is currently rendered with its own dedicated theme palette.' }}
+                        </p>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="text-xs font-medium text-red-600 hover:text-red-700 underline shrink-0"
+                    @click="resetToMasterTheme"
+                >
+                    {{ locale === 'ar' ? 'إعادة التعيين لوراثة المظهر العام' : 'Reset to Master Theme' }}
+                </button>
+            </div>
+            <div v-else class="rounded-lg bg-amber-50 border border-amber-200 p-4 flex items-center gap-2.5">
+                <span class="text-base">ℹ️</span>
+                <div>
+                    <h3 class="text-xs font-semibold text-amber-900">
+                        {{ locale === 'ar' ? `يرث المظهر العام للفندق: ${selected_branch.name}` : `Inheriting Master Theme: ${selected_branch.name}` }}
+                    </h3>
+                    <p class="text-xs text-amber-700 mt-0.5">
+                        {{ locale === 'ar' ? 'يقوم هذا الفرع حالياً بوراثة المظهر العام للفندق. عند تعديل أي ألوان وحفظها، سيتم إنشاء مظهر مخصص لهذا الفرع فقط.' : 'This branch currently inherits the master hotel styling. Modifying colors and clicking save will publish a custom theme override for this branch.' }}
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div v-if="flash_ok && !form.isDirty" class="rounded-lg bg-emerald-50 border border-emerald-200 p-4 flex items-center gap-3">
@@ -232,7 +322,7 @@ const cardOptions = [
                     </div>
                 </AdminCard>
 
-                <!-- Header & Footer / Dock Colors (NEW) -->
+                <!-- Header & Footer / Dock Colors -->
                 <AdminCard
                     :title="locale === 'ar' ? 'ألوان الشريط العلوي (Header) والقائمة السفلية (Footer / Dock)' : 'Header & Footer / Bottom Dock Colors'"
                     :subtitle="locale === 'ar' ? 'تحكم بدقة في لون الشريط العلوي ولون شريط التنقل السفلي والفوتر' : 'Set custom colors for the fixed top bar and the bottom navigation dock & footer'"
@@ -336,7 +426,7 @@ const cardOptions = [
                         :disabled="form.processing"
                         size="lg"
                     >
-                        {{ form.processing ? (locale === 'ar' ? 'جاري الحفظ...' : 'Saving…') : (locale === 'ar' ? 'حفظ ونشر المظهر للنزلاء' : 'Save & Publish Theme') }}
+                        {{ form.processing ? (locale === 'ar' ? 'جاري الحفظ...' : 'Saving…') : (locale === 'ar' ? 'حفظ ونشر المظهر' : (selected_branch ? 'Save Branch Theme' : 'Save & Publish Theme')) }}
                     </AdminButton>
                 </div>
             </form>
@@ -378,43 +468,61 @@ const cardOptions = [
                                 :style="{ background: form.header_bg ? form.header_bg + 'e6' : 'rgba(10, 12, 16, 0.85)' }"
                             >
                                 <div class="flex items-center gap-2">
-                                    <span class="h-2 w-2 rounded-full" :style="{ backgroundColor: form.primary_color }" />
-                                    <span class="font-serif tracking-tight text-xs sm:text-sm font-semibold truncate">Grand Horizon</span>
+                                    <span class="h-2.5 w-2.5 rounded-full" :style="{ backgroundColor: form.primary_color }" />
+                                    <span class="text-xs sm:text-sm font-semibold tracking-wide">
+                                        {{ selected_branch ? selected_branch.name : 'Grand Horizon' }}
+                                    </span>
                                 </div>
-                                <div class="flex items-center gap-2 text-xs">
-                                    <span class="rounded-full px-2 py-0.5 text-[10px] border border-white/20">EN</span>
-                                    <span class="text-white/70 tabular-nums text-[11px]">14:30</span>
+                                <div class="flex items-center gap-2 text-[11px] text-white/70">
+                                    <span class="hidden sm:inline">English</span>
+                                    <span>14:30</span>
                                 </div>
                             </div>
 
-                            <!-- Page Content Mock -->
-                            <div class="my-auto text-center space-y-2 py-3">
-                                <p class="text-[11px] uppercase tracking-widest text-white/50">Welcome to Paradise</p>
-                                <h3 class="text-sm sm:text-base font-medium">A Luxury Sanctuary Awaits</h3>
+                            <!-- Mock Content Body -->
+                            <div class="space-y-2 py-4">
+                                <div class="inline-block px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded text-white" :style="{ backgroundColor: form.primary_color }">
+                                    Featured
+                                </div>
+                                <div class="text-sm sm:text-base font-medium text-white/90">
+                                    {{ selected_branch ? `Welcome to ${selected_branch.name}` : 'Welcome to Grand Horizon Luxury Resort' }}
+                                </div>
+                                <p class="text-xs text-white/50 line-clamp-2">
+                                    Experience ultimate relaxation with tailored dining, spa wellness, and panoramic sea views.
+                                </p>
+                            </div>
+
+                            <!-- Bottom Floating Dock with live Footer Color -->
+                            <div
+                                class="mx-auto flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 transition-colors shadow-lg backdrop-blur-md"
+                                :style="{ background: form.footer_bg ? form.footer_bg + 'f0' : 'rgba(2, 44, 34, 0.92)' }"
+                            >
                                 <button
                                     type="button"
-                                    class="text-xs px-3 py-1 rounded-full font-medium transition-transform shadow-xs"
-                                    :style="{ backgroundColor: form.primary_color, color: '#ffffff' }"
-                                >
-                                    Explore Accommodations
-                                </button>
-                            </div>
-
-                            <!-- Bottom Classic Dock with live Footer/Dock Color -->
-                            <div
-                                class="rounded-2xl border border-white/15 backdrop-blur-md p-2 flex items-center justify-center gap-1.5 overflow-x-auto text-[10px] sm:text-[11px] transition-colors shadow-lg"
-                                :style="{ background: form.footer_bg ? form.footer_bg + 'f0' : 'rgba(10, 12, 16, 0.90)' }"
-                            >
-                                <span
-                                    class="px-2.5 py-1 rounded-full font-semibold shadow-xs transition-colors"
-                                    :style="{ backgroundColor: form.primary_color, color: '#ffffff' }"
+                                    class="px-2.5 py-1 rounded-full text-xs font-semibold text-white shadow-xs transition-colors"
+                                    :style="{ backgroundColor: form.primary_color }"
                                 >
                                     Home
-                                </span>
-                                <span class="px-2 py-1 rounded-full text-white/80 bg-white/10 border border-white/15">Rooms</span>
-                                <span class="px-2 py-1 rounded-full text-white/80 bg-white/10 border border-white/15">Weather</span>
-                                <span class="px-2 py-1 rounded-full text-white/80 bg-white/10 border border-white/15">Branches</span>
-                                <span class="px-2 py-1 rounded-full text-white/80 bg-white/10 border border-white/15">Dining</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="px-2.5 py-1 rounded-full text-xs text-white/80 hover:text-white transition-colors"
+                                >
+                                    Rooms
+                                </button>
+                                <button
+                                    type="button"
+                                    class="px-2.5 py-1 rounded-full text-xs text-white/80 hover:text-white transition-colors"
+                                >
+                                    Dining
+                                </button>
+                                <button
+                                    type="button"
+                                    class="px-2 py-1 rounded-full text-xs font-bold transition-colors"
+                                    :style="{ color: form.secondary_color }"
+                                >
+                                    ✦
+                                </button>
                             </div>
                         </div>
 
@@ -427,7 +535,9 @@ const cardOptions = [
                             >
                                 <div class="flex items-center gap-2">
                                     <span class="h-2 w-2 rounded-full" :style="{ backgroundColor: form.primary_color }" />
-                                    <span class="text-sm sm:text-base font-semibold">Grand Horizon</span>
+                                    <span class="text-sm sm:text-base font-semibold">
+                                        {{ selected_branch ? selected_branch.name : 'Grand Horizon' }}
+                                    </span>
                                 </div>
                                 <div class="flex items-center gap-2 text-xs text-white/60">
                                     <span>24°C Sunny</span>

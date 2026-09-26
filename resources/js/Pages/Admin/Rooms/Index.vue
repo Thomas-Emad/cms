@@ -4,13 +4,16 @@ import { router } from '@inertiajs/vue3';
 import { useI18n } from '@/i18n';
 import type { Room } from '@/types/room';
 import type { Paginated } from '@/types/facility';
-import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge, PageHeader } from '@/Components/Admin';
+import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge, PageHeader, BranchFilter } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
-defineProps<{ rooms: Paginated<Room> }>();
+defineProps<{
+    rooms: Paginated<Room>;
+    selected_branch_id?: number | null;
+}>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const destroy = (room: Room) => {
     router.delete(`/admin/rooms/${room.id}`);
@@ -30,6 +33,10 @@ const destroy = (room: Room) => {
             </template>
         </PageHeader>
 
+        <div class="mb-4">
+            <BranchFilter :selected-branch-id="selected_branch_id" />
+        </div>
+
         <AdminTable
             :items="rooms.data"
             :empty-message="t('admin.common.empty', undefined, 'Nothing here yet — add your first one.')"
@@ -38,6 +45,7 @@ const destroy = (room: Room) => {
                 <tr>
                     <th class="px-4 py-3 w-16"></th>
                     <th class="px-4 py-3 text-start">{{ t('common.name', undefined, 'Name') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('admin.branch', undefined, 'Branch') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('common.status_label', undefined, 'Status') }}</th>
                     <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
                 </tr>
@@ -60,6 +68,14 @@ const destroy = (room: Room) => {
                 <td class="px-4 py-2.5 font-medium text-slate-800">
                     {{ room.name }}
                     <span v-if="room.featured" class="ms-1.5 text-xs text-amber-500 font-normal">★ Featured</span>
+                </td>
+                <td class="px-4 py-2.5">
+                    <AdminBadge v-if="(room as any).branch" variant="info">
+                        📍 {{ (room as any).branch.name }}
+                    </AdminBadge>
+                    <span v-else class="text-xs text-slate-400">
+                        {{ locale === 'ar' ? 'عام (كل الفروع)' : 'All Branches' }}
+                    </span>
                 </td>
                 <td class="px-4 py-2.5">
                     <AdminBadge :variant="room.status === 'published' ? 'published' : 'draft'" dot>

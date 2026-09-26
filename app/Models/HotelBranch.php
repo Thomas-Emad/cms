@@ -21,6 +21,7 @@ class HotelBranch extends Model
         'hotel_id',
         'name',
         'slug',
+        'domain',
         'city',
         'address',
         'phone',
@@ -35,6 +36,8 @@ class HotelBranch extends Model
         'status',
         'is_main',
         'sort_order',
+        'guest_layout',
+        'metadata',
     ];
 
     protected $casts = [
@@ -43,6 +46,7 @@ class HotelBranch extends Model
         'is_main' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
+        'metadata' => 'array',
     ];
 
     public function scopePublished(Builder $query): Builder

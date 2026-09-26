@@ -4,13 +4,16 @@ import { router } from '@inertiajs/vue3';
 import { useI18n } from '@/i18n';
 import type { Offer } from '@/types/content';
 import type { Paginated } from '@/types/facility';
-import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge } from '@/Components/Admin';
+import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge, BranchFilter } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
-defineProps<{ offers: Paginated<Offer> }>();
+defineProps<{
+    offers: Paginated<Offer>;
+    selected_branch_id?: number | null;
+}>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const destroy = (offer: Offer) => {
     router.delete(`/admin/offers/${offer.id}`);
@@ -29,6 +32,10 @@ const destroy = (offer: Offer) => {
             </CreateButton>
         </div>
 
+        <div class="mb-4">
+            <BranchFilter :selected-branch-id="selected_branch_id" />
+        </div>
+
         <AdminTable
             :items="offers.data"
             :empty-message="t('admin.common.empty', undefined, 'Nothing here yet — add your first one.')"
@@ -36,6 +43,7 @@ const destroy = (offer: Offer) => {
             <template #header>
                 <tr>
                     <th class="px-4 py-3 text-start">{{ t('common.title', undefined, 'Title') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('admin.branch', undefined, 'Branch') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('admin.offers.form.discount', undefined, 'Discount') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('common.status_label', undefined, 'Status') }}</th>
                     <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
@@ -50,6 +58,14 @@ const destroy = (offer: Offer) => {
                 <td class="px-4 py-3 font-medium text-slate-800">
                     {{ offer.title }}
                     <span v-if="offer.featured" class="ms-1.5 text-xs text-amber-500">★</span>
+                </td>
+                <td class="px-4 py-3">
+                    <AdminBadge v-if="(offer as any).branch" variant="info">
+                        📍 {{ (offer as any).branch.name }}
+                    </AdminBadge>
+                    <span v-else class="text-xs text-slate-400">
+                        {{ locale === 'ar' ? 'عام (كل الفروع)' : 'All Branches' }}
+                    </span>
                 </td>
                 <td class="px-4 py-3 text-slate-500 font-mono text-xs">
                     {{ offer.discount ? offer.discount + '%' : '—' }}

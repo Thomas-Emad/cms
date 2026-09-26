@@ -20,7 +20,13 @@ class PageController extends Controller
      */
     public function home(CurrentHotel $currentHotel): Response
     {
-        $page = Page::query()->published()->home()->firstOrFail();
+        $page = Page::query()->published()->home()->first();
+
+        if (! $page) {
+            return Inertia::render('Guest/Home', [
+                'hotel' => $currentHotel->get(),
+            ]);
+        }
 
         return $this->renderPage($page, $currentHotel);
     }

@@ -3,22 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Models\Hotel;
+use App\Models\HotelBranch;
 use App\Services\Tenancy\CurrentHotel;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Resolves the active Hotel for this request and stores it in the
- * CurrentHotel singleton for the rest of the request lifecycle.
- *
- * Phase 1: single hotel, resolved by "first active hotel" (see CurrentHotel
- * fallback) — this middleware mostly exists so the seam is already wired
- * into the HTTP kernel.
- *
- * Phase 7: uncomment the domain-based resolution below and remove the
- * fallback in CurrentHotel::get().
- */
 class ResolveCurrentHotel
 {
     public function handle(Request $request, Closure $next): Response
@@ -26,18 +16,86 @@ class ResolveCurrentHotel
         /** @var CurrentHotel $currentHotel */
         $currentHotel = app(CurrentHotel::class);
 
-        // --- Phase 7 domain resolution (disabled for now) ---
-        // $host = $request->getHost();
-        // $hotel = Hotel::where('domain', $host)->first()
-        //     ?? Hotel::where('slug', explode('.', $host)[0])->first();
-        // if ($hotel) {
-        //     $currentHotel->set($hotel);
-        // }
+        $host = strtolower($request->getHost());
 
-        // Phase 1: rely on CurrentHotel's single-tenant fallback,
-        // just force resolution now so failures surface early (404 vs
-        // a confusing later error).
-        $currentHotel->get();
+        // 1. Direct custom hotel domain match (e.g. smarttel.com or brand.com)
+        $hotel = Hotel::where('domain', $host)->first();
+        $branch = null;
+
+        // 2. Direct custom branch domain match (e.g. cairo.smarttel.com, alexandria.smarttel.com)
+        if (! $hotel) {
+            $branch = HotelBranch::withoutGlobalScope('hotel')->where('domain', $host)->first();
+            if ($branch) {
+                $hotel = $branch->hotel;
+            }
+        }
+
+        // 3. Subdomain / slug match (e.g., cairo.saas.com or hotel-slug.saas.com)
+        if (! $hotel && str_contains($host, '.')) {
+            $subdomain = explode('.', $host)[0];
+            if ($subdomain !== 'www') {
+                // Check branch slug first
+                $branch = HotelBranch::withoutGlobalScope('hotel')->where('slug', $subdomain)->first();
+                if ($branch) {
+                    $hotel = $branch->hotel;
+                } else {
+                    $hotel = Hotel::where('slug', $subdomain)->first();
+                }
+            }
+        }
+
+        // 4. Fallback for testing / local development on localhost or 127.0.0.1
+        if (! $hotel && (app()->environment('testing', 'local') && in_array($host, ['localhost', '127.0.0.1'], true))) {
+            if ($currentHotel->has()) {
+                $hotel = $currentHotel->get();
+                $branch = $currentHotel->branch();
+            } else {
+                $user = $request->user();
+                if ($user && $user->hotel_id !== null) {
+                    $hotel = Hotel::find($user->hotel_id);
+                }
+
+                if (! $hotel) {
+                    $hotel = Hotel::where('status', 'active')->first();
+                }
+            }
+        }
+
+        // 5. Unknown domain -> abort 404
+        if (! $hotel) {
+            abort(404, "Hotel not found for domain: {$host}");
+        }
+
+        $currentHotel->set($hotel);
+
+        // If a specific branch was resolved, store it; otherwise pick the main branch if available (or clear if none)
+        if ($branch) {
+            $currentHotel->setBranch($branch);
+        } else {
+            $mainBranch = $hotel->branches()->where('is_main', true)->first();
+            $currentHotel->setBranch($mainBranch);
+        }
+
+        return $this->verifyAccessAndStatus($request, $next, $hotel);
+    }
+
+    protected function verifyAccessAndStatus(Request $request, Closure $next, Hotel $hotel): Response
+    {
+        $user = $request->user();
+
+        // If hotel is suspended: Super Admins can still view/manage, but guests and tenant users are blocked.
+        if ($hotel->status === 'suspended') {
+            if (! $user || ! $user->isSuperAdmin()) {
+                abort(403, 'This hotel is currently suspended.');
+            }
+        }
+
+        // Tenant boundary check: authenticated tenant users cannot access another hotel's context
+        if ($user && ! $user->isSuperAdmin() && $user->hotel_id !== null) {
+            if ($user->hotel_id !== $hotel->id) {
+                abort(403, 'Unauthorized access to this hotel.');
+            }
+        }
 
         return $next($request);
     }

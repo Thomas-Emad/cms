@@ -17,7 +17,7 @@ class Experience extends Model
     ];
 
     protected $fillable = [
-        'hotel_id', 'title', 'slug', 'description', 'category',
+        'hotel_id', 'hotel_branch_id', 'title', 'slug', 'description', 'category',
         'duration', 'price', 'booking_url', 'status', 'featured', 'sort_order',
     ];
 

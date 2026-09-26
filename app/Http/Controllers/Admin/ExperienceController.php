@@ -6,19 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreExperienceRequest;
 use App\Models\Experience;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ExperienceController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Experience::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         return Inertia::render('Admin/Experiences/Index', [
-            'experiences' => Experience::query()->ordered()->with('cover')->paginate(20)
+            'selected_branch_id' => $branchId,
+            'experiences' => Experience::query()
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
+                ->ordered()
+                ->with(['cover', 'branch:id,name,city'])
+                ->paginate(20)
+                ->withQueryString()
                 ->through(fn (Experience $e) => [
-                    ...$e->only(['id', 'title', 'slug', 'category', 'status', 'featured']),
+                    ...$e->only(['id', 'title', 'slug', 'category', 'status', 'featured', 'hotel_branch_id']),
+                    'branch' => $e->branch ? ['id' => $e->branch->id, 'name' => $e->branch->name, 'city' => $e->branch->city] : null,
                     'cover_image_url' => $e->cover_image_url,
                 ]),
         ]);

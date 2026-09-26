@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import BilingualTabs from '@/Components/Admin/BilingualTabs.vue';
+import { BranchSelector } from '@/Components/Admin';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { useI18n } from '@/i18n';
@@ -16,6 +17,7 @@ const activeTab = ref<'en' | 'ar'>('en');
 const rawTranslations = (props.experience as any)?.translations_data?.ar ?? {};
 
 const form = useForm({
+  hotel_branch_id: (props.experience as any)?.hotel_branch_id ?? null,
   title: props.experience?.title ?? '',
   slug: props.experience?.slug ?? '',
   description: props.experience?.description ?? '',
@@ -50,6 +52,11 @@ const submit = () => {
     <form @submit.prevent="submit" class="space-y-4 rounded-lg border border-slate-200 bg-white p-6">
       <!-- English Fields -->
       <div v-show="activeTab === 'en'" class="space-y-4">
+        <BranchSelector
+          v-model="form.hotel_branch_id"
+          :error="form.errors.hotel_branch_id"
+        />
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">{{ t('admin.experiences.form.title', 'Title') }} (EN)</label>

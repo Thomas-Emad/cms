@@ -6,19 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreOfferRequest;
 use App\Models\Offer;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class OfferController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Offer::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         return Inertia::render('Admin/Offers/Index', [
-            'offers' => Offer::query()->latest()->with('cover')->paginate(20)
+            'selected_branch_id' => $branchId,
+            'offers' => Offer::query()
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
+                ->latest()
+                ->with(['cover', 'branch:id,name,city'])
+                ->paginate(20)
+                ->withQueryString()
                 ->through(fn (Offer $o) => [
-                    ...$o->only(['id', 'title', 'slug', 'discount', 'status', 'featured', 'valid_until']),
+                    ...$o->only(['id', 'title', 'slug', 'discount', 'status', 'featured', 'valid_until', 'hotel_branch_id']),
+                    'branch' => $o->branch ? ['id' => $o->branch->id, 'name' => $o->branch->name, 'city' => $o->branch->city] : null,
                     'cover_image_url' => $o->cover_image_url,
                 ]),
         ]);

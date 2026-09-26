@@ -6,17 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreServiceRequest;
 use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ServiceController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Service::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         return Inertia::render('Admin/Services/Index', [
-            'services' => Service::query()->ordered()->paginate(20),
+            'selected_branch_id' => $branchId,
+            'services' => Service::query()
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
+                ->ordered()
+                ->with('branch:id,name,city')
+                ->paginate(20)
+                ->withQueryString(),
         ]);
     }
 

@@ -4,15 +4,16 @@ import { router } from '@inertiajs/vue3';
 import { useI18n } from '@/i18n';
 import type { Restaurant } from '@/types/restaurant';
 import type { Paginated } from '@/types/facility';
-import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge } from '@/Components/Admin';
+import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge, BranchFilter } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
 defineProps<{
     restaurants: Paginated<Restaurant>;
+    selected_branch_id?: number | null;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const destroy = (restaurant: Restaurant) => {
     router.delete(`/admin/restaurants/${restaurant.id}`);
@@ -31,6 +32,10 @@ const destroy = (restaurant: Restaurant) => {
             </CreateButton>
         </div>
 
+        <div class="mb-4">
+            <BranchFilter :selected-branch-id="selected_branch_id" />
+        </div>
+
         <AdminTable
             :items="restaurants.data"
             :empty-message="t('admin.common.empty', undefined, 'Nothing here yet — add your first one.')"
@@ -38,6 +43,7 @@ const destroy = (restaurant: Restaurant) => {
             <template #header>
                 <tr>
                     <th class="px-4 py-3 text-start">{{ t('common.name', undefined, 'Name') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('admin.branch', undefined, 'Branch') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('restaurants.cuisine', undefined, 'Cuisine') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('common.status_label', undefined, 'Status') }}</th>
                     <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
@@ -50,6 +56,14 @@ const destroy = (restaurant: Restaurant) => {
                 class="hover:bg-slate-50/70 transition-colors"
             >
                 <td class="px-4 py-3 font-medium text-slate-800">{{ restaurant.name }}</td>
+                <td class="px-4 py-3">
+                    <AdminBadge v-if="(restaurant as any).branch" variant="info">
+                        📍 {{ (restaurant as any).branch.name }}
+                    </AdminBadge>
+                    <span v-else class="text-xs text-slate-400">
+                        {{ locale === 'ar' ? 'عام (كل الفروع)' : 'All Branches' }}
+                    </span>
+                </td>
                 <td class="px-4 py-3 text-slate-500">{{ restaurant.cuisine || '—' }}</td>
                 <td class="px-4 py-3">
                     <AdminBadge :variant="restaurant.status === 'published' ? 'published' : 'draft'" dot>

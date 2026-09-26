@@ -28,17 +28,21 @@ class FacilityController extends Controller
 
         // ?category=meeting powers the "Meeting Rooms" sidebar entry: same data, filtered list.
         $category = $request->string('category')->value() ?: null;
+        $branchId = $request->integer('branch_id') ?: null;
 
         return Inertia::render('Admin/Facilities/Index', [
             'category' => $category,
+            'selected_branch_id' => $branchId,
             'facilities' => Facility::query()
                 ->category($category)
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
                 ->ordered()
-                ->with('cover')
+                ->with(['cover', 'branch:id,name,city'])
                 ->paginate(20)
                 ->withQueryString()
                 ->through(fn (Facility $f) => [
-                    ...$f->only(['id', 'name', 'slug', 'category', 'status', 'featured', 'sort_order']),
+                    ...$f->only(['id', 'name', 'slug', 'category', 'status', 'featured', 'sort_order', 'hotel_branch_id']),
+                    'branch' => $f->branch ? ['id' => $f->branch->id, 'name' => $f->branch->name, 'city' => $f->branch->city] : null,
                     'cover_image_url' => $f->cover_image_url,
                 ]),
         ]);

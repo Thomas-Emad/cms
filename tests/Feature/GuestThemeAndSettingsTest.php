@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Hotel;
+use App\Models\HotelSettings;
 use App\Models\Theme;
 use App\Models\User;
+use App\Services\Layout\GuestLayoutStore;
 use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -63,13 +65,13 @@ class GuestThemeAndSettingsTest extends TestCase
         $response->assertSessionHas('success');
 
         // Check hotel settings
-        $settings = \App\Models\HotelSettings::where('hotel_id', $this->hotel->id)->first();
+        $settings = HotelSettings::where('hotel_id', $this->hotel->id)->first();
         $this->assertNotNull($settings);
         $this->assertSame('tv', $settings->guest_view);
         $this->assertSame('tv', $settings->metadata['guest_layout']['template']);
 
         // Check GuestLayoutStore returns tv
-        $layoutConfig = app(\App\Services\Layout\GuestLayoutStore::class)->forHotel($this->hotel->id);
+        $layoutConfig = app(GuestLayoutStore::class)->forHotel($this->hotel->id);
         $this->assertSame('tv', $layoutConfig['template']);
     }
 

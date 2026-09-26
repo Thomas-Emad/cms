@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { BranchSelector } from '@/Components/Admin';
 import { Link, useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
 
 defineOptions({ layout: AdminLayout });
 
 const form = useForm({
+    hotel_branch_id: null,
     name: '',
     slug: '',
     is_home: false,
@@ -44,6 +46,11 @@ function submit() {
         </p>
 
         <form @submit.prevent="submit" class="space-y-4 rounded-lg border border-slate-200 bg-white p-6">
+            <BranchSelector
+                v-model="form.hotel_branch_id"
+                :error="form.errors.hotel_branch_id"
+            />
+
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Page Name</label>
                 <input v-model="form.name" type="text" placeholder="e.g. About Us" autofocus

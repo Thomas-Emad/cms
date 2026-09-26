@@ -37,8 +37,13 @@ return [
         'map_saved' => 'Map saved.',
         'saved' => 'Saved.',
         'cover_must_be_image' => 'The main photo must be an image, not a video.',
+        'customer_created' => 'Customer hotel created successfully.',
+        'customer_updated' => 'Customer hotel updated successfully.',
+        'customer_deleted' => 'Customer hotel deleted.',
     ],
     'dashboard_title' => 'Dashboard',
     'managing' => 'Managing',
     'dashboard_desc' => 'Welcome to your hotel management portal.',
+    'branch' => 'Branch',
+    'branch_assignment' => 'Branch Assignment',
 ];

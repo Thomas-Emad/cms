@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\Facility;
+use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class StoreFacilityRequest extends FormRequest
@@ -19,11 +19,15 @@ class StoreFacilityRequest extends FormRequest
         $facilityId = $this->route('facility')?->id;
 
         return [
+            'hotel_branch_id' => [
+                'nullable', 'integer',
+                Rule::exists('hotel_branches', 'id')->where('hotel_id', app(CurrentHotel::class)->id() ?? 0),
+            ],
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required', 'string', 'max:255', 'alpha_dash',
                 Rule::unique('facilities', 'slug')
-                    ->where('hotel_id', Auth::user()->hotel_id)
+                    ->where('hotel_id', app(CurrentHotel::class)->id())
                     ->ignore($facilityId),
             ],
             'description' => ['nullable', 'string'],

@@ -2,6 +2,10 @@
 
 return [
     'dashboard' => 'لوحة التحكم',
+    'platform' => 'المنصة',
+    'platform_overview' => 'نظرة عامة على المنصة',
+    'customers' => 'حسابات الفنادق المشتركة',
+    'create_customer' => 'إضافة فندق جديد',
     'hotel' => 'الفندق',
     'hotel_info' => 'معلومات الفندق',
     'theme' => 'المظهر',

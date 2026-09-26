@@ -5,6 +5,7 @@ import { useForm, router, Link } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
 import { useI18n } from '@/i18n';
 import type { Restaurant } from '@/types/restaurant';
+import { BranchSelector } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -19,6 +20,7 @@ const activeTab = ref<'en' | 'ar'>('en');
 const rawTranslations = (props.restaurant as any)?.translations_data?.ar ?? {};
 
 const form = useForm({
+  hotel_branch_id: (props.restaurant as any)?.hotel_branch_id ?? null,
   name: props.restaurant?.name ?? '',
   slug: props.restaurant?.slug ?? '',
   description: props.restaurant?.description ?? '',
@@ -188,6 +190,11 @@ const saveMenu = () => {
 
         <!-- English & Base Fields -->
         <div v-else class="space-y-4">
+          <BranchSelector
+            v-model="form.hotel_branch_id"
+            :error="form.errors.hotel_branch_id"
+          />
+
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">

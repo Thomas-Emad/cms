@@ -17,7 +17,7 @@ class Offer extends Model
     ];
 
     protected $fillable = [
-        'hotel_id', 'title', 'slug', 'description', 'price',
+        'hotel_id', 'hotel_branch_id', 'title', 'slug', 'description', 'price',
         'discount', 'valid_from', 'valid_until', 'booking_url', 'status', 'featured',
     ];
 

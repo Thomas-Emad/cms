@@ -8,22 +8,29 @@ use App\Http\Requests\Admin\StoreRestaurantRequest;
 use App\Http\Requests\Admin\UpdateMenuRequest;
 use App\Models\Restaurant;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class RestaurantController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Restaurant::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         return Inertia::render('Admin/Restaurants/Index', [
+            'selected_branch_id' => $branchId,
             'restaurants' => Restaurant::query()
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
                 ->ordered()
-                ->with('cover')
+                ->with(['cover', 'branch:id,name,city'])
                 ->paginate(20)
+                ->withQueryString()
                 ->through(fn (Restaurant $r) => [
-                    ...$r->only(['id', 'name', 'slug', 'cuisine', 'status', 'featured']),
+                    ...$r->only(['id', 'name', 'slug', 'cuisine', 'status', 'featured', 'hotel_branch_id']),
+                    'branch' => $r->branch ? ['id' => $r->branch->id, 'name' => $r->branch->name, 'city' => $r->branch->city] : null,
                     'cover_image_url' => $r->cover_image_url,
                 ]),
         ]);

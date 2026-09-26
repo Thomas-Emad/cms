@@ -21,6 +21,7 @@ class Event extends Model
 
     protected $fillable = [
         'hotel_id',
+        'hotel_branch_id',
         'title',
         'slug',
         'description',

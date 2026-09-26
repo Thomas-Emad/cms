@@ -3,6 +3,7 @@
 namespace App\Services\Tenancy;
 
 use App\Models\Hotel;
+use App\Models\HotelBranch;
 
 /**
  * Resolves "which hotel are we currently operating as" for the duration
@@ -28,9 +29,26 @@ class CurrentHotel
 {
     protected ?Hotel $hotel = null;
 
+    protected ?HotelBranch $branch = null;
+
     public function set(Hotel $hotel): void
     {
         $this->hotel = $hotel;
+    }
+
+    public function setBranch(?HotelBranch $branch): void
+    {
+        $this->branch = $branch;
+    }
+
+    public function branch(): ?HotelBranch
+    {
+        return $this->branch;
+    }
+
+    public function hasBranch(): bool
+    {
+        return $this->branch !== null;
     }
 
     public function get(): Hotel
@@ -66,6 +84,23 @@ class CurrentHotel
 
     public function has(): bool
     {
-        return $this->hotel !== null;
+        if ($this->hotel !== null) {
+            return true;
+        }
+
+        $user = auth()->user();
+        if ($user && $user->hotel_id !== null) {
+            $this->get();
+
+            return $this->hotel !== null;
+        }
+
+        return false;
+    }
+
+    public function clear(): void
+    {
+        $this->hotel = null;
+        $this->branch = null;
     }
 }

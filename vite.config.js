@@ -34,6 +34,8 @@ export default defineConfig({
     },
 
     server: {
+        cors: true,
+        allowedHosts: true,
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },

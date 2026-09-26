@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\Page;
+use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class StorePageRequest extends FormRequest
@@ -17,6 +17,10 @@ class StorePageRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'hotel_branch_id' => [
+                'nullable', 'integer',
+                Rule::exists('hotel_branches', 'id')->where('hotel_id', app(CurrentHotel::class)->id() ?? 0),
+            ],
             'name' => ['required', 'string', 'max:255'],
             // Lowercase letters, numbers, and hyphens only - matches the
             // same slug convention every Phase 2 entity uses. Empty
@@ -25,7 +29,7 @@ class StorePageRequest extends FormRequest
             // is_home governs that case rather than a separate field.
             'slug' => [
                 'nullable', 'string', 'max:255', 'regex:/^[a-z0-9]+(-[a-z0-9]+)*$/',
-                Rule::unique('pages', 'slug')->where('hotel_id', Auth::user()->hotel_id),
+                Rule::unique('pages', 'slug')->where('hotel_id', app(CurrentHotel::class)->id()),
             ],
             'is_home' => ['boolean'],
             // 'scroll' = normal page (default); 'fullscreen' = no page

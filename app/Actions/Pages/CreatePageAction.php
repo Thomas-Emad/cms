@@ -21,6 +21,7 @@ class CreatePageAction
 
             $page = Page::create([
                 'hotel_id' => $hotel->id,
+                'hotel_branch_id' => $attributes['hotel_branch_id'] ?? null,
                 'name' => $attributes['name'],
                 'slug' => $attributes['slug'],
                 'is_home' => $attributes['is_home'] ?? false,

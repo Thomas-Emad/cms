@@ -23,7 +23,7 @@ class Service extends Model
     ];
 
     protected $fillable = [
-        'hotel_id', 'name', 'slug', 'description', 'icon', 'availability',
+        'hotel_id', 'hotel_branch_id', 'name', 'slug', 'description', 'icon', 'availability',
         'contact', 'price', 'request_enabled', 'status', 'sort_order',
     ];
 

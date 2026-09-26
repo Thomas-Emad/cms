@@ -42,7 +42,9 @@ class BranchController extends Controller
                 'is_main' => $b->is_main,
             ]);
 
-        $activeSlug = $request->query('branch') ?: ($branches->firstWhere('is_main', true)['slug'] ?? $branches->first()['slug'] ?? null);
+        $activeSlug = $request->query('branch')
+            ?: ($currentHotel->hasBranch() ? $currentHotel->branch()?->slug : null)
+            ?: ($branches->firstWhere('is_main', true)['slug'] ?? $branches->first()['slug'] ?? null);
 
         return Inertia::render('Guest/Branches/Index', [
             'branches' => $branches,

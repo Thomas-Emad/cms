@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BranchController as AdminBranchController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\MapController as AdminMapController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\OfferController as AdminOfferController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
+use App\Http\Controllers\Admin\PlatformDashboardController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
@@ -87,6 +89,31 @@ Route::middleware(['web', 'resolve.hotel'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Super Admin Platform routes (Platform-level)
+|--------------------------------------------------------------------------
+| These routes are platform-level. They do NOT use resolve.hotel middleware
+| and operate across all hotels. Only super_admin users can access them.
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['web', 'auth', 'role:super_admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', PlatformDashboardController::class)->name('platform.dashboard');
+        Route::get('platform-dashboard', PlatformDashboardController::class)->name('platform.dashboard');
+        Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
+        Route::get('customers/create', [CustomerController::class, 'create'])->name('customers.create');
+        Route::post('customers', [CustomerController::class, 'store'])->name('customers.store');
+        Route::get('customers/{hotel}', [CustomerController::class, 'show'])->name('customers.show');
+        Route::get('customers/{hotel}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+        Route::put('customers/{hotel}', [CustomerController::class, 'update'])->name('customers.update');
+        Route::patch('customers/{hotel}/status', [CustomerController::class, 'updateStatus'])->name('customers.status');
+        Route::patch('customers/{hotel}/domain', [CustomerController::class, 'updateDomain'])->name('customers.domain');
+        Route::post('customers/{hotel}/users', [CustomerController::class, 'storeUser'])->name('customers.users.store');
+    });
+
+/*
+|--------------------------------------------------------------------------
 | Admin routes - middleware: web, auth, resolve.hotel, role:...
 |--------------------------------------------------------------------------
 */
@@ -94,6 +121,9 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('/', DashboardController::class)
+            ->middleware('role:super_admin,hotel_admin,hotel_staff')
+            ->name('dashboard');
         Route::get('/dashboard', DashboardController::class)
             ->middleware('role:super_admin,hotel_admin,hotel_staff')
             ->name('dashboard');
@@ -123,6 +153,7 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
 
             Route::get('layout', [AdminLayoutController::class, 'edit'])->name('layout.edit');
             Route::put('layout', [AdminLayoutController::class, 'update'])->name('layout.update');
+            Route::delete('layout/branch-reset', [AdminLayoutController::class, 'resetBranchLayout'])->name('layout.branch-reset');
 
             // Hotel Settings & Guest Layout Theme
             Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -130,6 +161,7 @@ Route::middleware(['web', 'auth', 'resolve.hotel'])
 
             Route::get('theme', [AdminThemeController::class, 'edit'])->name('theme.edit');
             Route::put('theme', [AdminThemeController::class, 'update'])->name('theme.update');
+            Route::delete('theme/branch-reset', [AdminThemeController::class, 'resetBranchTheme'])->name('theme.branch-reset');
 
             Route::get('map', [AdminMapController::class, 'edit'])->name('map.edit');
             Route::get('map/builder', [AdminMapController::class, 'builder'])->name('map.builder');

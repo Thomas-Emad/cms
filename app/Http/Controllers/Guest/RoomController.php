@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
 use App\Models\Room;
+use App\Services\Tenancy\CurrentHotel;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -12,9 +13,12 @@ class RoomController extends Controller
 {
     public function index(): Response
     {
+        $branchId = app(CurrentHotel::class)->branch()?->id;
+
         return Inertia::render('Guest/Rooms/Index', [
             'rooms' => Room::query()
                 ->published()
+                ->forBranch($branchId)
                 ->with('cover', 'translations')
                 ->ordered()
                 ->get()

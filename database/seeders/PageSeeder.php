@@ -28,16 +28,18 @@ class PageSeeder extends Seeder
 {
     public function run(): void
     {
-        $hotel = Hotel::where('slug', 'hilton-grand-horizon')->firstOrFail();
+        $hotels = Hotel::all();
 
-        $this->seedHomepage($hotel);
-        $this->seedAboutPage($hotel);
+        foreach ($hotels as $hotel) {
+            $this->seedHomepage($hotel);
+            $this->seedAboutPage($hotel);
+        }
     }
 
     protected function seedHomepage(Hotel $hotel): void
     {
         if (Page::where('hotel_id', $hotel->id)->where('is_home', true)->exists()) {
-            $this->command?->info('Homepage already exists, skipping.');
+            $this->command?->info("Homepage for {$hotel->name} already exists, skipping.");
 
             return;
         }
@@ -54,9 +56,9 @@ class PageSeeder extends Seeder
                 'type' => 'hero',
                 'props' => [
                     'media_id' => $heroMediaId,
-                    'eyebrow' => 'Luxury Hospitality on the Nile',
-                    'title' => 'Welcome to Smarttel Hotel Cairo',
-                    'subtitle' => 'Experience timeless Egyptian hospitality on the banks of the River Nile.',
+                    'eyebrow' => 'Luxury Hospitality',
+                    'title' => "Welcome to {$hotel->name}",
+                    'subtitle' => "Experience exceptional hospitality and comfort at {$hotel->name}.",
                     'button_text' => 'Explore Facilities',
                     'button_url' => '/facilities',
                 ],

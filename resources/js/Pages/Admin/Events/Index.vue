@@ -4,14 +4,17 @@ import { router } from '@inertiajs/vue3';
 import { useI18n } from '@/i18n';
 import type { HotelEvent } from '@/types/content';
 import type { Paginated } from '@/types/facility';
-import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge } from '@/Components/Admin';
+import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge, BranchFilter } from '@/Components/Admin';
 import { formatDate } from '@/lib/formatters';
 
 defineOptions({ layout: AdminLayout });
 
-defineProps<{ events: Paginated<HotelEvent> }>();
+defineProps<{
+    events: Paginated<HotelEvent>;
+    selected_branch_id?: number | null;
+}>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const destroy = (event: HotelEvent) => {
     router.delete(`/admin/events/${event.id}`);
@@ -30,6 +33,10 @@ const destroy = (event: HotelEvent) => {
             </CreateButton>
         </div>
 
+        <div class="mb-4">
+            <BranchFilter :selected-branch-id="selected_branch_id" />
+        </div>
+
         <AdminTable
             :items="events.data"
             :empty-message="t('admin.common.empty', undefined, 'Nothing here yet — add your first one.')"
@@ -37,6 +44,7 @@ const destroy = (event: HotelEvent) => {
             <template #header>
                 <tr>
                     <th class="px-4 py-3 text-start">{{ t('common.title', undefined, 'Title') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('admin.branch', undefined, 'Branch') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('common.date', undefined, 'Date') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('common.status_label', undefined, 'Status') }}</th>
                     <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
@@ -49,6 +57,14 @@ const destroy = (event: HotelEvent) => {
                 class="hover:bg-slate-50/70 transition-colors"
             >
                 <td class="px-4 py-3 font-medium text-slate-800">{{ event.title }}</td>
+                <td class="px-4 py-3">
+                    <AdminBadge v-if="(event as any).branch" variant="info">
+                        📍 {{ (event as any).branch.name }}
+                    </AdminBadge>
+                    <span v-else class="text-xs text-slate-400">
+                        {{ locale === 'ar' ? 'عام (كل الفروع)' : 'All Branches' }}
+                    </span>
+                </td>
                 <td class="px-4 py-3 text-slate-500 text-xs">{{ formatDate(event.start_date) || '—' }}</td>
                 <td class="px-4 py-3">
                     <AdminBadge :variant="event.status === 'published' ? 'published' : 'draft'" dot>

@@ -26,6 +26,7 @@ class BranchController extends Controller
                     'id' => $b->id,
                     'name' => $b->getRawOriginal('name') ?? $b->name,
                     'slug' => $b->slug,
+                    'domain' => $b->domain,
                     'city' => $b->getRawOriginal('city') ?? $b->city,
                     'address' => $b->getRawOriginal('address') ?? $b->address,
                     'phone' => $b->phone,

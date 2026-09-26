@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Services\Tenancy\CurrentHotel;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -11,8 +12,10 @@ class EventController extends Controller
 {
     public function index(): Response
     {
+        $branchId = app(CurrentHotel::class)->branch()?->id;
+
         return Inertia::render('Guest/Events/Index', [
-            'events' => Event::query()->published()->upcoming()->with('cover', 'translations')->get()
+            'events' => Event::query()->published()->forBranch($branchId)->upcoming()->with('cover', 'translations')->get()
                 ->map(fn (Event $e) => [
                     'id' => $e->id,
                     'slug' => $e->slug,

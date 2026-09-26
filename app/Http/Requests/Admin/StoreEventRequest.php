@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\Event;
+use App\Services\Tenancy\CurrentHotel;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class StoreEventRequest extends FormRequest
@@ -19,10 +19,14 @@ class StoreEventRequest extends FormRequest
         $eventId = $this->route('event')?->id;
 
         return [
+            'hotel_branch_id' => [
+                'nullable', 'integer',
+                Rule::exists('hotel_branches', 'id')->where('hotel_id', app(CurrentHotel::class)->id() ?? 0),
+            ],
             'title' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required', 'string', 'max:255', 'alpha_dash',
-                Rule::unique('events', 'slug')->where('hotel_id', Auth::user()->hotel_id)->ignore($eventId),
+                Rule::unique('events', 'slug')->where('hotel_id', app(CurrentHotel::class)->id())->ignore($eventId),
             ],
             'description' => ['nullable', 'string'],
             'start_date' => ['required', 'date'],

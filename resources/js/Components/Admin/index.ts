@@ -16,4 +16,5 @@ export { default as AdminFooter } from './AdminFooter.vue';
 export { default as BilingualTabs } from './BilingualTabs.vue';
 export { default as MediaManager } from './MediaManager.vue';
 export { default as TagListInput } from './TagListInput.vue';
-
+export { default as BranchSelector } from './BranchSelector.vue';
+export { default as BranchFilter } from './BranchFilter.vue';

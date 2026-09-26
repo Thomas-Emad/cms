@@ -17,7 +17,7 @@ class Room extends Model
     ];
 
     protected $fillable = [
-        'hotel_id', 'name', 'slug', 'short_description', 'description',
+        'hotel_id', 'hotel_branch_id', 'name', 'slug', 'short_description', 'description',
         'size_sqm', 'max_guests', 'bed_type', 'view', 'features',
         'status', 'featured', 'sort_order',
     ];

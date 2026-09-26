@@ -8,7 +8,7 @@ import type { Facility } from '@/types/facility';
 import type { MediaItem } from '@/types/room';
 import MediaManager from '@/Components/Admin/MediaManager.vue';
 import TagListInput from '@/Components/Admin/TagListInput.vue';
-import { AdminCard, AdminInput, AdminTextarea, AdminSelect, AdminButton, PageHeader } from '@/Components/Admin';
+import { AdminCard, AdminInput, AdminTextarea, AdminSelect, AdminButton, PageHeader, BranchSelector } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
@@ -26,6 +26,7 @@ const activeTab = ref<'en' | 'ar'>('en');
 const rawTranslations = (props.facility as any)?.translations_data?.ar ?? {};
 
 const form = useForm({
+  hotel_branch_id: (props.facility as any)?.hotel_branch_id ?? null,
   name: props.facility?.name ?? '',
   slug: props.facility?.slug ?? '',
   description: props.facility?.description ?? '',
@@ -141,6 +142,11 @@ const statuses = [
 
         <!-- English & Base Fields -->
         <div v-else class="space-y-4">
+          <BranchSelector
+            v-model="form.hotel_branch_id"
+            :error="form.errors.hotel_branch_id"
+          />
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <AdminInput
               v-model="form.name"

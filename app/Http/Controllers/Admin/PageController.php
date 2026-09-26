@@ -31,22 +31,33 @@ class PageController extends Controller
     {
         $this->authorize('viewAny', Page::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         $pages = Page::query()
+            ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
             ->when($request->string('q')->value(), function ($query, $search) {
                 $query->where(fn ($q) => $q
                     ->where('name', 'like', "%{$search}%")
                     ->orWhere('slug', 'like', "%{$search}%"));
             })
+            ->with('branch:id,name,city')
             ->orderByDesc('updated_at')
             ->paginate(20)
             ->withQueryString()
-            ->through(fn (Page $page) => $page->only([
-                'id', 'name', 'slug', 'status', 'is_home', 'published_version_id', 'updated_at',
-            ]));
+            ->through(fn (Page $page) => [
+                ...$page->only([
+                    'id', 'name', 'slug', 'status', 'is_home', 'published_version_id', 'updated_at', 'hotel_branch_id',
+                ]),
+                'branch' => $page->branch ? ['id' => $page->branch->id, 'name' => $page->branch->name, 'city' => $page->branch->city] : null,
+            ]);
 
         return Inertia::render('Admin/Pages/Index', [
             'pages' => $pages,
-            'filters' => ['q' => $request->string('q')->value()],
+            'selected_branch_id' => $branchId,
+            'filters' => [
+                'q' => $request->string('q')->value(),
+                'branch_id' => $branchId,
+            ],
         ]);
     }
 

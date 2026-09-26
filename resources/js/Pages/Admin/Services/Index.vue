@@ -4,13 +4,16 @@ import { router } from '@inertiajs/vue3';
 import { useI18n } from '@/i18n';
 import type { Service } from '@/types/content';
 import type { Paginated } from '@/types/facility';
-import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge } from '@/Components/Admin';
+import { AdminTable, CreateButton, EditButton, DeleteButton, AdminBadge, BranchFilter } from '@/Components/Admin';
 
 defineOptions({ layout: AdminLayout });
 
-defineProps<{ services: Paginated<Service> }>();
+defineProps<{
+    services: Paginated<Service>;
+    selected_branch_id?: number | null;
+}>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const destroy = (service: Service) => {
     router.delete(`/admin/services/${service.id}`);
@@ -29,6 +32,10 @@ const destroy = (service: Service) => {
             </CreateButton>
         </div>
 
+        <div class="mb-4">
+            <BranchFilter :selected-branch-id="selected_branch_id" />
+        </div>
+
         <AdminTable
             :items="services.data"
             :empty-message="t('admin.common.empty', undefined, 'Nothing here yet — add your first one.')"
@@ -36,6 +43,7 @@ const destroy = (service: Service) => {
             <template #header>
                 <tr>
                     <th class="px-4 py-3 text-start">{{ t('common.name', undefined, 'Name') }}</th>
+                    <th class="px-4 py-3 text-start">{{ t('admin.branch', undefined, 'Branch') }}</th>
                     <th class="px-4 py-3 text-start">{{ t('common.status_label', undefined, 'Status') }}</th>
                     <th class="px-4 py-3 text-end">{{ t('common.actions', undefined, 'Actions') }}</th>
                 </tr>
@@ -47,6 +55,14 @@ const destroy = (service: Service) => {
                 class="hover:bg-slate-50/70 transition-colors"
             >
                 <td class="px-4 py-3 font-medium text-slate-800">{{ service.name }}</td>
+                <td class="px-4 py-3">
+                    <AdminBadge v-if="(service as any).branch" variant="info">
+                        📍 {{ (service as any).branch.name }}
+                    </AdminBadge>
+                    <span v-else class="text-xs text-slate-400">
+                        {{ locale === 'ar' ? 'عام (كل الفروع)' : 'All Branches' }}
+                    </span>
+                </td>
                 <td class="px-4 py-3">
                     <AdminBadge :variant="service.status === 'published' ? 'published' : 'draft'" dot>
                         {{ t(`admin.status.${service.status}`, undefined, service.status) }}

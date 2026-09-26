@@ -67,6 +67,17 @@ const destroy = (branch: HotelBranch) => {
                         <span v-if="branch.is_main" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
                             ★ {{ t('branches.main_branch', undefined, 'Main Branch') }}
                         </span>
+                        <a
+                            v-if="branch.domain"
+                            :href="`http://${branch.domain}`"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-mono font-medium bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition-colors"
+                            :title="`Open http://${branch.domain}`"
+                        >
+                            <span>🌐 {{ branch.domain }}</span>
+                            <span class="text-indigo-400 text-[9px]">↗</span>
+                        </a>
                     </div>
                     <div class="text-xs text-slate-400 mt-0.5 font-mono">{{ branch.slug }}</div>
                 </td>

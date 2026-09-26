@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Hotel;
+use App\Models\HotelBranch;
 use App\Models\HotelSettings;
 use App\Models\User;
 use App\Services\Layout\GuestLayoutConfig;
@@ -87,5 +88,99 @@ class GuestLayoutTest extends TestCase
     {
         $this->get('/admin/layout')->assertRedirect();
         $this->put('/admin/layout', GuestLayoutConfig::defaults())->assertRedirect();
+    }
+
+    public function test_a_branch_can_have_its_own_independent_layout_override(): void
+    {
+        $branchTv = HotelBranch::create([
+            'hotel_id' => $this->hotelA->id,
+            'name' => 'Branch TV',
+            'slug' => 'branch-tv-'.uniqid(),
+            'guest_layout' => 'tv',
+            'status' => 'published',
+        ]);
+
+        $branchClassic = HotelBranch::create([
+            'hotel_id' => $this->hotelA->id,
+            'name' => 'Branch Classic',
+            'slug' => 'branch-classic-'.uniqid(),
+            'guest_layout' => null,
+            'status' => 'published',
+        ]);
+
+        $store = app(GuestLayoutStore::class);
+
+        // Branch with 'tv' override gets 'tv'
+        $configTv = $store->forHotel($this->hotelA->id, $branchTv->id);
+        $this->assertSame('tv', $configTv['template']);
+
+        // Branch with null inherits hotel default ('classic')
+        $configClassic = $store->forHotel($this->hotelA->id, $branchClassic->id);
+        $this->assertSame('classic', $configClassic['template']);
+    }
+
+    public function test_admin_can_save_and_reset_branch_specific_layout_customizations(): void
+    {
+        app(CurrentHotel::class)->set($this->hotelA);
+
+        $branch = HotelBranch::create([
+            'hotel_id' => $this->hotelA->id,
+            'name' => 'Cairo Branch',
+            'slug' => 'cairo-branch-'.uniqid(),
+            'guest_layout' => null,
+            'status' => 'published',
+        ]);
+
+        $store = app(GuestLayoutStore::class);
+        $this->assertFalse($store->hasCustomBranchLayout($branch->id));
+
+        // Save custom branch layout
+        $customConfig = array_merge(GuestLayoutConfig::defaults(), [
+            'hotel_branch_id' => $branch->id,
+            'template' => 'tv',
+            'headline' => 'Welcome to Cairo TV',
+        ]);
+
+        $this->actingAs($this->adminA)
+            ->put('/admin/layout', $customConfig)
+            ->assertRedirect('/admin/layout?branch_id='.$branch->id)
+            ->assertSessionHas('layout_saved');
+
+        $this->assertTrue($store->hasCustomBranchLayout($branch->id));
+        $resolved = $store->forHotel($this->hotelA->id, $branch->id);
+        $this->assertSame('tv', $resolved['template']);
+        $this->assertSame('Welcome to Cairo TV', $resolved['headline']);
+
+        // Reset branch layout
+        $this->actingAs($this->adminA)
+            ->delete('/admin/layout/branch-reset', ['hotel_branch_id' => $branch->id])
+            ->assertRedirect('/admin/layout?branch_id='.$branch->id)
+            ->assertSessionHas('layout_saved');
+
+        $this->assertFalse($store->hasCustomBranchLayout($branch->id));
+    }
+
+    public function test_branch_update_accepts_guest_layout(): void
+    {
+        app(CurrentHotel::class)->set($this->hotelA);
+
+        $branch = HotelBranch::create([
+            'hotel_id' => $this->hotelA->id,
+            'name' => 'Alexandria Branch',
+            'slug' => 'alex-branch-'.uniqid(),
+            'guest_layout' => null,
+            'status' => 'published',
+        ]);
+
+        $this->actingAs($this->adminA)
+            ->put('/admin/branches/'.$branch->id, [
+                'name' => 'Alexandria Branch Updated',
+                'slug' => $branch->slug,
+                'status' => 'published',
+                'guest_layout' => 'tv',
+            ])
+            ->assertRedirect();
+
+        $this->assertSame('tv', $branch->fresh()->guest_layout);
     }
 }

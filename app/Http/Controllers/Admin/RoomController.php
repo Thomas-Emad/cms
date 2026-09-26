@@ -7,22 +7,29 @@ use App\Http\Requests\Admin\StoreRoomRequest;
 use App\Models\Media;
 use App\Models\Room;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class RoomController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', Room::class);
 
+        $branchId = $request->integer('branch_id') ?: null;
+
         return Inertia::render('Admin/Rooms/Index', [
+            'selected_branch_id' => $branchId,
             'rooms' => Room::query()
+                ->when($branchId, fn ($q) => $q->where('hotel_branch_id', $branchId))
                 ->ordered()
-                ->with('cover')
+                ->with(['cover', 'branch:id,name,city'])
                 ->paginate(20)
+                ->withQueryString()
                 ->through(fn (Room $r) => [
-                    ...$r->only(['id', 'name', 'slug', 'status', 'featured', 'sort_order']),
+                    ...$r->only(['id', 'name', 'slug', 'status', 'featured', 'sort_order', 'hotel_branch_id']),
+                    'branch' => $r->branch ? ['id' => $r->branch->id, 'name' => $r->branch->name, 'city' => $r->branch->city] : null,
                     'cover_image_url' => $r->cover_image_url,
                 ]),
         ]);
